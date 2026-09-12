@@ -261,6 +261,7 @@ Thứ tự flow bám theo **hành trình người dùng thật**, không theo th
 | `11` | `share` | 🚧 Phase 2 — chia sẻ lịch (co-edit / lịch cố định), xem [phase-2-feedback.md](../../requirements/specs/phase-2-feedback.md#p3--share-lịch-tạo-lịch-gss) |
 | `12` | `ai-assistant` | 🚧 Phase 2 — trợ lý AI dạng chat, tự lên schedule, xem [phase-2-feedback.md](../../requirements/specs/phase-2-feedback.md#p4--ai-assistant-vào-calendarevent-improve-home-theo-category) |
 | `13` | `community` | 🚧 Phase 2 — calendar cộng đồng riêng của Ink, xem [phase-2-feedback.md](../../requirements/specs/phase-2-feedback.md#p6--build-community-co-edit-lịch-âm---tâm-linh) |
+| `14` | `edit-wallpaper` | Editor soạn/trang trí wallpaper trước khi lưu — vẽ tay, chữ, emoji, ảnh, tách nền (Decorate). Tách riêng khỏi `04_discover` (browse/collection) vì đây là nghiệp vụ **soạn/sửa**, không phải **duyệt/chọn**. Thêm 2026-09-12, build 1.2.15 (56) — xem [qc-wallpaper-decoration.md](../../requirements/specs/qc-wallpaper-decoration.md) |
 
 🚧 = tính năng **chưa build**, chưa có screenshot. Folder đã tạo sẵn (`.gitkeep`) để chụp ngay khi
 feature ra mắt. `flow-name` của 3 flow này có thể còn đổi trước khi có screenshot đầu tiên — sau đó

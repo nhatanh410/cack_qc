@@ -115,6 +115,7 @@ Cần cập nhật wireframe chính thức (thêm S05) sau đợt QC này; skill
 | **TSK-E11** | App bị kill giữa lúc đang gõ tên ô trong popup (chưa lưu) | Tên có mất không? | 🟡 | ☐ |
 | **TSK-E12** | Trong sheet Customize, đã chọn 1 icon, bấm lại icon "no icon" (dấu cấm ở đầu danh sách, mặc định đang chọn theo ảnh) | Có xoá được icon về trạng thái không-icon không, hay đây chỉ là icon hiển thị mặc định không bấm được? *(coverage gap, chưa thấy ảnh state đã chọn icon khác)* | 🟡 | ☐ |
 | **TSK-E13** | Sheet Customize sửa **subtitle** (không chỉ tên) — đổi ngôn ngữ máy sau khi chỉ sửa subtitle, không sửa tên | Subtitle có theo luật riêng (giữ nguyên nếu custom) hay luôn dịch theo tên? *(coverage gap mới phát sinh sau khi thấy subtitle nằm chung sheet với tên — liên hệ TSK-Q03)* | 🟠 | ☐ |
+| **TSK-E14** | Kéo task giữa 2 ô, quan sát **drag preview** lúc đang giữ tay (chưa thả) | Preview hiện dạng pill chữ nhật, nền trắng trơn, shadow cứng — **không kế thừa màu ô nguồn**, lệch tông so với phần còn lại của Matrix (ô/checkbox luôn theo màu, note 1.5). Ma sát thẩm mỹ, không phải lỗi hành vi — cần phân biệt với việc màu có đổi đúng **sau khi thả** (đó mới là bug nếu sai) | 🟡 | ☐ |
 
 ---
 

@@ -3,7 +3,7 @@
 Bảng tra tên file mới ↔ tên gốc từ iOS ↔ mô tả màn hình.
 Quy tắc đặt tên: [.claude/rules/screenshot-naming.md](../../../../../.claude/rules/screenshot-naming.md)
 
-Tổng: **61 screenshot** / 10 flow đã build. iPhone (1290×2796).
+Tổng: **75 screenshot** / 11 flow đã build. iPhone (1290×2796).
 
 ## Lịch sử chụp
 
@@ -11,6 +11,7 @@ Tổng: **61 screenshot** / 10 flow đã build. iPhone (1290×2796).
 |---|---|---|---|
 | 1 | 2026-08-14 → 19 | TestFlight 1.2.10 (27) | Batch gốc — 57 ảnh, 10 flow. Chi tiết dưới đây. |
 | 2 | 2026-09-09 | TestFlight, build chưa xác định | Batch refresh Phase 2 — `06_task` matrix (4 ảnh: `default`, `completed-empty`, `customize`, `customize-scrolled`). Khớp `screen-no 05` với ảnh iPad đã có. Còn thiếu build number — điền khi xác nhận được. |
+| 3 | 2026-09-12 | TestFlight 1.2.15 (56) | Flow mới `14_edit-wallpaper` (Decorate) — 14 ảnh, chỉ portrait (UI không xoay trên iPhone). Còn thiếu 3 state so với checklist gốc (sticker-settings, eyedropper, limit-warning). |
 
 > Khi chụp batch mới cho màn hình **đã có ảnh**: giữ nguyên `screen-no`, chỉ đổi `state` nếu UI đổi
 > trạng thái, hoặc thêm hậu tố `-v2` nếu cùng `state` nhưng nội dung/layout khác (rule §5.3). Ảnh cũ
@@ -153,6 +154,29 @@ Xem [phase-2-feedback.md § P4](../../../specs/phase-2-feedback.md#p4--ai-assist
 
 _Chưa có screenshot — chờ feature community/calendar riêng của Ink ra mắt._
 Xem [phase-2-feedback.md § P6](../../../specs/phase-2-feedback.md#p6--build-community-co-edit-lịch-âm---tâm-linh).
+
+## 14_edit-wallpaper — editor soạn/trang trí wallpaper (Decorate)
+
+> Nguồn: [qc-wallpaper-decoration.md](../../../specs/qc-wallpaper-decoration.md), build 1.2.15 (56), entry point "Wallpaper editor → nút Decorate". **2 screen-no riêng** — `01_wallpaper-editor` (màn chỉnh wallpaper có sẵn, chứa nút "Trang trí"/"Decorate" mới) và `02_decorate` (canvas trang trí, mới hoàn toàn). Không có bản landscape — iPhone không xoay UI này.
+
+| File | Gốc | Mô tả |
+|------|-----|-------|
+| `14_edit-wallpaper_01_wallpaper-editor_default.png` | IMG_1026 | Màn "Balance · Mix ✓ Current" — nút "Decorate" góc dưới trái, tab Background/Calendar/Style, đã có sẵn 1 nét vẽ từ trước |
+| `14_edit-wallpaper_01_wallpaper-editor_filled.png` | IMG_1030 | Cùng màn, sau khi lưu đủ decoration (emoji, 2 ảnh, cutout, nét vẽ) — xác nhận trực tiếp mục 2.5 (save khớp editor) |
+| `14_edit-wallpaper_02_decorate_tooltip.png` | IMG_1018 | Coach mark lần đầu mở Decorate — "Your toolbar: Text, emoji, photos and a pen. The top two switches preview the clock and calendar." + nút "Got it". **State mới, note không nhắc tới** |
+| `14_edit-wallpaper_02_decorate_default.png` | IMG_1019 | Canvas trống, toolbar phải hiện đủ 6 icon — mục 2.1 |
+| `14_edit-wallpaper_02_decorate_calendar-shown.png` | IMG_1020 | Toggle "Show calendar" bật — mục 2.1 |
+| `14_edit-wallpaper_02_decorate_brush-toolbar.png` | IMG_1021 | Toolbar vẽ đầy đủ — eyedropper + 8 màu + 4 loại nét + Eraser, đang kéo brush-size — mục 2.2 |
+| `14_edit-wallpaper_02_decorate_brush-toolbar-v2.png` | IMG_1022 | Gần như giống hệt ảnh trên (chưa thấy khác biệt rõ khi so sánh) — giữ cả 2 theo nguyên tắc không xoá ảnh đã chụp, xem lại nếu cần khi có thời gian |
+| `14_edit-wallpaper_02_decorate_text-editing.png` | IMG_1023 | Tool Text, bàn phím mở, placeholder "Type something" — mục 2.3 |
+| `14_edit-wallpaper_02_decorate_emoji-picker.png` | IMG_1024 | Sheet Emoji picker, nhóm "Smileys" — mục 2.4 |
+| `14_edit-wallpaper_02_decorate_photo-menu.png` | IMG_1025 | Menu ảnh — "Cutout" / "Photo" — mục 2.1 |
+| `14_edit-wallpaper_02_decorate_sticker-selected.png` | IMG_1027 | Sticker **emoji** đang chọn — khung xanh, ✕ góc trên, handle resize+xoay góc dưới — mục 2.3 |
+| `14_edit-wallpaper_02_decorate_sticker-selected-v2.png` | IMG_1028 | Cùng state, sticker **cutout ảnh** đang chọn thay vì emoji |
+| `14_edit-wallpaper_02_decorate_sticker-selected-v3.png` | IMG_1029 | Cùng state, sticker **ảnh thường (không cutout)** đang chọn |
+| `14_edit-wallpaper_02_decorate_discard-dialog.png` | *(ảnh chụp ngoài quy trình — file gốc `Screenshot 2026-09-12 at 14.25.22.png`, 920×1756, có khung viền máy — khác định dạng raw của các ảnh còn lại, 1290×2796)* | Bottom-sheet **"Discard changes?"** — subtitle "Your decorations won't be saved.", 2 nút: **Discard** (tối màu, nổi bật) / **Keep editing** (viền, phụ) — mục 2.5. ⚠️ Nút **Discard (huỷ, mất dữ liệu) lại có trọng lượng thị giác của nút chính**, ngược khuyến nghị thường thấy (hành động phá huỷ nên là nút phụ) — xem ghi chú UX ở wireframe |
+
+> ⏳ **Còn thiếu so với checklist gốc** (chưa chụp, không chặn): `sticker-settings` (bottom-sheet opacity/xoá — mục 2.3), `eyedropper` (đang hút màu — liên quan R5), `limit-warning` (>50 nét — R6). Dark Mode **không cần chụp** — app hiện chưa hỗ trợ Dark Mode. Đối chiếu thêm với bản iPad ([`ipad/index.md`](../ipad/index.md#14_edit-wallpaper--editor-soạntrang-trí-wallpaper-decorate)) — iPad có thêm `filled`/`filled-landscape` (canvas đầy đủ, không sticker nào đang chọn) và `text-collapsed` mà bộ iPhone này chưa có; ngược lại iPhone có `tooltip` và 3 biến thể `sticker-selected` mà iPad chưa có. Nên chụp bổ sung chéo nếu cần đối chiếu hành vi giữa 2 device.
 
 ---
 

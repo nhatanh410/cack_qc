@@ -25,6 +25,7 @@ Wireframe được dựng **từ screenshot thật**, mỗi flow một file. Dù
 | 11 | Share | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P3](../../specs/phase-2-feedback.md#p3--share-lịch-tạo-lịch-gss) |
 | 12 | AI Assistant | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P4](../../specs/phase-2-feedback.md#p4--ai-assistant-vào-calendarevent-improve-home-theo-category) |
 | 13 | Community | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P6](../../specs/phase-2-feedback.md#p6--build-community-co-edit-lịch-âm---tâm-linh) |
+| 14 | [Edit Wallpaper (Decorate)](14_edit-wallpaper.md) | 2 | 13 | Mới hoàn toàn, build 1.2.15 (56) · ⚠️ nhiều *Possible missing screen* (sheet cài đặt sticker, eyedropper, discard dialog...) |
 
 ---
 
@@ -46,6 +47,8 @@ flowchart TD
 
     F4 -->|👑| F8[08 Paywall]
     F4 -->|⚙| F9[09 Settings]
+    F4 -->|nút Decorate<br/>trong wallpaper editor| F14[14 Edit Wallpaper<br/>Decorate — mới 1.2.15]
+    F14 --> F4
     F9 -->|Upgrade to Pro| F8
     F9 -->|Set up shortcut| F3
     F4 -->|Use template → tooltip| F3[03 Shortcut Setup<br/>một lần duy nhất]

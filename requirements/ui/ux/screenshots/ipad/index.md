@@ -3,7 +3,7 @@
 Bảng tra tên file mới ↔ tên gốc từ iOS ↔ mô tả màn hình.
 Quy tắc đặt tên: [.claude/rules/screenshot-naming.md](../../../../../.claude/rules/screenshot-naming.md)
 
-Tổng: **14 screenshot** / 6 flow đã build (01, 02, 03, 04, 06, 08). Batch 1 chụp 19/08/2026, batch 2 chụp 09/09/2026.
+Tổng: **29 screenshot** / 7 flow đã build (01, 02, 03, 04, 06, 08, 14). Batch 1 chụp 19/08/2026, batch 2 chụp 09/09/2026, batch 3 chụp 12/09/2026 (`14_edit-wallpaper`, 15 ảnh, cả 2 chiều).
 
 > **Thiết bị:** iPad 10.2" — **1620×2160 portrait** (suy ra từ độ phân giải: iPad gen 7/8/9. Cần xác nhận model chính xác.)
 > **Phiên bản app:** TestFlight — **build chưa xác định** cho cả 2 batch, status bar chỉ hiện "TestFlight". Cần điền.
@@ -18,6 +18,7 @@ Xem flow map đầy đủ ở mục 7 của [rule đặt tên](../../../../../.c
 |---|---|---|---|
 | 1 | 2026-08-19 | TestFlight, build chưa xác định | Batch gốc — 12 ảnh, 5 flow. Chi tiết dưới đây. |
 | 2 | 2026-09-09 | TestFlight, build chưa xác định | Batch refresh Phase 2 — bắt đầu với `06_task` matrix (2 ảnh: default + landscape). Confirmed matrix dùng chung component với iPhone. Còn thiếu build number — điền khi xác nhận được. |
+| 3 | 2026-09-12 | TestFlight 1.2.15 (56) | Flow mới `14_edit-wallpaper` (Decorate) — 15 ảnh, đủ cả portrait + landscape. Còn thiếu 5 state so với checklist gốc (sticker-selected, sticker-settings, eyedropper, limit-warning, discard-dialog) — xem ghi chú ⏳ trong mục flow. |
 
 > Quy tắc refresh giống iPhone: giữ `screen-no`, đổi `state` nếu UI đổi state, hoặc thêm hậu tố `-v2`
 > nếu cùng state khác nội dung (rule §5.3). Không xoá ảnh cũ trừ khi xác nhận lỗi thời.
@@ -110,6 +111,38 @@ là app thiếu chức năng, chỉ chưa chụp trên device này._
 
 _Chưa có screenshot — 3 flow này chưa tồn tại trong app, chờ Phase 2. Xem flow map [§7 rule đặt tên](../../../../../.claude/rules/screenshot-naming.md#7-flow-map--ink-calendar-ios)
 và [`requirements/specs/phase-2-feedback.md`](../../../specs/phase-2-feedback.md). Cấp số flow **dùng chung** với iPhone — khi feature ra mắt, chụp song song cả 2 device nếu có thể._
+
+## 14_edit-wallpaper — editor soạn/trang trí wallpaper (Decorate)
+
+> Nguồn: [qc-wallpaper-decoration.md](../../../specs/qc-wallpaper-decoration.md), build 1.2.15 (56). **2 screen-no riêng biệt** — `01_wallpaper-editor` là màn hình chỉnh wallpaper đã có từ trước (chứa nút "Trang trí" mới), `02_decorate` là canvas trang trí thực sự (mới hoàn toàn), vào từ nút Trang trí ở màn 01. Đã chụp **cả 2 chiều** — khớp yêu cầu bắt buộc của R8 (bug xoay ngang làm lệch sticker, đã sửa).
+
+| File | Gốc | Mô tả |
+|------|-----|-------|
+| `14_edit-wallpaper_01_wallpaper-editor_default.png` | IMG_1476 | Màn chỉnh wallpaper "Cân bằng · Kết hợp" — tab Hình nền/Lịch/Kiểu, nút "Trang trí" góc dưới trái, "Đặt làm hiện tại" |
+| `14_edit-wallpaper_01_wallpaper-editor_landscape.png` | IMG_1485 | Cùng màn, xoay ngang — **đã có wallpaper đã lưu với đủ decoration** (emoji, cutout, ảnh, nét vẽ) áp trên preview → xác nhận trực tiếp mục 2.5 (save khớp editor) qua cả 2 chiều |
+| `14_edit-wallpaper_02_decorate_default.png` | IMG_1477 | Canvas Decorate vừa mở, toolbar phải: grid/lịch/bút/Aa/emoji/ảnh — mục 2.1 |
+| `14_edit-wallpaper_02_decorate_calendar-shown.png` | IMG_1478 | Toggle "Show calendar" bật — preview lịch hiện trên canvas — mục 2.1 |
+| `14_edit-wallpaper_02_decorate_drawing.png` | IMG_1479 | Đang vẽ (nét trắng), header + toolbar **ẩn** trong lúc kéo — mục 2.2. *Cần verify: ẩn lúc đang vẽ là chủ ý, khác với bug R1 (ẩn vĩnh viễn sau khi buông tay resize handle)* |
+| `14_edit-wallpaper_02_decorate_text-editing.png` | IMG_1480 | Tool Text — placeholder "Nhập nội dung", bàn phím mở, thanh format (màu/Aa/canh lề/Bold/cỡ chữ/tương phản) — mục 2.3 |
+| `14_edit-wallpaper_02_decorate_text-collapsed.png` | IMG_1481 | Cùng tool Text, bàn phím đã tắt (chạm ra ngoài), thanh format vẫn còn — chưa nhập gì |
+| `14_edit-wallpaper_02_decorate_emoji-picker.png` | IMG_1482 | Sheet Emoji picker, nhóm "Mặt cười", 7 tab nhóm dưới đáy — mục 2.4 |
+| `14_edit-wallpaper_02_decorate_photo-menu.png` | IMG_1483 | Menu ảnh mở ra 2 lựa chọn "Cắt nền" / "Ảnh" — mục 2.1 |
+| `14_edit-wallpaper_02_decorate_filled.png` | IMG_1484 | Canvas đầy đủ: emoji 🤫, nét vẽ trái tim, cutout người đeo balo, ảnh thường — không sticker nào đang chọn, sẵn sàng lưu |
+| `14_edit-wallpaper_02_decorate_filled-landscape.png` | IMG_1486 | Cùng nội dung như `filled`, xoay ngang — canvas letterbox giữa màn, toolbar dời sang phải — đối chiếu R8 |
+| `14_edit-wallpaper_02_decorate_calendar-shown-landscape.png` | IMG_1487 (dup export → " 2") | Toggle lịch bật, xoay ngang |
+| `14_edit-wallpaper_02_decorate_brush-toolbar-landscape.png` | IMG_1488 | **Toàn bộ thanh công cụ vẽ** — eyedropper + 12 màu + 4 loại nét (Pen/Marker/Highlighter/Dotted) + Eraser — mục 2.2, ảnh rõ nhất cho case này trong cả bộ |
+| `14_edit-wallpaper_02_decorate_text-editing-landscape.png` | IMG_1489 | Tool Text, bàn phím mở, xoay ngang |
+| `14_edit-wallpaper_02_decorate_emoji-picker-landscape.png` | IMG_1490 | Sheet Emoji picker, xoay ngang — sheet **không co giãn theo chiều ngang**, giữ nguyên kích thước như portrait |
+
+> ⏳ **Còn thiếu so với checklist gốc của note** (chưa chụp, không chặn — bổ sung nếu có dịp chụp lại):
+> - `sticker-selected` — 1 sticker đang chọn, thấy rõ handle resize + nút ✕ (mục 2.3, và cần đặt gần mép để test R8 khi kéo/xoay)
+> - `sticker-settings` — bottom-sheet cài đặt sticker (opacity, xoá — mục 2.3)
+> - `eyedropper` — đang hút màu (mục 2.2, liên quan R5)
+> - `limit-warning` — thông báo hết chỗ vẽ sau >50 nét (R6)
+> - `discard-dialog` — popup "Discard changes?" (mục 2.5)
+> - Bản **portrait** của `photo-menu` và `brush-toolbar` đã có (brush-toolbar chỉ có landscape) — nên chụp thêm bản còn thiếu để đối chiếu chéo 2 chiều nếu nghi ngờ có khác biệt layout.
+>
+> ⚠️ **Cần verify riêng, không suy đoán:** `drawing.png` (IMG_1479) cho thấy header/toolbar biến mất trong lúc đang vẽ — cần xác nhận đây là **hành vi cố ý** (ẩn tạm trong lúc thao tác, hiện lại khi buông tay) chứ không phải biến thể của bug R1 (ẩn vĩnh viễn sau resize). Nếu buông tay mà toolbar không hiện lại → đó chính là R1, log ngay theo severity Critical.
 
 ---
 
