@@ -12,8 +12,8 @@ Tên file được chuẩn hoá để đọc tên là hiểu ngay flow / thứ t
 
 | Device | Thư mục | Index | Số ảnh |
 |--------|---------|-------|--------|
-| iPhone | [`iphone/`](iphone/) | [`iphone/index.md`](iphone/index.md) | 57 ảnh / 10 flow đã build |
-| iPad | [`ipad/`](ipad/) | [`ipad/index.md`](ipad/index.md) | 14 ảnh / 6 flow (13 portrait, 1 landscape) |
+| iPhone | [`iphone/`](iphone/) | [`iphone/index.md`](iphone/index.md) | 77 ảnh / 11 flow đã build |
+| iPad | [`ipad/`](ipad/) | [`ipad/index.md`](ipad/index.md) | 29 ảnh / 7 flow (22 portrait, 7 landscape) |
 
 ```
 screenshots/
@@ -32,7 +32,8 @@ screenshots/
 │   ├── 10_lockscreen/      1 ảnh — lock screen thật sau khi áp dụng
 │   ├── 11_share/          🚧 0 ảnh — Phase 2, chưa build
 │   ├── 12_ai-assistant/   🚧 0 ảnh — Phase 2, chưa build
-│   └── 13_community/      🚧 0 ảnh — Phase 2, chưa build
+│   ├── 13_community/      🚧 0 ảnh — Phase 2, chưa build
+│   └── 14_edit-wallpaper/ 16 ảnh — editor trang trí wallpaper (Decorate), build 1.2.15 (56)
 └── ipad/
     ├── index.md           ← bảng tra ngược về ảnh gốc (iPad)
     ├── 01_onboarding/      5 ảnh — slide 1–5/6 (thiếu slide 6)
@@ -47,7 +48,8 @@ screenshots/
     ├── 10_lockscreen/     0 ảnh — chưa chụp
     ├── 11_share/          🚧 0 ảnh — Phase 2, chưa build
     ├── 12_ai-assistant/   🚧 0 ảnh — Phase 2, chưa build
-    └── 13_community/      🚧 0 ảnh — Phase 2, chưa build
+    ├── 13_community/      🚧 0 ảnh — Phase 2, chưa build
+    └── 14_edit-wallpaper/ 15 ảnh — cùng flow trên, cả portrait + landscape
 ```
 
 🚧 = tính năng Phase 2 **chưa build trong app** — folder đã tạo sẵn (kèm `.gitkeep`) để chụp ngay

@@ -1,6 +1,6 @@
 # Exploratory Checklist — 14 Edit Wallpaper (Decorate)
 
-> **Nguồn:** [wireframe](../ui/ux/wideframes/14_edit-wallpaper.md) · 13 screenshot ·
+> **Nguồn:** [wireframe](../ui/ux/wideframes/14_edit-wallpaper.md) · 16 screenshot ·
 > [index screenshot iPhone](../ui/ux/screenshots/iphone/index.md#14_edit-wallpaper--editor-soạntrang-trí-wallpaper-decorate) ·
 > [index screenshot iPad](../ui/ux/screenshots/ipad/index.md) (15 ảnh, cả 2 chiều — bổ sung, không phải nguồn chính)
 > **Change note:** [qc-wallpaper-decoration.md](../specs/qc-wallpaper-decoration.md) · **Test plan:** [1.2.15-decoration-inkai.md](../test-plans/1.2.15-decoration-inkai.md)
@@ -19,7 +19,7 @@
 **Q1 — Mục tiêu user:** biến 1 template wallpaper chung (đã chọn ở Flow 04) thành của riêng mình bằng vẽ
 tay, chữ, emoji, ảnh cá nhân — trước khi lưu thành lock screen thật.
 
-**Q8 — Mục tiêu business:** không thấy gate Free/Pro nào trong 13 ảnh hiện có — chưa rõ Decorate có tính phí
+**Q8 — Mục tiêu business:** không thấy gate Free/Pro nào trong 16 ảnh hiện có — chưa rõ Decorate có tính phí
 hay không (xem `DEC-Q02`). Nếu miễn phí hoàn toàn, đây nhiều khả năng là tính năng **giữ chân** (differentiation,
 tăng lý do quay lại app mỗi ngày) hơn là tính năng bán hàng trực tiếp.
 
@@ -27,6 +27,19 @@ tăng lý do quay lại app mỗi ngày) hơn là tính năng bán hàng trực 
 đều là form/list/toggle. Không có kịch bản cố định nào đủ phủ hết tổ hợp gesture tự do (vẽ + sticker + xoay +
 resize cùng lúc), nên phần lớn §1–§2 chỉ đủ để bắt lỗi **rõ ràng**, không thay được exploratory session tự do
 trên canvas thật.
+
+**Tham chiếu UX quen thuộc — Instagram Stories editor:** cùng thể loại editor (sticker/vẽ/chữ đè lên **1 khung
+ảnh cố định**, không phải canvas tự do như Canva/CapCut). Dùng làm chuẩn đối chiếu để phân biệt "thiếu sót
+thật" với "đúng convention của thể loại editor này":
+
+| Thao tác | Instagram Stories | Ink Decorate (quan sát được từ ảnh) | Nhận xét |
+|---|---|---|---|
+| Chọn sticker | Chạm 1 lần, chỉ phóng to nhẹ, **không có khung/handle rõ** | Chạm 1 lần → khung viền + ✕ + handle góc rõ ràng | ✅ Ink **dễ nhận biết hơn** — ưu điểm cho người mới, không phải thiếu sót |
+| Scale + xoay | Pinch/xoay **tự do ở bất kỳ đâu trên sticker**, không cần trúng 1 điểm | Change note mục 2.3 ghi cả "pinch tự do" lẫn "handle góc" — **chưa rõ có phải bấm đúng handle mới xoay/scale được, hay pinch tự do ở đâu cũng được như Instagram** | ⚠️ Cần xác nhận — xem `DEC-H28b` |
+| Xoá sticker | Kéo sticker thả vào **icon thùng rác hiện ở đáy màn hình** khi đang kéo, kèm rung phản hồi | Chỉ thấy nút ✕ nhỏ cố định góc trên phải, không có ảnh nào cho thấy thùng rác xuất hiện khi kéo | ⚠️ Thiếu affordance quen thuộc — user quen Instagram có thể tìm thùng rác mà không thấy. Xem `DEC-H33b` |
+| Zoom/pan **canvas** | **Không có** — khung khoá cứng theo tỉ lệ ảnh/video xuất ra | Không có bằng chứng (giống Instagram) | Nhiều khả năng đây là **hành vi đúng theo convention của thể loại editor này**, không phải thiếu sót — hạ bớt mức độ khẩn của `DEC-E09b/E09c`, nhưng vẫn cần hỏi dev để xác nhận chứ không mặc định |
+| Double-tap reset scale/góc | Có ở một số phiên bản | Chưa có bằng chứng | Tiện ích nhỏ, không bắt buộc — `DEC-E09d` |
+| Đường canh giữa khi kéo | Có (vạch vàng/hồng khi vào giữa hoặc thẳng hàng vật khác) | Có — "đường canh giữa" (change note mục 2.3) | ✅ Khớp convention |
 
 **Câu hỏi mới, chưa flow nào từng đặt ra:**
 
@@ -102,11 +115,14 @@ trên canvas thật.
 | **DEC-H26** | Chạm 1 lần vào sticker bất kỳ (chữ/emoji/ảnh) | Sticker được **chọn** — khung viền + ✕ góc trên + handle resize/xoay góc dưới | Đúng cho **cả 3 loại** sticker (emoji, cutout, ảnh thường) — xem 3 ảnh `sticker-selected*` | ☐ |
 | **DEC-H27** | Kéo sticker gần chính giữa canvas | Đường canh giữa (guide line) hiện khi vào đúng tâm | — | ☐ |
 | **DEC-H28** | Pinch 2 ngón để phóng to/thu nhỏ | Sticker scale mượt theo khoảng cách 2 ngón | — | ☐ |
+| **DEC-H28b** | Pinch/xoay 2 ngón đặt **ở bất kỳ đâu trên sticker** (không nhắm đúng vào handle góc dưới phải) | So sánh với Instagram Stories: pinch/xoay tự do ở đâu trên sticker cũng ăn — xem quan sát ở §0. Ghi rõ Ink có giống vậy không, hay **bắt buộc phải chạm đúng handle** mới scale/xoay được | Nếu bắt buộc đúng handle → tap target nhỏ (đã ghi ở `DEC-E08`) ảnh hưởng nặng hơn, vì đó là **cách duy nhất** để scale | ☐ |
 | **DEC-H29** | Xoay 2 ngón | Sticker xoay theo đúng góc tay, không giật | — | ☐ |
 | **DEC-H30** | Kéo handle góc dưới phải | Vừa scale vừa xoay cùng lúc theo hướng kéo | — | ☐ |
-| **DEC-H31** | Chạm lần 2 vào sticker **đang chọn** | Mở sheet cài đặt (opacity, xoá) | ⚠️ **coverage gap** — chưa có ảnh sheet này | ☐ |
-| **DEC-H32** | Trong sheet cài đặt, kéo slider opacity | Độ trong suốt của sticker đổi theo thời gian thực | ⚠️ chưa có ảnh — ghi lại range giá trị (0–100%?) | ☐ |
+| **DEC-H31** | **Double-tap** vào sticker (chọn hoặc chưa chọn đều thử) | Mở bottom-sheet cài đặt — tiêu đề đổi theo loại sticker ("Emoji"/"Photo", đã có ảnh; "Text" chưa có ảnh) — ✅ đã có ảnh `sticker-settings.png` (+v2) xác nhận | Thử double-tap khi sticker **chưa được chọn trước** — có mở thẳng sheet không, hay bắt buộc phải chọn (đơn chạm) trước rồi mới double-tap được | ☐ |
+| **DEC-H32** | Trong sheet cài đặt, kéo slider Opacity | Độ trong suốt của sticker đổi theo thời gian thực | Ảnh hiện có chỉ chụp ở 100% — thử kéo về 0% và mức giữa, xác nhận range + preview realtime | ☐ |
+| **DEC-H32b** | Trong sheet cài đặt, bấm **Delete** | Sticker bị xoá, sheet đóng | So sánh style nút Delete (chữ đỏ, nền nhạt — chuẩn) với nút Discard ở popup khác (nền tối, nổi bật) — 2 pattern khác nhau cho cùng loại hành động phá huỷ, xem `DEC-Q13` | ☐ |
 | **DEC-H33** | Bấm ✕ trên sticker đang chọn | Sticker biến mất khỏi canvas ngay | — | ☐ |
+| **DEC-H33b** | Chọn 1 sticker, kéo nó xuống **sát đáy màn hình** rồi giữ | So sánh Instagram Stories: có icon **thùng rác hiện ra ở đáy** để thả vào xoá không, hay chỉ có đúng 1 cách xoá là bấm ✕ nhỏ góc trên? Ghi lại quan sát, không giả định thiếu | Nếu không có, đây là 1 affordance quen thuộc bị thiếu so với chuẩn thể loại — mức độ nhẹ, không chặn chức năng vì ✕ vẫn xoá được | ☐ |
 
 ### 1.7 · Lưu — S02 → S01
 
@@ -173,6 +189,9 @@ trên canvas thật.
 | **DEC-E07** | 🔴 **VoiceOver** bật, thử thao tác sticker (chọn/di chuyển/resize/xoay) | Toàn bộ thao tác dựa vào gesture tự do (pinch/drag/rotate) — VoiceOver có cách nào thay thế không, hay **hoàn toàn không dùng được**? | 🔴 | ☐ |
 | **DEC-E08** | Đo tap target của ✕ và handle trên sticker bằng thước/pixel thật | Có đạt tối thiểu 44×44pt theo Apple HIG không — quan sát bằng mắt ở mục 6 test plan nghi ngờ dưới chuẩn | 🟠 | ☐ |
 | **DEC-E09** | Đặt sticker/emoji **đè trực tiếp lên vùng lịch** khi đã bật Show calendar | Có cảnh báo hay giới hạn vùng đặt không, hay cho che tự do làm mất khả năng đọc lịch? | 🟠 | ☐ |
+| **DEC-E09b** | Pinch 2 ngón trên **vùng canvas trống** (không nhắm vào sticker nào) | Canvas có **zoom** (phóng to cả bức tranh để làm chi tiết) không, hay pinch ngoài sticker không có tác dụng gì? Instagram Stories (cùng thể loại: khung cố định, không phải canvas tự do) **cũng không có zoom cấp canvas** — nếu Ink cũng vậy thì nhiều khả năng là đúng convention, không phải thiếu sót | 🟡 *(hạ từ nghi vấn ban đầu — xem tham chiếu Instagram ở §0)* | ☐ |
+| **DEC-E09c** | Sau khi (nếu) zoom được canvas, kéo 1 ngón trên vùng trống | Canvas có **pan** (cuộn khung nhìn) được không? Nếu không zoom được thì mục này tự động N/A, ghi lại rõ | 🟡 | ☐ |
+| **DEC-E09d** | Double-tap (chạm nhanh 2 lần) vào 1 sticker đã scale/xoay lệch | Có reset về scale/góc mặc định không? Một số app cùng thể loại (Instagram bản mới) có tiện ích này | 🟡 — tiện ích nhỏ, không bắt buộc | ☐ |
 | **DEC-E10** | Cross-device — lặp lại `DEC-H09`–`H33` trên **iPad**, đối chiếu với iPhone | Hành vi gesture có giống hệt không, hay iPad có khác biệt riêng? Chưa có xác nhận "dùng chung component" như đã có cho Matrix ở note 1.2.14 | 🟠 | ☐ |
 | **DEC-E11** | iPad, mở Emoji picker ở **landscape** | Sheet có giữ nguyên bề rộng hẹp như portrait không (đã quan sát ở `emoji-picker-landscape.png`), hay đây là điều đã sửa | 🟡 | ☐ |
 | **DEC-E12** | 🔴 **Qua đêm** — trang trí xong, chờ automation chạy sáng hôm sau | Xem framing ở §0 — decoration có còn trên lock screen thật không | 🔴 | ☐ |
@@ -193,7 +212,7 @@ trên canvas thật.
 | S02 · sticker-selected (emoji/cutout/ảnh thường) | ✅ | ☐ |
 | S02 · filled / filled-landscape *(iPad)* | ✅ | ☐ |
 | S02 · discard-dialog | ✅ | ☐ |
-| **Bottom-sheet cài đặt sticker** (opacity, xoá) | ❌ | ☐ |
+| S02 · sticker-settings (Emoji + Photo) | ✅ | ☐ |
 | **Eyedropper đang hút màu** | ❌ | ☐ |
 | **UI chọn ảnh sau khi bấm Photo/Cutout** | ❌ | ☐ |
 | **Thông báo hết chỗ vẽ (>50 nét)** | ❌ | ☐ |
@@ -202,8 +221,10 @@ trên canvas thật.
 | ~~Dark Mode~~ | N/A — app chưa hỗ trợ | — |
 | **iPhone**: `filled` canvas riêng (chỉ có ở S01, chưa có ảnh canvas S02 dạng nghỉ không sticker nào chọn) | ❌ | ☐ |
 | **Dialog quyền Photos** (nếu có) | ❌ | ☐ |
+| **Zoom/pan cấp canvas** (khác pinch/kéo trên 1 sticker) | ❌ | ☐ |
 
-> Các mục ❌ chặn trực tiếp: `DEC-H23`, `H24`, `H31`, `H32`, `N10`. Chưa chụp bổ sung thì ghi coverage gap khi
+> Các mục ❌ chặn trực tiếp: `DEC-H23`, `H24`, `N10`. `H31`/`H32` **đã hết chặn** — ảnh `sticker-settings`
+> (+v2) bổ sung 2026-09-12 xác nhận đúng nội dung. Chưa chụp bổ sung thì ghi coverage gap khi
 > chạy, không suy diễn kết quả từ tên gọi. `N01`–`N03` **đã hết chặn** — ảnh `discard-dialog` bổ sung
 > 2026-09-12 đã xác nhận đúng nội dung dialog.
 
@@ -214,7 +235,7 @@ trên canvas thật.
 | ID | Câu hỏi | Vì sao cần |
 |---|---|---|
 | **DEC-Q01** | 🔴 **Decoration có sống sót qua lần automation chạy tiếp theo không** (wallpaper tự render lại mỗi sáng)? | Nền tảng của toàn bộ §0/`DEC-E12`. Nếu không, giá trị sản phẩm chỉ tồn tại đúng 1 ngày — cần biết **trước khi** đánh giá mức độ nghiêm trọng của mọi bug khác trong flow này |
-| **DEC-Q02** | Decorate có giới hạn Free/Pro không? Nếu có, giới hạn ở đâu (số sticker, loại nét, ảnh cutout...)? | Không thấy gate nào trong 13 ảnh — cần xác nhận đây là tính năng miễn phí hoàn toàn hay chưa chụp được màn `locked` |
+| **DEC-Q02** | Decorate có giới hạn Free/Pro không? Nếu có, giới hạn ở đâu (số sticker, loại nét, ảnh cutout...)? | Không thấy gate nào trong 16 ảnh — cần xác nhận đây là tính năng miễn phí hoàn toàn hay chưa chụp được màn `locked` |
 | **DEC-Q03** | Số nét vẽ chính xác trước khi hiện thông báo hết chỗ (R6) là bao nhiêu? | Chặn `DEC-N10` — không viết được test biên chính xác nếu chỉ biết "hơn 50" |
 | **DEC-Q04** | Icon **▦ (grid)** đầu toolbar dùng để làm gì? | `DEC-H08`, `DEC-Q07` — không khớp trực tiếp mô tả nào trong change note |
 | **DEC-Q05** | Ảnh chọn qua Photo/Cutout dùng `PHPickerViewController` (không cần quyền) hay `PHPhotoLibrary` trực tiếp (cần quyền Photos)? | Quyết định `DEC-H24` có nên xuất hiện dialog quyền hay không — trả lời dứt điểm câu hỏi mở nhiều kỳ ở [permissions-matrix §1.3](../../references/permissions-matrix.md#13--️-photos--nhiều-khả-năng-cần-chưa-thấy-dialog) |
@@ -222,6 +243,11 @@ trên canvas thật.
 | **DEC-Q07** | Decorate iPhone/iPad có dùng chung component không? | `DEC-E10` — chưa có xác nhận tương tự Matrix ở note 1.2.14, không tự suy diễn theo rule `screenshot-naming.md` §8.11 |
 | **DEC-Q08** | Có giới hạn số lượng sticker tối đa trên 1 canvas không (ngoài giới hạn nét vẽ)? | Không đề cập trong change note — ảnh hưởng `DEC-N13` và hiệu năng máy yếu |
 | **DEC-Q09** | Giới hạn ký tự cho Text sticker là bao nhiêu (nếu có)? | Không đề cập — ảnh hưởng `DEC-E03`, khác với Ink AI vốn có dòng đếm đỏ rõ ràng khi vượt giới hạn |
+| **DEC-Q10** | Canvas có hỗ trợ **zoom/pan cấp toàn bộ bức tranh** không (khác pinch/kéo trên từng sticker)? | Change note hoàn toàn không nhắc. Instagram Stories (cùng thể loại khung cố định) cũng không có zoom/pan canvas — nhiều khả năng đây là chủ ý theo convention thể loại, không phải thiếu sót, nhưng cần **xác nhận bằng lời** thay vì suy diễn. `DEC-E09b`/`E09c` |
+| **DEC-Q11** | Scale/xoay sticker có ăn khi pinch **ở bất kỳ đâu trên sticker** (như Instagram), hay bắt buộc phải chạm đúng handle góc dưới phải? | `DEC-H28b`. Nếu bắt buộc đúng handle, tap target nhỏ (`DEC-E08`) trở thành điểm nghẽn nghiêm trọng hơn vì không có cách thay thế |
+| **DEC-Q12** | Có affordance **kéo-thả-vào-thùng-rác** để xoá sticker không (như Instagram/Snapchat), hay chỉ có nút ✕ cố định? | `DEC-H33b`. Không bắt buộc phải có, nhưng nên biết đây là quyết định thiết kế có chủ ý hay chưa nghĩ tới |
+| **DEC-Q13** | Vì sao nút phá huỷ ở 2 nơi style khác nhau — **Delete** trong sheet cài đặt sticker (chữ đỏ, nền nhạt, chuẩn iOS) vs **Discard** trong popup thoát (nền tối, nổi bật nhất)? | `DEC-H32b`, `DEC-N03b`. Cùng 1 tính năng, 2 pattern khác nhau cho cùng loại hành động — cần biết có chủ ý phân biệt mức độ nghiêm trọng (xoá 1 sticker vs mất cả bản vẽ) hay chỉ là thiếu rà soát |
+| **DEC-Q14** | Double-tap vào sticker **chưa được chọn trước** có mở thẳng sheet cài đặt không, hay bắt buộc phải chạm chọn (1 lần) trước? | `DEC-H31`. Change note viết "chạm lần 2 vào item **đang chọn**" — ngụ ý phải chọn trước, nhưng chưa xác nhận trên máy thật |
 
 ---
 
@@ -272,10 +298,12 @@ Q9 15 phút thì test gì:      §6
 
 ## 8 · Ghi chú về giới hạn checklist này
 
-- **7 trạng thái vẫn chưa có ảnh** *(xem §4)* — `DEC-H31`/`H32` (sheet cài đặt sticker) và `DEC-N10` (thông báo
-  hết chỗ vẽ) là 2 mục quan trọng nhất còn thiếu bằng chứng, nên chụp bổ sung sớm. `DEC-N01`–`N03` (popup
-  Discard) **đã hết coverage gap** — ảnh `discard-dialog.png` bổ sung 2026-09-12 xác nhận đúng nội dung, kèm
-  1 phát hiện UX mới (`DEC-N03b`): nút Discard được style nổi bật hơn Keep editing, ngược pattern thường dùng.
+- **8 trạng thái vẫn chưa có ảnh** *(xem §4)* — `DEC-N10` (thông báo hết chỗ vẽ) là mục quan trọng nhất còn
+  thiếu bằng chứng, nên chụp bổ sung sớm. `DEC-N01`–`N03` (popup Discard) và `DEC-H31`/`H32` (sheet cài đặt
+  sticker) **đã hết coverage gap** — ảnh `discard-dialog.png` và `sticker-settings.png` (+v2) bổ sung
+  2026-09-12 xác nhận đúng nội dung, kèm 2 phát hiện UX mới: nút Discard nổi bật hơn Keep editing (`DEC-N03b`),
+  và 2 pattern khác nhau cho cùng loại hành động phá huỷ giữa 2 dialog (`DEC-Q13`). Zoom/pan cấp canvas mới
+  thêm vào danh sách gap sau khi đối chiếu với Instagram Stories (`DEC-Q10`).
 - **Dark Mode không còn là gap** — xác nhận 2026-09-12 app chưa hỗ trợ, loại khỏi `DEC-E05` và coverage matrix.
 - **`DEC-Q01` chặn cách đọc kết quả của cả checklist.** Nếu decoration không sống sót qua automation, mọi bug
   khác trong §1–§3 giảm mức độ nghiêm trọng xuống (feature chỉ dùng 1 lần/ngày thì ít bug nào là 🔴 thật sự) —

@@ -7,7 +7,7 @@ Tổng: **29 screenshot** / 7 flow đã build (01, 02, 03, 04, 06, 08, 14). Batc
 
 > **Thiết bị:** iPad 10.2" — **1620×2160 portrait** (suy ra từ độ phân giải: iPad gen 7/8/9. Cần xác nhận model chính xác.)
 > **Phiên bản app:** TestFlight — **build chưa xác định** cho cả 2 batch, status bar chỉ hiện "TestFlight". Cần điền.
-> **Orientation:** 13 ảnh portrait, **1 ảnh landscape** (`06_task_05_task-matrix_landscape`) — landscape đầu tiên của bộ ảnh iPad.
+> **Orientation:** 22 ảnh portrait, **7 ảnh landscape** — landscape đầu tiên của bộ ảnh iPad là `06_task_05_task-matrix_landscape` (batch 2), sau đó batch 3 (`14_edit-wallpaper`) bổ sung thêm 6 ảnh landscape.
 
 `flow-no` dùng **chung** với iPhone — cùng số = cùng nghiệp vụ, để đối chiếu song song 2 device.
 Xem flow map đầy đủ ở mục 7 của [rule đặt tên](../../../../../.claude/rules/screenshot-naming.md).

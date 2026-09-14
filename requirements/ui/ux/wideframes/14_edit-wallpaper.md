@@ -2,7 +2,7 @@
 
 **Mục tiêu:** trang trí wallpaper (vẽ tay, chữ, emoji, ảnh/cắt nền) ngay trong màn chỉnh wallpaper, trước khi lưu thành lock screen thật.
 
-**Nguồn:** 13 screenshot trong [`screenshots/iphone/14_edit-wallpaper/`](../screenshots/iphone/14_edit-wallpaper/) — build TestFlight **1.2.15 (56)**, PR [#185](https://github.com/sfunvn/lockscreen-calendar/pull/185), change note [qc-wallpaper-decoration.md](../../specs/qc-wallpaper-decoration.md).
+**Nguồn:** 16 screenshot trong [`screenshots/iphone/14_edit-wallpaper/`](../screenshots/iphone/14_edit-wallpaper/) — build TestFlight **1.2.15 (56)**, PR [#185](https://github.com/sfunvn/lockscreen-calendar/pull/185), change note [qc-wallpaper-decoration.md](../../specs/qc-wallpaper-decoration.md).
 
 > ⚠️ Flow **mới hoàn toàn**, chưa từng có wireframe trước đó — khác các file khác trong bộ này vốn đã có ít nhất 1 phiên bản cũ để đối chiếu. Mọi mô tả dưới đây dựng lần đầu, hoàn toàn từ ảnh.
 > Bộ ảnh **iPad** (15 ảnh, cả 2 chiều) cũng tồn tại ở [`screenshots/ipad/14_edit-wallpaper/`](../screenshots/ipad/14_edit-wallpaper/) nhưng theo đúng quy ước của thư mục này (nguồn chính là iPhone), wireframe chính dựng từ iPhone — khác biệt/bổ sung quan sát được từ iPad gom riêng ở mục cuối.
@@ -30,6 +30,8 @@ flowchart TD
     S2EMJ -.->|chạm emoji| S2SEL[S02 · sticker-selected<br/>3 loại: emoji · cutout · ảnh thường]
     S2SEL -->|✕ góc trên| DELD[❓ sau khi xoá<br/>chưa có ảnh]
     S2SEL -->|kéo handle góc dưới| RESZ[❓ giữa lúc resize/xoay<br/>chưa có ảnh]
+    S2SEL -->|double-tap| S2SET[S02 · sticker-settings<br/>Opacity + Delete]
+    S2SET -->|Delete| DELD
     S2 -->|✓ Save| S1F[S01 · filled<br/>preview đã áp decoration]
     S2 -->|✕ khi có thay đổi| DISC[S02 · discard-dialog]
     DISC -->|Discard| S1
@@ -116,7 +118,7 @@ flowchart TD
 
 ---
 
-## S02 — Decorate canvas · 9 state có ảnh
+## S02 — Decorate canvas · 10 state có ảnh
 
 Toolbar dọc bên phải xuất hiện xuyên suốt mọi state (trừ lúc đang vẽ, xem ghi chú `drawing`): 6 icon xếp dọc — **grid** (chưa rõ chức năng, xem *Possible missing screen*) · **lịch** (toggle Show calendar) · **bút** (Draw) · **Aa** (Text) · **mặt cười** (Emoji) · **ảnh** (Photo/Cutout).
 
@@ -244,6 +246,36 @@ Popup nhỏ nổi cạnh toolbar, 2 dòng: **"Cutout"** (icon người chấm n�
 
 > ⚠️ **Kích thước tap target:** ước lượng bằng mắt trên ảnh, nút ✕ và handle đều khá nhỏ so với ngón tay thật — cần đo trực tiếp trên máy thật để xác nhận có đạt chuẩn 44×44pt hay không, ảnh tĩnh không đo chính xác được.
 
+> **Đối chiếu Instagram Stories editor** (cùng thể loại: sticker đè lên khung ảnh cố định): Instagram cho pinch/xoay **tự do ở bất kỳ đâu trên sticker**, không cần trúng 1 handle, và không hiện khung/handle rõ như Ink. Khung viền + handle rõ ràng của Ink **dễ nhận biết hơn cho người mới** (điểm cộng), nhưng nếu Ink lại **bắt buộc** phải chạm đúng handle nhỏ mới scale/xoay được (khác Instagram cho phép pinch tự do) thì tap target nhỏ ở trên trở thành vấn đề nghiêm trọng hơn — chưa xác nhận được từ ảnh tĩnh, xem exploratory checklist `DEC-H28b`/`DEC-Q11`. Instagram cũng có affordance kéo-thả-vào-thùng-rác để xoá (không chỉ nút ✕) — Ink chưa thấy bằng chứng có tương tự, xem `DEC-H33b`.
+
+### `14_edit-wallpaper_02_decorate_sticker-settings.png` · 2 biến thể
+
+```
+┌────────────────────────────────────────┐
+│ ✕          ↶   ↷              ✓        │
+│ [ canvas: sticker đang chọn (khung xanh│
+│   + ✕), các sticker khác + nét vẽ ]    │
+│┌────────────────────────────────────┐  │
+││              ▔▔                    │  │ ← grabber
+││              Emoji                 │  │ ← tiêu đề — đổi theo loại sticker
+││                                    │  │
+││ Opacity                            │  │
+││ ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━○│  │ ← slider, đang ở 100%
+││                                    │  │
+││ ┌────────────────────────────────┐ │  │
+││ │             Delete             │ │  │ ← chữ đỏ, nền xám nhạt — nút phụ chuẩn
+││ └────────────────────────────────┘ │  │
+│└────────────────────────────────────┘  │
+└────────────────────────────────────────┘
+```
+
+- **`sticker-settings.png`** — tiêu đề sheet **"Emoji"** khi sticker đang chọn là emoji.
+- **`sticker-settings-v2.png`** — cùng sheet, tiêu đề đổi thành **"Photo"** khi sticker đang chọn là ảnh — xác nhận **tiêu đề sheet đổi theo loại sticker đang chọn** (chưa có ảnh nào cho biến thể "Text").
+
+**Cách mở sheet này: double-tap** trực tiếp vào sticker/ảnh (1 gesture nhấn đúp, không phải chạm 1 lần chọn rồi chạm rời rạc lần 2 như câu chữ change note "chạm lần 2" có thể gây hiểu lầm — xác nhận từ QA 2026-09-12).
+
+> ✅ Nút **Delete** ở đây dùng đúng pattern chuẩn iOS cho hành động phá huỷ (chữ đỏ, nền nhạt, không nổi bật quá mức) — **khác hẳn** nút **Discard** ở popup kế tiếp (nền tối, chiếm vị trí chính). Cùng 1 tính năng nhưng 2 dialog xử lý hành động phá huỷ theo 2 pattern khác nhau — đáng để hỏi dev/design có phải chủ ý hay chỉ 2 người làm rời nhau không rà lại.
+
 ### `14_edit-wallpaper_02_decorate_discard-dialog.png`
 
 ```
@@ -282,7 +314,7 @@ Popup nhỏ nổi cạnh toolbar, 2 dòng: **"Cutout"** (icon người chấm n�
 | # | Màn hình | State có ảnh |
 |---|----------|--------------|
 | S01 | Wallpaper editor | default · filled |
-| S02 | Decorate canvas | tooltip · default · calendar-shown · brush-toolbar (+v2) · text-editing · emoji-picker · photo-menu · sticker-selected (+v2, +v3) · discard-dialog |
+| S02 | Decorate canvas | tooltip · default · calendar-shown · brush-toolbar (+v2) · text-editing · emoji-picker · photo-menu · sticker-selected (+v2, +v3) · sticker-settings (+v2) · discard-dialog |
 
 **Vấn đề đã nhận diện**
 
@@ -294,9 +326,9 @@ Không có mục nào đủ bằng chứng để khẳng định là **lỗi (�
 - UI chọn ảnh từ thư viện sau khi bấm **Cutout** hoặc **Photo** ở menu (chỉ có ảnh menu, chưa có ảnh bước kế tiếp).
 - Trạng thái **giữa lúc** resize/xoay sticker (chỉ có ảnh trước và sau, không có ảnh đang kéo).
 - Trạng thái **sau khi xoá** sticker (chỉ có ảnh trước khi xoá).
-- **Bottom-sheet cài đặt sticker** (opacity, xoá) — change note mục 2.3 mô tả nhưng không có ảnh nào trong bộ.
 - **Eyedropper đang hút màu** — change note mục 2.2 mô tả nhưng không có ảnh.
 - **Thông báo hết chỗ vẽ** (>50 nét, R6 trong change note) — không có ảnh.
+- **Zoom/pan cấp canvas** (phóng to/cuộn cả bức tranh, khác pinch/kéo trên 1 sticker) — change note mục 2.2/2.3 chỉ mô tả pinch/kéo **trên sticker**, không nhắc gì tới thao tác ở cấp canvas. Không có ảnh nào cho thấy canvas zoom được. *(Instagram Stories — cùng thể loại khung cố định — cũng không có zoom/pan canvas, nên nhiều khả năng đây là đúng convention chứ không phải thiếu sót; vẫn cần xác nhận bằng lời, không mặc định.)*
 
 > ✅ Không cần chụp **Dark Mode** — xác nhận 2026-09-12: app hiện **chưa hỗ trợ Dark Mode**, không phải gap.
 
@@ -310,4 +342,4 @@ Bộ [`screenshots/ipad/14_edit-wallpaper/`](../screenshots/ipad/14_edit-wallpap
 - **`text-collapsed`** — cùng tool Text nhưng bàn phím đã tắt (chạm ra ngoài), thanh format vẫn còn hiện — trạng thái trung gian mà bộ iPhone chưa chụp.
 - **`drawing`** (chỉ có ở iPad) — ⚠️ cho thấy **toàn bộ header (✕/↶/↷/✓) và toolbar biến mất hoàn toàn** trong lúc đang kéo nét vẽ, không chỉ ẩn brush bar. Chưa xác nhận đây là ẩn tạm chủ ý (hiện lại khi buông tay) hay là dấu hiệu của bug đã biết (toolbar kẹt cứng sau thao tác resize, ghi trong change note) — **cần verify trên máy thật trước tiên**, xem [test plan mục 11](../../test-plans/1.2.15-decoration-inkai.md).
 - **Emoji picker trên iPad landscape** không giãn theo chiều ngang — giữ nguyên bề rộng như bản portrait, nổi giữa màn hình rộng, hai bên trống trải.
-- iPad **không có** state `tooltip` hay `sticker-selected` trong bộ đã chụp — chưa rõ hành vi coach-mark có giống iPhone không (chưa chụp, không suy diễn).
+- iPad **không có** state `tooltip`, `sticker-selected`, `sticker-settings`, hay `discard-dialog` trong bộ đã chụp — chưa rõ hành vi coach-mark, sheet cài đặt sticker, và popup Discard trên iPad có giống iPhone không (chưa chụp, không suy diễn).

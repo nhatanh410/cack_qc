@@ -3,7 +3,7 @@
 Bảng tra tên file mới ↔ tên gốc từ iOS ↔ mô tả màn hình.
 Quy tắc đặt tên: [.claude/rules/screenshot-naming.md](../../../../../.claude/rules/screenshot-naming.md)
 
-Tổng: **75 screenshot** / 11 flow đã build. iPhone (1290×2796).
+Tổng: **77 screenshot** / 11 flow đã build. iPhone (1290×2796).
 
 ## Lịch sử chụp
 
@@ -11,7 +11,7 @@ Tổng: **75 screenshot** / 11 flow đã build. iPhone (1290×2796).
 |---|---|---|---|
 | 1 | 2026-08-14 → 19 | TestFlight 1.2.10 (27) | Batch gốc — 57 ảnh, 10 flow. Chi tiết dưới đây. |
 | 2 | 2026-09-09 | TestFlight, build chưa xác định | Batch refresh Phase 2 — `06_task` matrix (4 ảnh: `default`, `completed-empty`, `customize`, `customize-scrolled`). Khớp `screen-no 05` với ảnh iPad đã có. Còn thiếu build number — điền khi xác nhận được. |
-| 3 | 2026-09-12 | TestFlight 1.2.15 (56) | Flow mới `14_edit-wallpaper` (Decorate) — 14 ảnh, chỉ portrait (UI không xoay trên iPhone). Còn thiếu 3 state so với checklist gốc (sticker-settings, eyedropper, limit-warning). |
+| 3 | 2026-09-12 | TestFlight 1.2.15 (56) | Flow mới `14_edit-wallpaper` (Decorate) — 16 ảnh, chỉ portrait (UI không xoay trên iPhone). Còn thiếu 2 state so với checklist gốc (eyedropper, limit-warning). |
 
 > Khi chụp batch mới cho màn hình **đã có ảnh**: giữ nguyên `screen-no`, chỉ đổi `state` nếu UI đổi
 > trạng thái, hoặc thêm hậu tố `-v2` nếu cùng `state` nhưng nội dung/layout khác (rule §5.3). Ảnh cũ
@@ -175,8 +175,10 @@ Xem [phase-2-feedback.md § P6](../../../specs/phase-2-feedback.md#p6--build-com
 | `14_edit-wallpaper_02_decorate_sticker-selected-v2.png` | IMG_1028 | Cùng state, sticker **cutout ảnh** đang chọn thay vì emoji |
 | `14_edit-wallpaper_02_decorate_sticker-selected-v3.png` | IMG_1029 | Cùng state, sticker **ảnh thường (không cutout)** đang chọn |
 | `14_edit-wallpaper_02_decorate_discard-dialog.png` | *(ảnh chụp ngoài quy trình — file gốc `Screenshot 2026-09-12 at 14.25.22.png`, 920×1756, có khung viền máy — khác định dạng raw của các ảnh còn lại, 1290×2796)* | Bottom-sheet **"Discard changes?"** — subtitle "Your decorations won't be saved.", 2 nút: **Discard** (tối màu, nổi bật) / **Keep editing** (viền, phụ) — mục 2.5. ⚠️ Nút **Discard (huỷ, mất dữ liệu) lại có trọng lượng thị giác của nút chính**, ngược khuyến nghị thường thấy (hành động phá huỷ nên là nút phụ) — xem ghi chú UX ở wireframe |
+| `14_edit-wallpaper_02_decorate_sticker-settings.png` | *(ảnh chụp ngoài quy trình — ban đầu thả nhầm vào `ipad/`, đã chuyển đúng chỗ vì nội dung là iPhone (Dynamic Island); file gốc `Screenshot 2026-09-12 at 16.01.32.png`, 920×1756, cùng định dạng khung viền máy như `discard-dialog`)* | Bottom-sheet cài đặt sticker — tiêu đề **"Emoji"** (đổi theo loại sticker), slider **Opacity** (đang 100%), nút **Delete** (chữ đỏ, nền xám nhạt — nút phụ dạng chuẩn, khác hẳn style của nút Discard ở dialog kia) — mục 2.3. **Trigger đúng bằng double-tap** vào sticker/ảnh, không phải 2 lần chạm rời rạc |
+| `14_edit-wallpaper_02_decorate_sticker-settings-v2.png` | *(cùng nguồn, file gốc `Screenshot 2026-09-12 at 16.01.55.png`)* | Cùng sheet, tiêu đề đổi thành **"Photo"** khi sticker đang chọn là ảnh (chim đội balo đỏ) thay vì emoji — xác nhận tiêu đề sheet đổi theo loại sticker |
 
-> ⏳ **Còn thiếu so với checklist gốc** (chưa chụp, không chặn): `sticker-settings` (bottom-sheet opacity/xoá — mục 2.3), `eyedropper` (đang hút màu — liên quan R5), `limit-warning` (>50 nét — R6). Dark Mode **không cần chụp** — app hiện chưa hỗ trợ Dark Mode. Đối chiếu thêm với bản iPad ([`ipad/index.md`](../ipad/index.md#14_edit-wallpaper--editor-soạntrang-trí-wallpaper-decorate)) — iPad có thêm `filled`/`filled-landscape` (canvas đầy đủ, không sticker nào đang chọn) và `text-collapsed` mà bộ iPhone này chưa có; ngược lại iPhone có `tooltip` và 3 biến thể `sticker-selected` mà iPad chưa có. Nên chụp bổ sung chéo nếu cần đối chiếu hành vi giữa 2 device.
+> ⏳ **Còn thiếu so với checklist gốc** (chưa chụp, không chặn): `eyedropper` (đang hút màu — liên quan R5), `limit-warning` (>50 nét — R6). Dark Mode **không cần chụp** — app hiện chưa hỗ trợ Dark Mode. Đối chiếu thêm với bản iPad ([`ipad/index.md`](../ipad/index.md#14_edit-wallpaper--editor-soạntrang-trí-wallpaper-decorate)) — iPad có thêm `filled`/`filled-landscape` (canvas đầy đủ, không sticker nào đang chọn) và `text-collapsed` mà bộ iPhone này chưa có; ngược lại iPhone có `tooltip`, 3 biến thể `sticker-selected`, và sheet `sticker-settings` mà iPad chưa có. Nên chụp bổ sung chéo nếu cần đối chiếu hành vi giữa 2 device.
 
 ---
 
