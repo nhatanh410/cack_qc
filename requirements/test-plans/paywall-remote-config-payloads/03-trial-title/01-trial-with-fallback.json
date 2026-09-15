@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "variant": "trial_01_with_fallback",
+  "headline": {
+    "en": "[TC trial-01] title co {trial} + co title_no_trial"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true,
+      "preselected": true,
+      "title": {
+        "en": "Get {trial} free"
+      },
+      "title_no_trial": {
+        "en": "Weekly plan"
+      }
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true
+    }
+  ]
+}

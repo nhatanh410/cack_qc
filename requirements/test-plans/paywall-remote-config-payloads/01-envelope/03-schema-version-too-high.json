@@ -1,0 +1,7 @@
+{
+  "schema_version": 2,
+  "variant": "env_03_schema_version_too_high",
+  "headline": {
+    "en": "[TC env-03] KHONG duoc hien - schema_version=2 vuot muc build hieu (1)"
+  }
+}

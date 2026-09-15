@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "variant": "plans_03_all_hidden_CRITICAL",
+  "headline": {
+    "en": "[TC plans-03] P1 - 3 goi hop le nhung show:false het, khong con goi nao mua duoc"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": false
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.annual",
+      "period": "annual",
+      "type": "subscription",
+      "show": false
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": false
+    }
+  ]
+}

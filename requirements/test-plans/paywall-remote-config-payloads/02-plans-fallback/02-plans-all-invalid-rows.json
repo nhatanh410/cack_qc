@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "variant": "plans_02_all_invalid_rows",
+  "headline": {
+    "en": "[TC plans-02] moi hang plans thieu truong bat buoc"
+  },
+  "plans": [
+    {
+      "product_id": "",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.annual",
+      "period": "",
+      "type": "subscription",
+      "show": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "variant": "discount_05_negative_invalid",
+  "headline": {
+    "en": "[TC discount-05] discount=-0.1 - am, ngoai khoang hop le"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true,
+      "discount": -0.1
+    }
+  ]
+}

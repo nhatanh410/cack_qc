@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "variant": "open_01_yearly_vs_annual",
+  "headline": {
+    "en": "[TC open-01] xem muc 10.1 test plan - dung de tra loi yearly vs annual"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.yearly",
+      "period": "yearly",
+      "type": "subscription",
+      "show": true,
+      "preselected": true,
+      "title": {
+        "en": "Try {trial} free"
+      }
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true
+    }
+  ]
+}

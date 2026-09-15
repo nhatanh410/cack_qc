@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "variant": "benefits_02_count_6",
+  "headline": {
+    "en": "[TC benefits-02] 6 dong - dong thu 6 phai bi cat, khong hien"
+  },
+  "benefits": [
+    {
+      "icon": "calendar",
+      "tint": "accentBlue",
+      "title": {
+        "en": "Benefit 1"
+      }
+    },
+    {
+      "icon": "sparkles",
+      "tint": "accentPink",
+      "title": {
+        "en": "Benefit 2"
+      }
+    },
+    {
+      "icon": "paintpalette",
+      "tint": "accentMint",
+      "title": {
+        "en": "Benefit 3"
+      }
+    },
+    {
+      "icon": "bolt",
+      "tint": "accentAmber",
+      "title": {
+        "en": "Benefit 4"
+      }
+    },
+    {
+      "icon": "lock",
+      "tint": "accentCyan",
+      "title": {
+        "en": "Benefit 5"
+      }
+    },
+    {
+      "icon": "star",
+      "tint": "accentGreen",
+      "title": {
+        "en": "Benefit 6 - KHONG duoc hien"
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "variant": "benefits_01_count_5",
+  "headline": {
+    "en": "[TC benefits-01] dung 5 dong - phai hien du 5"
+  },
+  "benefits": [
+    {
+      "icon": "calendar",
+      "tint": "accentBlue",
+      "title": {
+        "en": "Benefit 1"
+      }
+    },
+    {
+      "icon": "sparkles",
+      "tint": "accentPink",
+      "title": {
+        "en": "Benefit 2"
+      }
+    },
+    {
+      "icon": "paintpalette",
+      "tint": "accentMint",
+      "title": {
+        "en": "Benefit 3"
+      }
+    },
+    {
+      "icon": "bolt",
+      "tint": "accentAmber",
+      "title": {
+        "en": "Benefit 4"
+      }
+    },
+    {
+      "icon": "lock",
+      "tint": "accentCyan",
+      "title": {
+        "en": "Benefit 5"
+      }
+    }
+  ]
+}

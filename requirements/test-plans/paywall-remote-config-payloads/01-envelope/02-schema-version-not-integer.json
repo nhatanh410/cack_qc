@@ -1,0 +1,7 @@
+{
+  "schema_version": 0,
+  "variant": "env_02_schema_version_not_integer",
+  "headline": {
+    "en": "[TC env-02] PHAI hien - schema_version khong hop le, coi nhu vang mat (= v1)"
+  }
+}

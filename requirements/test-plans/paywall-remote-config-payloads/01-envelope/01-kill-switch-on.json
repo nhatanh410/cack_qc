@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "use_bundled_paywall": true,
+  "variant": "env_01_kill_switch_on",
+  "headline": {
+    "en": "[TC env-01] KHONG duoc hien - kill switch dang bat"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "variant": "discount_02_just_above_zero_valid",
+  "headline": {
+    "en": "[TC discount-02] discount=0.01 - vua trong khoang hop le"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true,
+      "discount": 0.01
+    }
+  ]
+}

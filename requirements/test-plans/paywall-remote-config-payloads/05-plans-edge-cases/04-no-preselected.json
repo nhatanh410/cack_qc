@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "variant": "edge_04_no_preselected",
+  "headline": {
+    "en": "[TC edge-04] khong goi nao preselected - phai tu chon goi DAU TIEN trong mang (Weekly), khong phai goi co badge best_value"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.annual",
+      "period": "annual",
+      "type": "subscription",
+      "show": true,
+      "badge": "best_value"
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true
+    }
+  ]
+}

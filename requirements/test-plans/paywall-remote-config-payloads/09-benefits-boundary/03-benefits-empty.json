@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "variant": "benefits_03_empty_hidden",
+  "headline": {
+    "en": "[TC benefits-03] benefits rong - khoi benefit phai AN HAN, khong lech layout"
+  },
+  "benefits": []
+}

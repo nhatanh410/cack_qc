@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "min_app_version": "1.0.0",
+  "variant": "env_06_valid_baseline",
+  "headline": {
+    "en": "[TC env-06] PHAI hien - envelope hop le, dung lam control case"
+  }
+}

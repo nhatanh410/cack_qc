@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "variant": "hero_02_animation_unknown_name",
+  "hero": {
+    "animation": "confetti_burst"
+  },
+  "headline": {
+    "en": "[TC hero-02] animation ten khong ton tai - build cu roi xuong tier anh"
+  }
+}

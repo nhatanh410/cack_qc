@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "variant": "edge_02_unknown_product_id",
+  "headline": {
+    "en": "[TC edge-02] product_id ngoai 3 id dang ban that"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.monthly",
+      "period": "annual",
+      "type": "subscription",
+      "show": true
+    }
+  ]
+}

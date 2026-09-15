@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "variant": "trial_02_missing_fallback_expected",
+  "headline": {
+    "en": "[TC trial-02] title co {trial} nhung KHONG co title_no_trial - roi ve ten bundled la HANH VI DUNG (expected), khong phai bug"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true,
+      "preselected": true,
+      "title": {
+        "en": "Get {trial} free"
+      }
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true
+    }
+  ]
+}

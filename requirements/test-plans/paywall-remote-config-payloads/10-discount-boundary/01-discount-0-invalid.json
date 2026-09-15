@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "variant": "discount_01_zero_invalid",
+  "headline": {
+    "en": "[TC discount-01] discount=0 - ngoai khoang (0,1), khong duoc co pill Save / gach gia"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.lifetime",
+      "period": "lifetime",
+      "type": "lifetime",
+      "show": true,
+      "discount": 0
+    }
+  ]
+}

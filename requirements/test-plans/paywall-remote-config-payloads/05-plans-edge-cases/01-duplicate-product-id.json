@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "variant": "edge_01_duplicate_product_id",
+  "headline": {
+    "en": "[TC edge-01] 2 hang trung product_id"
+  },
+  "plans": [
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true,
+      "badge": "popular"
+    },
+    {
+      "product_id": "com.silverai.calendar.lockscreen.pro.weekly",
+      "period": "weekly",
+      "type": "subscription",
+      "show": true,
+      "badge": "best_value"
+    }
+  ]
+}

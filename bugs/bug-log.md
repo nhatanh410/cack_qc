@@ -14,6 +14,7 @@
 |---|---|---|---|---|---|---|---|
 | BUG-001 | 2026-08-14 | 04_discover | create-note | editing | High | Nút ✓ đóng màn edit nhưng note không được lưu | Open |
 | BUG-002 | 2026-08-14 | 04_discover | collection | default | Medium | Lockscreen dạng Note hiển thị tên `(Untitled)` trong Your collection | Open |
+| BUG-003 | 2026-09-15 | 08_paywall | plan-list | default | Medium | `discount: 1` là giá trị invalid (`discount` phải nhỏ hơn 1) nhưng pill "SAVE 100%" vẫn hiện — thiếu 1 nhánh validate | Open |
 
 ---
 
@@ -117,3 +118,52 @@ Screenshot user cung cấp trong session 2026-08-14 — Discover home, `Your col
 - [ ] Tap `Edit` trên card → có màn đặt/đổi tên không?
 - [ ] Vào `Your collection ›` (màn full list, filter `Note`) → tên hiển thị ở đó có khác không?
 - [ ] Các loại khác do user tạo (lockscreen tự chỉnh, live activity) có bị `(Untitled)` tương tự không, hay chỉ riêng Note?
+
+---
+
+## BUG-003 · `discount: 1` là giá trị invalid nhưng pill "SAVE 100%" vẫn hiện
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-09-15 |
+| **Flow** | `08_paywall` |
+| **Screen** | `plan-list` — danh sách gói trong paywall (screen-name mới, chưa có trong `.claude/rules/screenshot-naming.md` §7.1 — đề xuất bổ sung khi hợp nhất bộ ảnh UX) |
+| **State** | `default` |
+| **Severity** | Medium — không mất dữ liệu, không chặn luồng mua hàng, nhưng sai hành vi validate + có rủi ro giật giá nếu Remote Config bị cấu hình nhầm (xem mục Rủi ro) |
+| **Status** | Open |
+| **Device / Build** | ❓ chưa ghi nhận — cần bổ sung (test trên `dev`, xem `paywall-remote-config-payloads/screenshots/README.md` — TC-PLAN-12) |
+
+### Steps to reproduce
+
+1. Publish payload [`10-discount-boundary/04-discount-1-invalid.json`](../requirements/test-plans/paywall-remote-config-payloads/10-discount-boundary/04-discount-1-invalid.json) (gói **Lifetime** có `discount: 1`) vào Firebase Remote Config parameter `pro_paywall_config_v1` → **Publish changes**.
+2. Kill app hoàn toàn → mở lại (trên `dev`, `minimumFetchInterval = 0` nên lấy giá trị mới ngay).
+3. Mở paywall, quan sát hàng gói **Lifetime**.
+
+### Expected
+
+`discount` phải **nhỏ hơn 1** để hợp lệ — theo spec [`paywall-config.md`](../requirements/specs/paywall-config.md) (mục `plans`): *"`discount` (0…1) drives the "-60%" pill and the struck-through price"*, và theo công thức giá gạch ngang `price / (1 - discount)` (chia cho 0 tại `discount = 1`, không tính được). `discount: 1` do đó là **giá trị invalid**, nằm ngoài khoảng `(0,1)` mở — decoder phải bỏ qua toàn bộ field `discount`: **không hiện pill, không hiện giá gạch ngang**, giống hệt cách xử lý `discount = 0` hoặc âm (đã verify đúng ở TC-PLAN-09/13).
+
+### Actual
+
+Pill **"SAVE 100%" vẫn hiện** dù `discount = 1` là giá trị invalid — chỉ riêng giá gạch ngang không hiện (do chia cho 0 → `Infinity`/`NaN`, bị ẩn ở bước render). Decoder đang thiếu nhánh validate `discount < 1` cho pill, chỉ áp dụng nó cho phần tính giá gạch ngang.
+
+Evidence: [`screenshots/10-discount-boundary/04-discount-1-invalid.png`](../requirements/test-plans/paywall-remote-config-payloads/screenshots/10-discount-boundary/04-discount-1-invalid.png).
+
+### Rủi ro / vì sao đáng quan tâm
+
+`discount = 1` = giảm 100% = tặng miễn phí vĩnh viễn — không phải giá trị người vận hành RC có lý do chính đáng để set thật, nhiều khả năng chỉ xảy ra do **gõ nhầm** (nhập `1` thay vì `0.1`, hoặc nhầm đơn vị %). Vì decoder hiện tại **chấp nhận** giá trị invalid này ở nhánh pill, một lỗi cấu hình RC có thể vô tình hiện "SAVE 100%" cho toàn bộ user thật mà không có lưới an toàn nào chặn lại — khác với `discount = 0` hoặc âm, vốn đã bị ẩn hoàn toàn cả pill đúng như thiết kế.
+
+### Đề xuất
+
+Sửa decoder: validate `discount ∈ (0,1)` **một lần**, dùng chung cho cả pill và giá gạch ngang (thay vì chỉ áp dụng riêng cho giá gạch ngang như hiện tại) — `discount ≥ 1` hoặc `≤ 0` phải bị coi là invalid toàn bộ, ẩn cả 2 UI element, nhất quán với `discount = 0`/âm.
+
+### Cần dev xác nhận
+
+- [ ] Điều kiện hiện **pill** trong code thật hiện đang là gì — xác nhận đúng là thiếu check `< 1` như QC suy luận?
+- [ ] Điều kiện hiện **giá gạch ngang** có phải chủ đích validate `discount < 1`, hay chỉ là kết quả `Infinity`/`NaN` bị discard tự nhiên (không có validate riêng)?
+- [ ] Timeline fix dự kiến — có cần patch RC payload nào đang live để né tạm case này trước khi fix không?
+
+### Notes
+
+- Liên quan trực tiếp tới câu hỏi #5 (mục "`discount = 1` vẫn hiện pill...") đã gửi trong [`paywall-remote-config-questions-for-dev.md`](../requirements/test-plans/paywall-remote-config-questions-for-dev.md) — bug report này là bản mở rộng kèm khuyến nghị cụ thể, không thay thế câu hỏi đó.
+- TC-PLAN-12 trong [`test-cases/paywall-remote-config.md`](../test-cases/paywall-remote-config.md) đã cập nhật lại expected result theo Actual quan sát được — không đánh dấu Fail, chỉ ghi nhận deviation.

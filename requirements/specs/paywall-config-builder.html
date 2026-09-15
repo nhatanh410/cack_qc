@@ -1,0 +1,1573 @@
+<title>Paywall Config Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{
+  --ground:#EEF1F6; --panel:#FFFFFF; --panel-2:#F7F9FC; --panel-3:#EDF1F7;
+  --line:#DCE2EB; --line-soft:#E9EDF4;
+  --ink:#111827; --body:#374151; --muted:#6B7280; --subtle:#9CA3AF;
+  --accent:#7A45FF; --accent-soft:#EFE8FF; --accent-line:#CDB8FF;
+  --ok:#0FA37F; --warn:#B4750A; --bad:#D8102A;
+  --ok-soft:#E3F7F1; --warn-soft:#FDF1DA; --bad-soft:#FDE7EA;
+  --code-bg:#12151D; --code-fg:#D6DCE8; --code-key:#9DC1FF; --code-str:#8ADFB4; --code-num:#F0B95E;
+  --shadow:0 1px 2px rgba(17,24,39,.05), 0 8px 24px -12px rgba(17,24,39,.18);
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme: dark){
+  --ground:#0E1117; --panel:#161A22; --panel-2:#1B202A; --panel-3:#212734;
+  --line:#2B323D; --line-soft:#232935;
+  --ink:#F2F5FA; --body:#CBD2DC; --muted:#98A1AE; --subtle:#6E7684;
+  --accent:#A480FF; --accent-soft:#251E3B; --accent-line:#4A3A79;
+  --ok:#3EE0BA; --warn:#FFC44D; --bad:#FF6373;
+  --ok-soft:#122E28; --warn-soft:#332714; --bad-soft:#331519;
+  --code-bg:#0A0D13; --code-fg:#CBD3E1;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  --ground:#0E1117; --panel:#161A22; --panel-2:#1B202A; --panel-3:#212734;
+  --line:#2B323D; --line-soft:#232935;
+  --ink:#F2F5FA; --body:#CBD2DC; --muted:#98A1AE; --subtle:#6E7684;
+  --accent:#A480FF; --accent-soft:#251E3B; --accent-line:#4A3A79;
+  --ok:#3EE0BA; --warn:#FFC44D; --bad:#FF6373;
+  --ok-soft:#122E28; --warn-soft:#332714; --bad-soft:#331519;
+  --code-bg:#0A0D13; --code-fg:#CBD3E1;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--body);
+  font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  font-size:13.5px; line-height:1.5; margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0; color:var(--ink); text-wrap:balance}
+a{color:var(--accent)}
+code,kbd,pre{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+kbd{
+  font-size:11.5px; background:var(--panel-3); border:1px solid var(--line);
+  border-radius:4px; padding:1px 5px; color:var(--body);
+}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* ── Header ─────────────────────────────────────────── */
+header{
+  position:sticky; top:0; z-index:40; background:var(--panel);
+  border-bottom:1px solid var(--line);
+}
+.hrow{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:11px 20px; max-width:1560px; margin:0 auto;
+}
+.brand{display:flex; align-items:baseline; gap:9px; margin-right:2px}
+.brand b{font-size:15px; font-weight:700; letter-spacing:-.015em; color:var(--ink)}
+.brand span{font-size:11px; color:var(--subtle); letter-spacing:.06em; text-transform:uppercase}
+.keychip{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--accent);
+  background:var(--accent-soft); border:1px solid var(--accent-line);
+  padding:3px 9px; border-radius:5px; white-space:nowrap;
+}
+.hspace{flex:1 1 auto}
+
+button, select, input, textarea{font:inherit; color:inherit}
+.btn{
+  display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  background:var(--panel); color:var(--body);
+  border:1px solid var(--line); border-radius:7px;
+  padding:5px 11px; font-size:12.5px; font-weight:500;
+}
+.btn:hover{background:var(--panel-2); border-color:var(--muted)}
+.btn.primary{background:var(--ink); color:var(--panel); border-color:var(--ink)}
+.btn.primary:hover{opacity:.88}
+.btn.ghost{background:transparent; border-color:transparent; color:var(--muted)}
+.btn.ghost:hover{background:var(--panel-2); color:var(--ink)}
+.btn.danger:hover{color:var(--bad); border-color:var(--bad)}
+.btn.tiny{padding:2px 7px; font-size:11.5px; border-radius:5px}
+
+/* ── Variant + locale strips ────────────────────────── */
+.strip{
+  border-bottom:1px solid var(--line); background:var(--panel-2);
+  position:sticky; z-index:39;
+}
+.strip.variants{top:54px}
+.strip.locales{top:94px; background:var(--panel)}
+.srow{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  padding:7px 20px; max-width:1560px; margin:0 auto;
+}
+.slabel{
+  font-size:10.5px; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--subtle); font-weight:600; margin-right:2px;
+}
+.vtab{
+  display:inline-flex; align-items:center; gap:7px; cursor:pointer;
+  border:1px solid var(--line); background:var(--panel);
+  border-radius:7px; padding:4px 10px; font-size:12.5px; font-weight:500;
+}
+.vtab[aria-selected="true"]{
+  background:var(--ink); color:var(--panel); border-color:var(--ink); font-weight:600;
+}
+.vtab .dot{width:6px; height:6px; border-radius:50%; background:var(--ok)}
+.vtab .dot.bad{background:var(--bad)}
+.vtab .dot.warn{background:var(--warn)}
+
+.lchip{
+  cursor:pointer; border:1px solid var(--line); background:var(--panel);
+  border-radius:6px; padding:3px 9px; font-size:12px;
+  display:inline-flex; align-items:center; gap:6px;
+  font-variant-numeric:tabular-nums;
+}
+.lchip[aria-selected="true"]{background:var(--accent-soft); border-color:var(--accent-line); color:var(--accent); font-weight:600}
+.lchip .n{font-size:10px; color:var(--subtle)}
+.lchip[aria-selected="true"] .n{color:var(--accent)}
+.lchip.derived{border-style:dashed}
+
+/* ── Shell ──────────────────────────────────────────── */
+.shell{
+  max-width:1560px; margin:0 auto; padding:20px;
+  display:grid; grid-template-columns:minmax(0,1fr) 452px; gap:20px; align-items:start;
+}
+@media (max-width:1180px){ .shell{grid-template-columns:minmax(0,1fr)} }
+
+/* ── Editor sections ────────────────────────────────── */
+.editor{display:flex; flex-direction:column; gap:14px; min-width:0}
+section.card{
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:11px; box-shadow:var(--shadow); overflow:hidden;
+}
+.chead{
+  display:flex; align-items:center; gap:10px;
+  padding:11px 15px; border-bottom:1px solid var(--line-soft); background:var(--panel-2);
+}
+.chead h2{font-size:13px; font-weight:600; letter-spacing:-.005em}
+.chead .rc{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--subtle);
+}
+.cbody{padding:15px; display:flex; flex-direction:column; gap:14px}
+
+.fallback{
+  font-size:11.5px; color:var(--muted); border-left:2px solid var(--line);
+  padding-left:9px; line-height:1.45;
+}
+.fallback b{color:var(--body); font-weight:600}
+.fallback code{font-size:11px; color:var(--accent)}
+
+.field{display:flex; flex-direction:column; gap:5px; min-width:0}
+.field > label, .flabel{
+  font-size:11px; font-weight:600; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em;
+  display:flex; align-items:center; gap:7px;
+}
+.flabel .hint{text-transform:none; letter-spacing:0; font-weight:400; color:var(--subtle); font-size:11px}
+input[type=text], input[type=number], input[type=url], select, textarea{
+  background:var(--panel-2); border:1px solid var(--line); border-radius:7px;
+  padding:7px 9px; font-size:13px; width:100%; min-width:0;
+}
+input:hover, select:hover, textarea:hover{border-color:var(--muted)}
+input:focus, select:focus, textarea:focus{outline:none; border-color:var(--accent); background:var(--panel)}
+input::placeholder, textarea::placeholder{color:var(--subtle)}
+select{cursor:pointer; appearance:none; padding-right:26px;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 14px) 52%, calc(100% - 9px) 52%;
+  background-size:5px 5px, 5px 5px; background-repeat:no-repeat;
+}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+@media (max-width:620px){ .grid2,.grid3{grid-template-columns:1fr} }
+
+.switchrow{display:flex; align-items:flex-start; gap:9px}
+.switchrow input{width:auto; margin:2px 0 0}
+.switchrow .t{font-size:12.5px; color:var(--body)}
+.switchrow .t b{color:var(--ink); font-weight:600}
+.switchrow .t em{display:block; font-style:normal; font-size:11.5px; color:var(--muted)}
+
+.seg{display:inline-flex; align-self:flex-start; background:var(--panel-3); border-radius:8px; padding:2px; gap:2px; flex-wrap:wrap}
+.cbody > .btn{align-self:flex-start}
+.seg button{
+  cursor:pointer; border:0; background:transparent; color:var(--muted);
+  padding:4px 10px; border-radius:6px; font-size:12px; font-weight:500;
+}
+.seg button[aria-pressed="true"]{background:var(--panel); color:var(--ink); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* localized input */
+.loc{display:flex; gap:6px; align-items:stretch}
+.loc .empty{
+  flex:0 0 auto; width:30px; cursor:pointer; border:1px solid var(--line);
+  background:var(--panel-2); border-radius:7px; color:var(--subtle);
+  font-size:14px; line-height:1; display:grid; place-items:center;
+}
+.loc .empty[aria-pressed="true"]{background:var(--warn-soft); border-color:var(--warn); color:var(--warn)}
+.locmeta{font-size:11px; color:var(--subtle); display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.locmeta .filled{color:var(--muted)}
+.locmeta .over{color:var(--warn); font-weight:600}
+.locked{
+  font-size:11.5px; color:var(--muted); background:var(--panel-2);
+  border:1px dashed var(--line); border-radius:7px; padding:7px 9px;
+}
+
+/* repeatable rows */
+.rowlist{display:flex; flex-direction:column; gap:10px}
+.rowitem{
+  border:1px solid var(--line); border-radius:9px; background:var(--panel-2); overflow:hidden;
+}
+.rowitem.off{opacity:.55}
+.rowhead{
+  display:flex; align-items:center; gap:8px; padding:8px 10px;
+  border-bottom:1px solid var(--line-soft); background:var(--panel);
+}
+.rowhead .idx{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--subtle);
+  width:18px; text-align:center; flex:0 0 auto;
+}
+.rowhead .name{font-size:12.5px; font-weight:600; color:var(--ink); flex:1 1 auto; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.rowhead .tag{font-size:10.5px; color:var(--muted); font-family:"IBM Plex Mono",monospace}
+.rowbody{padding:11px; display:flex; flex-direction:column; gap:11px}
+.swatch{width:11px; height:11px; border-radius:3px; flex:0 0 auto; border:1px solid rgba(0,0,0,.12)}
+.tintrow{display:flex; align-items:center; gap:7px}
+
+/* ── Rail ───────────────────────────────────────────── */
+.rail{
+  position:sticky; top:148px; display:flex; flex-direction:column; gap:0;
+  background:var(--panel); border:1px solid var(--line); border-radius:11px;
+  box-shadow:var(--shadow); overflow:hidden; max-height:calc(100vh - 168px);
+}
+@media (max-width:1180px){ .rail{position:static; max-height:none} }
+.railtabs{display:flex; gap:2px; padding:8px 8px 0; border-bottom:1px solid var(--line-soft); background:var(--panel-2)}
+.railtabs button{
+  cursor:pointer; border:1px solid transparent; border-bottom:0; background:transparent;
+  color:var(--muted); padding:6px 12px; border-radius:7px 7px 0 0; font-size:12.5px; font-weight:500;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.railtabs button[aria-selected="true"]{background:var(--panel); color:var(--ink); font-weight:600; border-color:var(--line-soft); margin-bottom:-1px}
+.count{
+  font-size:10px; font-weight:700; min-width:16px; padding:0 4px; border-radius:8px;
+  background:var(--panel-3); color:var(--muted); font-variant-numeric:tabular-nums;
+}
+.count.bad{background:var(--bad-soft); color:var(--bad)}
+.count.warn{background:var(--warn-soft); color:var(--warn)}
+.railbody{overflow:auto; flex:1 1 auto; min-height:0}
+.railfoot{
+  border-top:1px solid var(--line); background:var(--panel-2);
+  padding:9px 11px; display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+}
+.railfoot .meta{font-size:11px; color:var(--subtle); font-variant-numeric:tabular-nums}
+
+/* JSON view */
+pre.json{
+  margin:0; background:var(--code-bg); color:var(--code-fg);
+  padding:14px; font-size:12px; line-height:1.6; overflow-x:auto; min-height:100%;
+  tab-size:2;
+}
+pre.json .k{color:var(--code-key)}
+pre.json .s{color:var(--code-str)}
+pre.json .n{color:var(--code-num)}
+pre.json .p{color:#7A8497}
+
+/* checks */
+.checks{padding:12px; display:flex; flex-direction:column; gap:8px}
+.check{
+  display:grid; grid-template-columns:auto 1fr; gap:9px; align-items:start;
+  border:1px solid var(--line); border-radius:8px; padding:9px 10px; background:var(--panel-2);
+}
+.check .sev{
+  font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  padding:2px 6px; border-radius:4px; white-space:nowrap; margin-top:1px;
+}
+.check.error{border-color:var(--bad)} .check.error .sev{background:var(--bad-soft); color:var(--bad)}
+.check.warn .sev{background:var(--warn-soft); color:var(--warn)}
+.check.info .sev{background:var(--panel-3); color:var(--muted)}
+.check .msg{font-size:12.5px; color:var(--body)}
+.check .msg b{color:var(--ink); font-weight:600}
+.check .msg code{font-size:11.5px; color:var(--accent)}
+.check .msg em{display:block; font-style:normal; color:var(--muted); font-size:11.5px; margin-top:2px}
+.allclear{
+  display:flex; align-items:center; gap:9px; padding:12px;
+  background:var(--ok-soft); border:1px solid var(--ok); border-radius:8px;
+  color:var(--ok); font-size:12.5px; font-weight:600;
+}
+
+/* ── Phone preview (always LIGHT: app ships UIUserInterfaceStyle=Light) ── */
+.previewpane{padding:14px; display:flex; flex-direction:column; gap:10px; align-items:center}
+.simbar{
+  width:100%; display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+}
+.simbar .slabel{margin:0}
+.simbar label{font-size:11.5px; color:var(--muted); display:inline-flex; align-items:center; gap:5px}
+.simbar input[type=number]{width:52px; padding:3px 6px; font-size:12px}
+.simbar input[type=checkbox]{width:auto}
+.phonewrap{width:100%; display:flex; justify-content:center}
+.phonebox{width:283px; height:614px; position:relative}
+.phone{
+  --p-canvas:#F8F9FA; --p-raised:#FFFFFF; --p-sunken:#F2F4F7;
+  --p-ink:#111827; --p-body:#374151; --p-muted:#6B7280; --p-subtle:#9CA3AF;
+  --p-line:#E5E7EB; --p-violet:#8B5CFF; --p-wash:rgba(139,92,255,.141);
+  position:absolute; top:0; left:0;
+  width:393px; height:852px; transform:scale(.72); transform-origin:top left;
+  background:var(--p-canvas); color:var(--p-ink);
+  border-radius:44px; border:9px solid #14171D; overflow:hidden;
+  font-family:ui-rounded,"SF Pro Rounded","Nunito",system-ui,sans-serif;
+  display:flex; flex-direction:column;
+  box-shadow:0 18px 40px -18px rgba(17,24,39,.55);
+}
+.phone *{box-sizing:border-box}
+.island{
+  position:absolute; top:11px; left:50%; transform:translateX(-50%);
+  width:118px; height:33px; background:#14171D; border-radius:17px; z-index:5;
+}
+.pscroll{flex:1 1 auto; overflow:auto; scrollbar-width:thin}
+.pherowash{background:linear-gradient(var(--p-wash), var(--p-wash) 60%, rgba(139,92,255,0))}
+.pheroslot{height:172px; margin:20px 16px 0; display:grid; place-items:center;
+  border-radius:20px; border:1px dashed rgba(139,92,255,.45); background:rgba(255,255,255,.5)}
+.pheroslot .tag{font-size:11px; color:var(--p-muted); text-align:center; padding:0 14px; line-height:1.45}
+.pheroslot .tag b{display:block; color:var(--p-violet); font-size:12.5px; font-weight:700; margin-bottom:2px}
+.pheroslot img{max-width:100%; max-height:172px; object-fit:contain; border-radius:16px}
+.pherotext{padding:32px 16px 16px; display:flex; flex-direction:column; gap:8px; align-items:center}
+.pheadline{font-size:32px; font-weight:700; line-height:1.12; text-align:center; letter-spacing:-.02em;
+  color:var(--p-ink); -webkit-line-clamp:3; -webkit-box-orient:vertical; display:-webkit-box; overflow:hidden}
+.psubtitle{font-size:14px; color:var(--p-muted); text-align:center; line-height:1.35}
+.pbenefits{padding:4px 0 32px; display:flex; flex-direction:column}
+.pbrow{display:flex; align-items:center; gap:12px; padding:4px 80px}
+.pbtile{width:30px; height:30px; border-radius:8px; display:grid; place-items:center; flex:0 0 auto}
+.pbtile svg{width:15px; height:15px}
+.pbtitle{font-size:15px; font-weight:600; color:var(--p-ink); line-height:1.28;
+  -webkit-line-clamp:2; -webkit-box-orient:vertical; display:-webkit-box; overflow:hidden}
+.pplans{padding:0 16px; display:flex; flex-direction:column; gap:12px}
+.pplan{
+  position:relative; border-radius:16px; padding:12px 16px; background:var(--p-sunken);
+  border:1px solid var(--p-line); display:flex; gap:12px; align-items:center;
+}
+.pplan.sel{background:var(--p-wash); border:2px solid var(--p-violet); padding:11px 15px}
+.pplan .l{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:4px}
+.pplan .nameline{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.pplan .nm{font-size:16px; font-weight:600; color:var(--p-ink)}
+.pplan .sub{font-size:12px; color:var(--p-muted)}
+.pillbadge{
+  font-size:9px; font-weight:700; letter-spacing:.4px; text-transform:uppercase;
+  color:#fff; background:var(--p-ink); border-radius:99px; padding:2px 6px;
+}
+.savebadge{
+  position:absolute; top:-6px; right:14px;
+  font-size:9px; font-weight:700; letter-spacing:.4px; text-transform:uppercase;
+  color:#fff; background:var(--p-violet); border-radius:99px; padding:2px 6px;
+}
+.pplan .r{text-align:right; display:flex; flex-direction:column; gap:4px; align-items:flex-end}
+.pplan .price{font-size:16px; font-weight:700; color:var(--p-ink); white-space:nowrap}
+.pplan .strike{font-size:12px; color:var(--p-subtle); text-decoration:line-through}
+.pplan .cap{font-size:11px; color:var(--p-muted)}
+.pfooter{padding:8px 16px 10px; display:flex; flex-direction:column; gap:8px; background:var(--p-canvas);
+  border-top:1px solid rgba(0,0,0,.04)}
+.pauto{font-size:12px; color:var(--p-muted); text-align:center}
+.pcta{
+  height:56px; border-radius:99px; background:var(--p-ink); color:#fff;
+  display:grid; place-items:center; font-size:17px; font-weight:700; padding:0 16px; text-align:center;
+}
+.plegal{display:flex; justify-content:center; gap:16px; font-size:11px; color:var(--p-subtle); padding-bottom:2px}
+
+/* dialog */
+dialog{
+  border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--body);
+  padding:0; max-width:620px; width:calc(100vw - 40px); box-shadow:0 24px 60px -20px rgba(0,0,0,.5);
+}
+dialog::backdrop{background:rgba(15,18,24,.5)}
+.dhead{padding:13px 16px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px}
+.dhead h2{font-size:14px}
+.dbody{padding:16px; display:flex; flex-direction:column; gap:12px}
+.dbody textarea{min-height:220px; font-family:"IBM Plex Mono",monospace; font-size:12px; resize:vertical}
+.dfoot{padding:11px 16px; border-top:1px solid var(--line); display:flex; gap:9px; justify-content:flex-end; background:var(--panel-2)}
+.err{color:var(--bad); font-size:12px}
+
+.helpbody{font-size:12.5px; line-height:1.6}
+.helpbody ol{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:7px}
+.helpbody code{font-size:11.5px; color:var(--accent)}
+.helpbody h3{font-size:12px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-top:6px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+</style>
+
+<header>
+  <div class="hrow">
+    <div class="brand"><b>Paywall Config</b><span>Ink · Remote Config</span></div>
+    <span class="keychip">pro_paywall_config_v1</span>
+    <div class="hspace"></div>
+    <button class="btn ghost" id="btnHelp">Cách dùng</button>
+    <button class="btn" id="btnImport">Nhập JSON…</button>
+    <button class="btn" id="btnReset">Đặt lại</button>
+  </div>
+</header>
+
+<div class="strip variants">
+  <div class="srow">
+    <span class="slabel">Biến thể</span>
+    <div id="variantTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    <button class="btn tiny" id="btnAddVariant">+ Thêm</button>
+    <button class="btn tiny" id="btnDupVariant">Nhân bản</button>
+    <button class="btn tiny" id="btnRenameVariant">Đổi tên</button>
+    <button class="btn tiny danger" id="btnDelVariant">Xoá</button>
+  </div>
+</div>
+
+<div class="strip locales">
+  <div class="srow">
+    <span class="slabel">Ngôn ngữ</span>
+    <div id="localeChips" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+  </div>
+</div>
+
+<div class="shell">
+  <div class="editor" id="editor"></div>
+  <aside class="rail">
+    <div class="railtabs" role="tablist">
+      <button role="tab" data-tab="preview" aria-selected="true">Xem trước</button>
+      <button role="tab" data-tab="json" aria-selected="false">JSON</button>
+      <button role="tab" data-tab="checks" aria-selected="false">Kiểm tra <span class="count" id="checkCount">0</span></button>
+    </div>
+    <div class="railbody" id="railBody"></div>
+    <div class="railfoot">
+      <button class="btn primary" id="btnCopy">Copy JSON</button>
+      <button class="btn" id="btnCopyPretty">Copy bản đọc</button>
+      <button class="btn ghost" id="btnDownload">Tải .json</button>
+      <span class="hspace"></span>
+      <span class="meta" id="sizeMeta"></span>
+    </div>
+  </aside>
+</div>
+
+<dialog id="dlgImport">
+  <div class="dhead"><h2>Nhập JSON có sẵn</h2></div>
+  <div class="dbody">
+    <p style="margin:0;font-size:12.5px;color:var(--muted)">
+      Dán giá trị hiện tại của <code>pro_paywall_config_v1</code> (hoặc của một variant trong A/B test) để chỉnh tiếp.
+      Payload sẽ nạp vào biến thể đang chọn.
+    </p>
+    <textarea id="importText" spellcheck="false" placeholder='{"schema_version":1,"variant":"…"}'></textarea>
+    <div class="err" id="importErr" hidden></div>
+  </div>
+  <div class="dfoot">
+    <button class="btn" id="btnImportCancel">Huỷ</button>
+    <button class="btn primary" id="btnImportGo">Nạp vào biến thể này</button>
+  </div>
+</dialog>
+
+<dialog id="dlgAsk">
+  <div class="dhead"><h2 id="askTitle">Xác nhận</h2></div>
+  <div class="dbody">
+    <p id="askMsg" style="margin:0;font-size:13px"></p>
+    <input type="text" id="askInput" hidden>
+  </div>
+  <div class="dfoot">
+    <button class="btn" id="askCancel">Huỷ</button>
+    <button class="btn primary" id="askOk">Đồng ý</button>
+  </div>
+</dialog>
+
+<dialog id="dlgHelp">
+  <div class="dhead"><h2>Từ file này tới Firebase</h2></div>
+  <div class="dbody helpbody">
+    <h3>Publish thẳng (một payload cho tất cả)</h3>
+    <ol>
+      <li>Firebase Console → <b>Remote Config</b> → tham số <code>pro_paywall_config_v1</code> (kiểu <b>JSON</b>).</li>
+      <li>Bấm <b>Copy JSON</b> ở đây, dán vào ô giá trị, <b>Publish changes</b>.</li>
+      <li>App fetch mỗi lần mở (có minimum fetch interval). Muốn ép lấy ngay khi QC: gỡ app cài lại, hoặc đợi hết interval.</li>
+    </ol>
+    <h3>Chạy A/B test</h3>
+    <ol>
+      <li>Console → <b>A/B Testing</b> → <b>Create experiment</b> → <b>Remote Config</b>.</li>
+      <li>Mỗi variant (Baseline, Variant A…) chọn tham số <code>pro_paywall_config_v1</code> và dán payload tương ứng của biến thể trong file này.</li>
+      <li>Mỗi payload phải có <code>variant</code> KHÁC nhau — đó là nhãn đi vào analytics. Trùng nhãn thì hai nhánh không tách được trong funnel.</li>
+      <li>Goal: <code>pro_purchase_succeeded</code>. Nhớ cắt theo user property <code>paywall_variant</code>, không chỉ theo event <code>pro_paywall_viewed</code>.</li>
+    </ol>
+    <h3>Cảnh báo</h3>
+    <p style="margin:0;color:var(--muted)">
+      <code>firebase deploy --only remoteconfig</code> thay <b>toàn bộ</b> template — dùng Console cho việc sửa một key.
+      Ảnh hero mới tới máy user <b>chậm một lần mở app</b> (chỉ đổi sau khi file đã nằm trong cache).
+    </p>
+  </div>
+  <div class="dfoot"><button class="btn primary" id="btnHelpClose">Đóng</button></div>
+</dialog>
+
+<script>
+/* ────────────────────────────────────────────────────────────────
+   Mirrors ios/Ink/Domain/Pro/PaywallConfigDecoder.swift + PaywallContent.swift.
+   Đổi decoder bên Swift thì đổi cả EMIT và CHECKS ở dưới.
+   ──────────────────────────────────────────────────────────────── */
+
+/* MARKETING_VERSION của app. `min_app_version` cao hơn số này ⇒ envelope bị
+   loại NGUYÊN payload, và màn hình trông y hệt lúc chưa có config. Cập nhật
+   khi bump version. */
+const APP_VERSION = "1.2.16";
+
+/* Đúng luật CalendarCatalogCapabilities.version(_:isAtLeast:): so từng số,
+   thiếu bậc coi như 0, parse hỏng thì MỞ cổng (trả true). */
+function versionAtLeast(lhs, rhs){
+  const num = v => v.split(".").map(x => x === "" ? NaN : Number(x));
+  const L = num(lhs), R = num(rhs);
+  if(L.some(isNaN) || R.some(isNaN)) return true;
+  for(let i = 0; i < Math.max(L.length, R.length); i++){
+    const a = L[i] || 0, b = R[i] || 0;
+    if(a !== b) return a > b;
+  }
+  return true;
+}
+
+const RC_LOCALES = ["en","vi","es","id","ja","ko","ms","pt","th","zh"];
+const LOCALE_NAMES = {
+  en:"English", vi:"Tiếng Việt", es:"Español", id:"Indonesia", ja:"日本語",
+  ko:"한국어", ms:"Melayu", pt:"Português", th:"ไทย", zh:"简体中文", "zh-Hant":"繁體中文"
+};
+/* Thiết bị zh-Hant đọc map `zh` (LocalizedText.currentLanguageCode chỉ lấy mã ngôn ngữ),
+   nhưng chuỗi bundled của nó vẫn là zh-Hant — nên đây là locale xem-thử, không soạn được. */
+const PREVIEW_LOCALES = RC_LOCALES.concat(["zh-Hant"]);
+
+const TINTS = {
+  accentPink:"#FF7BA8", accentMint:"#1FCFA4", accentCoral:"#FF3E55", accentAmber:"#FFB422",
+  accentCyan:"#00C0E8", accentBlue:"#007AFF", accentGreen:"#34C759", brandViolet:"#8B5CFF"
+};
+const HERO_ANIMS = {
+  tidy_timetable:"Tidy Timetable — thẻ sự kiện lộn xộn xếp vào thời khoá biểu tuần",
+  phone_assemble:"Phone Assemble — iPhone tự vẽ, sự kiện trong ngày bay lên màn hình",
+  matrix_lock_screen:"Matrix Lock Screen — task xếp vào ma trận Eisenhower rồi lên lock screen"
+};
+const KNOWN_PRODUCTS = [
+  "com.silverai.calendar.lockscreen.pro.weekly",
+  "com.silverai.calendar.lockscreen.pro.annual",
+  "com.silverai.calendar.lockscreen.pro.lifetime"
+];
+const SF_SUGGEST = ["calendar","sparkles","paintpalette","lock.rotation","infinity","bell.badge",
+  "checklist","photo.on.rectangle","clock","star","bolt","heart","crown","apps.iphone","textformat",
+  "arrow.triangle.2.circlepath","wand.and.stars","square.grid.2x2","rectangle.stack","calendar.badge.clock"];
+
+/* Chuỗi bundled thật, lấy từ ios/Ink/Localizable.xcstrings */
+const B = {
+  headline:{en:"Unlock everything",es:"Desbloquéalo todo",id:"Buka kunci semua",ja:"すべてを解放",ko:"모든 기능 잠금 해제",ms:"Buka kunci semua",pt:"Desbloqueie tudo",th:"ปลดล็อกทุกฟีเจอร์",vi:"Mở khóa tất cả",zh:"解锁全部功能","zh-Hant":"解鎖全部功能"},
+  subtitle:{en:"Make your lock screen feel made just for you.",es:"Haz que tu pantalla de bloqueo se sienta hecha solo para ti.",id:"Buat layar kunci Anda terasa dibuat khusus untuk Anda.",ja:"ロック画面をあなただけのものに。",ko:"잠금 화면을 나만을 위한 것으로 만드세요.",ms:"Jadikan skrin kunci anda terasa dibuat khas untuk anda.",pt:"Faça sua tela de bloqueio parecer feita só para você.",th:"ทำให้หน้าจอล็อกของคุณรู้สึกเหมือนสร้างมาเพื่อคุณโดยเฉพาะ",vi:"Biến lock screen thành lịch riêng của bạn.",zh:"让你的锁屏宛如专为你打造。","zh-Hant":"讓你的鎖定畫面像是為你量身打造。"},
+  b1:{en:"Unlimited calendars",es:"Calendarios ilimitados",id:"Kalender tanpa batas",ja:"無制限のカレンダー",ko:"무제한 캘린더",ms:"Kalendar tanpa had",pt:"Calendários ilimitados",th:"ปฏิทินไม่จำกัด",vi:"Lịch không giới hạn",zh:"无限日历","zh-Hant":"無限行事曆"},
+  b2:{en:"All premium templates",es:"Todas las plantillas premium",id:"Semua templat premium",ja:"すべてのプレミアムテンプレート",ko:"모든 프리미엄 템플릿",ms:"Semua templat premium",pt:"Todos os modelos premium",th:"เทมเพลตพรีเมียมทั้งหมด",vi:"Tất cả mẫu Pro",zh:"全部高级模板","zh-Hant":"所有進階範本"},
+  b3:{en:"Day colors & backgrounds",es:"Colores de los días y fondos",id:"Warna hari & latar belakang",ja:"日付の色と背景",ko:"날짜 색상 & 배경",ms:"Warna hari & latar belakang",pt:"Cores dos dias e planos de fundo",th:"สีประจำวันและภาพพื้นหลัง",vi:"Màu ngày & nền",zh:"日期颜色与背景","zh-Hant":"日期顏色與背景"},
+  weekly:{en:"Weekly",es:"Semanal",id:"Mingguan",ja:"週間",ko:"주간",ms:"Mingguan",pt:"Semanal",th:"รายสัปดาห์",vi:"Hằng tuần",zh:"每周","zh-Hant":"每週"},
+  annual:{en:"Annual",es:"Anual",id:"Tahunan",ja:"年間",ko:"연간",ms:"Tahunan",pt:"Anual",th:"รายปี",vi:"Hằng năm",zh:"每年","zh-Hant":"每年"},
+  lifetime:{en:"Lifetime",es:"De por vida",id:"Seumur hidup",ja:"買い切り",ko:"평생",ms:"Seumur hidup",pt:"Vitalício",th:"ตลอดชีพ",vi:"Trọn đời",zh:"终身","zh-Hant":"終身"},
+  bestValue:{en:"Best value",es:"Mejor valor",id:"Paling hemat",ja:"お得",ko:"최고의 가치",ms:"Nilai terbaik",pt:"Melhor custo-benefício",th:"คุ้มค่าที่สุด",vi:"Tốt nhất",zh:"超值之选","zh-Hant":"最划算"},
+  popular:{en:"Popular",es:"Popular",id:"Populer",ja:"人気",ko:"인기",ms:"Popular",pt:"Popular",th:"ยอดนิยม",vi:"Phổ biến",zh:"热门","zh-Hant":"熱門"},
+  oneTime:{en:"One-time purchase",es:"Compra única",id:"Pembelian satu kali",ja:"1回限りの購入",ko:"일회성 구매",ms:"Pembelian sekali",pt:"Compra única",th:"ซื้อครั้งเดียว",vi:"Mua 1 lần",zh:"一次性购买","zh-Hant":"一次性購買"},
+  billedYearly:{en:"Billed yearly",es:"Facturación anual",id:"Ditagih tahunan",ja:"年額請求",ko:"연간 청구",ms:"Dibilkan setiap tahun",pt:"Cobrança anual",th:"เรียกเก็บเงินรายปี",vi:"Thanh toán hằng năm",zh:"按年计费","zh-Hant":"依年計費"},
+  cont:{en:"Continue",es:"Continuar",id:"Lanjutkan",ja:"続ける",ko:"계속",ms:"Teruskan",pt:"Continuar",th:"ดำเนินการต่อ",vi:"Tiếp tục",zh:"继续","zh-Hant":"繼續"},
+  autoRenew:{en:"Auto-renew. Cancel anytime.",es:"Renovación automática. Cancela cuando quieras.",id:"Perpanjangan otomatis. Batalkan kapan saja.",ja:"自動更新。いつでも解約できます。",ko:"자동 갱신. 언제든 취소 가능.",ms:"Pembaharuan automatik. Batalkan pada bila-bila masa.",pt:"Renovação automática. Cancele quando quiser.",th:"ต่ออายุอัตโนมัติ ยกเลิกได้ตลอดเวลา",vi:"Tự động gia hạn. Huỷ bất cứ lúc nào.",zh:"自动续订。可随时取消。","zh-Hant":"自動續訂。可隨時取消。"},
+  restore:{en:"Restore purchases",es:"Restaurar compras",id:"Pulihkan pembelian",ja:"購入を復元",ko:"구매 복원",ms:"Pulihkan pembelian",pt:"Restaurar compras",th:"กู้คืนรายการซื้อ",vi:"Khôi phục",zh:"恢复购买","zh-Hant":"恢復購買"},
+  terms:{en:"Terms",es:"Términos",id:"Ketentuan",ja:"利用規約",ko:"약관",ms:"Syarat",pt:"Termos",th:"ข้อกำหนด",vi:"Điều khoản",zh:"条款","zh-Hant":"條款"},
+  privacy:{en:"Privacy",es:"Privacidad",id:"Privasi",ja:"プライバシー",ko:"개인정보",ms:"Privasi",pt:"Privacidade",th:"ความเป็นส่วนตัว",vi:"Bảo mật",zh:"隐私","zh-Hant":"隱私權"},
+  perMonth:{en:"%@/month",es:"%@/mes",id:"%@/bulan",ja:"%@/月",ko:"%@/월",ms:"%@/bulan",pt:"%@/mês",th:"%@/เดือน",vi:"%@/tháng",zh:"%@/月","zh-Hant":"%@/月"},
+  perWeek:{en:"%@/week",es:"%@/semana",id:"%@/minggu",ja:"%@/週",ko:"%@/주",ms:"%@/minggu",pt:"%@/semana",th:"%@/สัปดาห์",vi:"%@/tuần",zh:"%@/周","zh-Hant":"%@/週"},
+  justPerWeek:{en:"Just %@/week",es:"Solo %@/semana",id:"Hanya %@/minggu",ja:"%@/週だけ",ko:"주 %@",ms:"Hanya %@/minggu",pt:"Apenas %@/semana",th:"เพียง %@/สัปดาห์",vi:"Chỉ %@/tuần",zh:"仅 %@/周","zh-Hant":"僅 %@/週"},
+  save:{en:"Save %@",es:"Ahorra %@",id:"Simpan %@",ja:"%@お得",ko:"%@ 할인",ms:"Simpan %@",pt:"Economize %@",th:"บันทึก %@",vi:"Tiết kiệm %@",zh:"省 %@","zh-Hant":"省 %@"},
+  dayFree:{en:"%d-day free",es:"%d días gratis",id:"Gratis %d hari",ja:"%d日間無料",ko:"%d일 무료",ms:"Percuma %d hari",pt:"%d dias grátis",th:"ฟรี %d วัน",vi:"Miễn phí %d ngày",zh:"%d 天免费","zh-Hant":"%d 天免費"},
+  startTrial:{en:"Start %d-day free trial",es:"Iniciar prueba gratis de %d días",id:"Mulai uji coba gratis %d hari",ja:"%d日間の無料トライアルを開始",ko:"%d일 무료 체험 시작",ms:"Mulakan percubaan percuma %d hari",pt:"Iniciar teste grátis de %d dias",th:"เริ่มทดลองใช้ฟรี %d วัน",vi:"Bắt đầu dùng thử miễn phí %d ngày",zh:"开始 %d 天免费试用","zh-Hant":"開始 %d 天免費試用"}
+};
+const bundled = (key, loc, n) => {
+  let s = B[key][loc] ?? B[key].en;
+  if (n !== undefined) s = s.replace(/%d/g, n);
+  return s;
+};
+const fill = (tpl, v) => tpl.replace(/%@/g, v);
+
+/* Icon minh hoạ — SF Symbol thật chỉ render trên máy */
+const ICONS = {
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  sparkles:'<path d="M12 3.2l1.7 4.6 4.6 1.7-4.6 1.7L12 15.8l-1.7-4.6L5.7 9.5l4.6-1.7z"/><path d="M18.3 14.6l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/>',
+  palette:'<path d="M12 3.2a8.8 8.8 0 100 17.6c1.3 0 2-.9 2-1.8 0-.6-.3-1-.6-1.4-.3-.4-.5-.8-.5-1.2 0-.9.7-1.5 1.6-1.5H16a5 5 0 005-5c0-3.9-4-6.7-9-6.7z"/><circle cx="7.6" cy="11.2" r="1.1"/><circle cx="10.6" cy="7.7" r="1.1"/><circle cx="15" cy="8.2" r="1.1"/>',
+  lock:'<rect x="4.5" y="10" width="15" height="10.5" rx="3.2"/><path d="M8 10V7.6a4 4 0 018 0V10"/>',
+  infinity:'<path d="M8.3 8.7c-1.9 0-3.5 1.5-3.5 3.3s1.6 3.3 3.5 3.3c3.2 0 4.2-6.6 7.4-6.6 1.9 0 3.5 1.5 3.5 3.3s-1.6 3.3-3.5 3.3c-3.2 0-4.2-6.6-7.4-6.6z"/>',
+  bell:'<path d="M17.8 16.2H6.2l1.4-2.1V10a4.4 4.4 0 018.8 0v4.1z"/><path d="M10.2 19a1.9 1.9 0 003.6 0"/>',
+  checklist:'<path d="M4 7.4l1.6 1.7L8.9 5.8M4 16.4l1.6 1.7 3.3-3.3M12 7.9h8M12 17h8"/>',
+  photo:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.4 16.4l4.3-4.3 3.9 3.9 3.4-3.4 5.6 5.2"/><circle cx="8.6" cy="9.6" r="1.2"/>',
+  clock:'<circle cx="12" cy="12" r="8.4"/><path d="M12 7.4V12l3 2"/>',
+  star:'<path d="M12 4.1l2.4 5 5.4.8-3.9 3.8 1 5.4-4.9-2.6-4.9 2.6 1-5.4L4.2 9.9l5.4-.8z"/>',
+  bolt:'<path d="M13.6 3.2L5.7 13.3h4.9L10.4 20.8l8.2-10.2h-5.2z"/>',
+  heart:'<path d="M12 20.1s-7.4-4.5-7.4-9.3A4.05 4.05 0 0112 8.2a4.05 4.05 0 017.4 2.6c0 4.8-7.4 9.3-7.4 9.3z"/>',
+  crown:'<path d="M4.4 18.2h15.2M4.6 8.2l3.5 3.4L12 5.6l3.9 6 3.5-3.4-1.3 8H5.9z"/>',
+  phone:'<rect x="6.6" y="2.6" width="10.8" height="18.8" rx="3"/><path d="M10.4 5.3h3.2"/>',
+  text:'<path d="M5 6.2h14M12 6.2v12.6M9.2 18.8h5.6"/>',
+  refresh:'<path d="M20.2 12a8.2 8.2 0 11-2.7-6.1"/><path d="M20.2 3.9v4.2H16"/>'
+};
+function iconSvg(name){
+  const n = (name || "").toLowerCase();
+  const pick =
+    n.startsWith("calendar") ? "calendar" :
+    (n.includes("sparkle") || n.includes("wand")) ? "sparkles" :
+    (n.includes("paint") || n.includes("drop") || n.includes("swatch")) ? "palette" :
+    n.includes("lock") ? "lock" :
+    n.includes("infinity") ? "infinity" :
+    n.includes("bell") ? "bell" :
+    (n.includes("check") || n.includes("list")) ? "checklist" :
+    (n.includes("photo") || n.includes("square.grid") || n.includes("rectangle")) ? "photo" :
+    (n.includes("clock") || n.includes("timer") || n.includes("alarm")) ? "clock" :
+    n.includes("star") ? "star" :
+    n.includes("bolt") ? "bolt" :
+    n.includes("heart") ? "heart" :
+    n.includes("crown") ? "crown" :
+    (n.includes("iphone") || n.includes("widget") || n.includes("apps")) ? "phone" :
+    (n.includes("textformat") || n.includes("character")) ? "text" :
+    n.includes("arrow") ? "refresh" : "sparkles";
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICONS[pick] + '</svg>';
+}
+
+/* ── State ─────────────────────────────────────────────────────── */
+const STORE_KEY = "ink.paywall.builder.v1";
+
+function blankCfg(){
+  return {
+    schema_version:1, min_app_version:"", use_bundled_paywall:false, variant:"",
+    headline:{}, subtitle:{},
+    heroMode:"bundled", heroAnimation:"matrix_lock_screen", heroImageUrl:"",
+    benefitsMode:"default", benefits:[],
+    plansMode:"default", plans:[]
+  };
+}
+function blankPlan(productId, period, type){
+  return {
+    product_id:productId||"", period:period||"weekly", type:type||"subscription",
+    show:true, preselected:false, badge:"", discount:"",
+    title:{}, title_no_trial:{}, subtitle:{},
+    _price:"", _cur:"USD"
+  };
+}
+function seed(){
+  const base = blankCfg();
+  base.variant = "baseline";
+
+  const b = blankCfg();
+  b.variant = "hero_matrix_trial_vi";
+  b.headline = { en:"Your week, already sorted", vi:"Tuần của bạn, đã xếp gọn" };
+  b.subtitle = { en:"Every task where it belongs — right on the lock screen.",
+                 vi:"Mọi việc đúng chỗ của nó — ngay trên màn hình khoá." };
+  b.heroMode = "animation"; b.heroAnimation = "matrix_lock_screen";
+  b.benefitsMode = "custom";
+  b.benefits = [
+    { icon:"checklist",    tint:"brandViolet", title:{ en:"Eisenhower matrix on your lock screen", vi:"Ma trận Eisenhower trên lock screen" } },
+    { icon:"calendar",     tint:"accentPink",  title:{ en:"Unlimited calendars",  vi:"Lịch không giới hạn" } },
+    { icon:"sparkles",     tint:"accentMint",  title:{ en:"All premium templates", vi:"Tất cả mẫu Pro" } },
+    { icon:"paintpalette", tint:"accentAmber", title:{ en:"Day colors & backgrounds", vi:"Màu ngày & nền" } }
+  ];
+  b.plansMode = "custom";
+  const w = blankPlan(KNOWN_PRODUCTS[0], "weekly", "subscription");
+  w.preselected = true; w.badge = "popular"; w._price = "4.99";
+  w.title = { en:"Get {trial}", vi:"Nhận {trial}" };
+  w.title_no_trial = { en:"Weekly", vi:"Hằng tuần" };
+  const a = blankPlan(KNOWN_PRODUCTS[1], "annual", "subscription");
+  a.badge = "best_value"; a._price = "29.99";
+  const l = blankPlan(KNOWN_PRODUCTS[2], "lifetime", "lifetime");
+  l.discount = "0.6"; l._price = "79.99";
+  b.plans = [w, a, l];
+
+  return {
+    variants:[ {name:"Baseline", cfg:base}, {name:"Variant B", cfg:b} ],
+    active:1, locale:"vi", tab:"preview",
+    sim:{ trialEligible:true, trialDays:3 }
+  };
+}
+
+let S = load();
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const p = JSON.parse(raw);
+      if(p && Array.isArray(p.variants) && p.variants.length) return p;
+    }
+  }catch(e){}
+  return seed();
+}
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} }
+const cfg = () => S.variants[S.active].cfg;
+
+/* ── Helpers ───────────────────────────────────────────────────── */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rcLocale = loc => loc === "zh-Hant" ? "zh" : loc;
+/* LocalizedText.resolved: locale → en → giá trị đầu tiên */
+function resolveMap(map, loc){
+  if(!map) return null;
+  const l = rcLocale(loc);
+  if(Object.prototype.hasOwnProperty.call(map, l)) return map[l];
+  if(Object.prototype.hasOwnProperty.call(map, "en")) return map["en"];
+  const v = Object.values(map);
+  return v.length ? v[0] : null;
+}
+const nonEmptyMap = m => m && Object.keys(m).length > 0;
+/* `override` của PaywallContent: rỗng coi như không có */
+function override(map, loc){ const v = resolveMap(map, loc); return (v && v.length) ? v : null; }
+
+function money(raw, cur, loc){
+  const n = parseFloat(raw);
+  if(!isFinite(n)) return null;
+  const l = loc === "vi" ? "vi-VN" : loc === "ja" ? "ja-JP" : loc === "ko" ? "ko-KR" : "en-US";
+  try{ return new Intl.NumberFormat(l, {style:"currency", currency:cur||"USD"}).format(n); }
+  catch(e){ return (cur||"USD") + " " + n.toFixed(2); }
+}
+
+/* ── EMIT: đúng những gì decoder đọc, bỏ mọi field preview ──────── */
+function emit(c){
+  const o = {};
+  o.schema_version = Number(c.schema_version) || 1;
+  if(c.min_app_version.trim()) o.min_app_version = c.min_app_version.trim();
+  if(c.use_bundled_paywall) o.use_bundled_paywall = true;
+  if(c.variant.trim()) o.variant = c.variant.trim();
+  if(nonEmptyMap(c.headline)) o.headline = {...c.headline};
+  if(nonEmptyMap(c.subtitle)) o.subtitle = {...c.subtitle};
+
+  if(c.heroMode === "animation" && c.heroAnimation) o.hero = { animation:c.heroAnimation };
+  else if(c.heroMode === "image" && c.heroImageUrl.trim()) o.hero = { image_url:c.heroImageUrl.trim() };
+
+  if(c.benefitsMode === "hidden") o.benefits = [];
+  else if(c.benefitsMode === "custom"){
+    o.benefits = c.benefits.map(b => {
+      const r = { icon:b.icon.trim(), tint:b.tint };
+      if(nonEmptyMap(b.title)) r.title = {...b.title};
+      return r;
+    });
+  }
+
+  if(c.plansMode === "custom"){
+    o.plans = c.plans.map(p => {
+      const r = { product_id:p.product_id.trim(), period:p.period, type:p.type };
+      if(!p.show) r.show = false;
+      if(p.preselected) r.preselected = true;
+      if(p.badge) r.badge = p.badge;
+      const d = parseFloat(p.discount);
+      if(isFinite(d) && d !== 0) r.discount = d;
+      if(nonEmptyMap(p.title)) r.title = {...p.title};
+      if(nonEmptyMap(p.title_no_trial)) r.title_no_trial = {...p.title_no_trial};
+      if(nonEmptyMap(p.subtitle)) r.subtitle = {...p.subtitle};
+      return r;
+    });
+  }
+  return o;
+}
+const emitMin = c => JSON.stringify(emit(c));
+const emitPretty = c => JSON.stringify(emit(c), null, 2);
+
+/* ── CHECKS: luật lấy thẳng từ PaywallConfigDecoder + ProPlanSelector ── */
+function checks(c){
+  const out = [];
+  const add = (sev, msg, why) => out.push({sev, msg, why:why||""});
+  const j = emit(c);
+
+  /* Một map khai thiếu locale KHÔNG phải "rơi về mặc định" — nó ghi đè bản
+     dịch bundled bằng tiếng Anh. Chuỗi bundled đã có đủ 10 thứ tiếng, nên map
+     chỉ có en+vi khiến 8 locale còn lại TỆ HƠN lúc không cấu hình gì. */
+  function localeGap(map, label){
+    if(!nonEmptyMap(map)) return;
+    const missing = RC_LOCALES.filter(l => !(l in map));
+    if(!missing.length || missing.length >= RC_LOCALES.length) return;
+    add("warn", label+" thiếu "+missing.length+" ngôn ngữ (<code>"+missing.join(" ")+"</code>) — các máy đó đọc <code>en</code>, tức <b>mất bản dịch sẵn có</b>.",
+        "Nếu đang chạy A/B, những locale này đồng thời đổi cả ngôn ngữ lẫn thứ bạn định đo — kết quả không quy cho nhân tố nào được. Giữ nguyên chữ bundled thì bản dịch đã có sẵn trong <code>Localizable.xcstrings</code>, chỉ việc chép sang.");
+  }
+
+  /* Envelope — bỏ cả payload, không nửa vời */
+  if(c.use_bundled_paywall)
+    add("error","Kill switch đang BẬT — app bỏ qua toàn bộ payload và vẽ màn hình bundled.",
+        "Mọi field bên dưới vô nghĩa cho tới khi tắt <code>use_bundled_paywall</code>.");
+  const sv = Number(c.schema_version);
+  if(!Number.isInteger(sv) || sv < 1)
+    add("warn","<code>schema_version</code> không phải số nguyên ≥ 1 — decoder coi như vắng mặt, tức schema v1.");
+  else if(sv > 1)
+    add("error","<code>schema_version = "+sv+"</code> lớn hơn mức build hiện tại hiểu (1) — payload bị bỏ qua toàn bộ.",
+        "Chỉ tăng khi app đã nâng <code>PaywallConfig.supportedSchemaVersion</code>.");
+  const mav = c.min_app_version.trim();
+  if(mav){
+    if(!/^\d+(\.\d+){0,3}$/.test(mav))
+      add("error","<code>min_app_version</code> = “"+esc(mav)+"” sai định dạng — so sánh phiên bản sẽ trượt và payload bị bỏ.");
+    else if(!versionAtLeast(APP_VERSION, mav))
+      add("error","<code>min_app_version = "+esc(mav)+"</code> cao hơn bản đang phát hành (<b>"+APP_VERSION+"</b>) — <b>toàn bộ</b> payload bị bỏ, không áp một nửa.",
+          "Đây là lỗi im lặng nhất trong file này: paywall vẫn vẽ đẹp, chỉ là vẽ bản bundled. Không chắc thì để trống — vắng mặt nghĩa là mọi build đều nhận.");
+    else
+      add("info","Chỉ build ≥ <b>"+esc(mav)+"</b> nhận payload này; build cũ hơn vẫn thấy màn hình bundled. Bản phát hành hiện tại là "+APP_VERSION+".");
+  }
+
+  /* Analytics */
+  if(!c.variant.trim())
+    add("warn","Chưa đặt <code>variant</code> — analytics ghi user property <code>paywall_variant = \"bundled\"</code>.",
+        "Không có nhãn thì không cắt được funnel theo nhánh. A/B test bắt buộc phải có, và mỗi nhánh một nhãn khác nhau.");
+
+  /* Copy */
+  const hl = resolveMap(c.headline, S.locale);
+  if(nonEmptyMap(c.headline)){
+    if(hl === null)
+      add("warn","Headline không có giá trị nào cho <b>"+LOCALE_NAMES[S.locale]+"</b> — sẽ rơi về <code>en</code>.");
+    else if(hl.trim() === "")
+      add("warn","Headline rỗng ở locale này — KHÔNG ẩn được, app rơi về chuỗi bundled.",
+          "Headline là field duy nhất mà chuỗi rỗng cũng fallback: một paywall không tiêu đề là paywall hỏng.");
+    else if(hl.length > 30)
+      add("warn","Headline "+hl.length+" ký tự (32pt, tối đa 3 dòng, không co theo Dynamic Type) — nên dưới ~30.");
+    localeGap(c.headline, "Headline");
+  }
+  const st = resolveMap(c.subtitle, S.locale);
+  if(st !== null && st.trim() === "")
+    add("info","Subtitle là chuỗi rỗng ở locale này — dòng phụ bị ẩn (đúng thiết kế).");
+  localeGap(c.subtitle, "Subtitle");
+
+  /* Hero */
+  if(c.heroMode === "image"){
+    const u = c.heroImageUrl.trim();
+    if(!u) add("warn","Chọn hero ảnh nhưng chưa nhập URL — không có key <code>hero</code>, app dùng ảnh bundled.");
+    else if(!/^https:\/\//i.test(u))
+      add("error","<code>hero.image_url</code> phải là <b>https</b> — URL khác bị decoder bỏ, hero về ảnh bundled.",
+          "ATS chặn http, và đây là màn hình đầu tiên sau splash.");
+    else
+      add("info","Ảnh hero mới tới user <b>chậm một lần mở app</b> — chỉ đổi sau khi file đã nằm trong cache Kingfisher.",
+          "Publish trước ngày bắt đầu experiment một hôm.");
+  }
+  if(c.heroMode === "animation")
+    add("info","Hero animation <code>"+c.heroAnimation+"</code> được compile sẵn trong app — không tải gì, không hỏng được. Build cũ không biết tên này sẽ rơi xuống tier ảnh.");
+
+  /* Benefits */
+  if(c.benefitsMode === "hidden")
+    add("info","<code>benefits: []</code> — khối lợi ích bị ẩn hoàn toàn.");
+  if(c.benefitsMode === "custom"){
+    if(c.benefits.length === 0)
+      add("warn","Chế độ tự cấu hình nhưng chưa có dòng nào — payload gửi mảng rỗng, khối lợi ích sẽ bị ẩn.");
+    if(c.benefits.length > 5)
+      add("error","Có "+c.benefits.length+" dòng lợi ích — decoder cắt còn <b>5</b>, "+(c.benefits.length-5)+" dòng cuối bị bỏ.",
+          "Khối này nằm giữa hero và danh sách gói trong một stack dọc cố định; thả cửa là đẩy nút CTA khỏi màn hình.");
+    c.benefits.forEach((b,i) => {
+      const n = "Dòng lợi ích #"+(i+1);
+      if(!b.icon.trim()) add("error",n+" thiếu <code>icon</code> — decoder bỏ cả dòng.");
+      if(!nonEmptyMap(b.title)) add("error",n+" thiếu <code>title</code> — decoder bỏ cả dòng.");
+      else{
+        const t = resolveMap(b.title, S.locale) || "";
+        if(t.length > 30) add("info",n+" dài "+t.length+" ký tự — cột chữ chỉ ~233pt, sẽ xuống 2 dòng rồi co lại 85%.");
+      }
+      if(!(b.tint in TINTS)) add("warn",n+" dùng tint lạ — app vẫn giữ dòng nhưng đổi sang <code>brandViolet</code>.");
+      localeGap(b.title, n);
+    });
+  }
+
+  /* Plans */
+  if(c.plansMode === "default")
+    add("info","Không gửi <code>plans</code> — app đọc key cũ <code>pro_plan_config</code>, rồi mới tới danh sách bundled.");
+  else{
+    const valid = c.plans.filter(p => p.product_id.trim() && p.period && p.type);
+    const visible = valid.filter(p => p.show);
+    if(valid.length === 0)
+      add("error","Không hàng nào hợp lệ (thiếu <code>product_id</code>/<code>period</code>/<code>type</code>) — app rơi về <code>pro_plan_config</code> rồi bundled.");
+    else if(visible.length === 0)
+      add("error","Mọi hàng đều <code>show: false</code> — không còn gói nào mua được, app phải dựng lại bằng danh sách bundled.",
+          "Đây là lỗi doanh thu kinh điển: user vẫn thấy paywall nhưng không phải paywall bạn thiết kế.");
+    const pre = visible.filter(p => p.preselected);
+    if(pre.length > 1)
+      add("warn",pre.length+" hàng cùng <code>preselected</code> — hàng đứng trước thắng, các hàng sau bị lờ.");
+    if(pre.length === 0 && visible.length)
+      add("info","Chưa hàng nào <code>preselected</code> — app chọn hàng đầu tiên trong danh sách (không còn cờ <code>recommended</code> ở key này).");
+    const seen = {};
+    c.plans.forEach((p,i) => {
+      const n = "Gói #"+(i+1)+" ("+(p.product_id.trim() ? esc(p.product_id.split(".").pop()) : "chưa có id")+")";
+      const id = p.product_id.trim();
+      if(!id) add("error",n+" thiếu <code>product_id</code> — decoder bỏ hàng này.");
+      else{
+        if(seen[id]) add("warn",n+" trùng <code>product_id</code> với hàng #"+seen[id]+".");
+        else seen[id] = i+1;
+        if(!KNOWN_PRODUCTS.includes(id))
+          add("warn",n+" dùng product id ngoài 3 id app đang bán — nếu App Store Connect không có, StoreKit trả về rỗng và hàng biến mất.");
+      }
+      if((p.period === "lifetime") !== (p.type === "lifetime"))
+        add("warn",n+" có <code>period</code> và <code>type</code> lệch nhau (<code>"+p.period+"</code> / <code>"+p.type+"</code>) — CTA và dòng auto-renew sẽ hiển thị sai.");
+      const d = parseFloat(p.discount);
+      if(p.discount !== "" && (!isFinite(d) || d <= 0 || d >= 1))
+        add("warn",n+" có <code>discount</code> ngoài khoảng 0…1 — pill giảm giá và giá gạch ngang sẽ không hiện.");
+      if(isFinite(d) && d > 0 && d < 1 && p.type !== "lifetime")
+        add("info",n+" có discount nhưng không phải gói lifetime — chỉ hiện pill “Save x%”, không có giá gạch ngang.");
+      const tt = resolveMap(p.title, S.locale) || "";
+      if(tt.includes("{trial}") && !nonEmptyMap(p.title_no_trial))
+        add("warn",n+" dùng <code>{trial}</code> nhưng thiếu <code>title_no_trial</code> — user đã dùng hết free trial sẽ thấy tên gói bundled thay vì tiêu đề của bạn.",
+            "Free trial đến từ StoreKit, không phải từ file này. Eligibility tính theo subscription group và tiêu một lần là hết.");
+      localeGap(p.title, n+" · title");
+      localeGap(p.title_no_trial, n+" · title_no_trial");
+      localeGap(p.subtitle, n+" · subtitle");
+      if(!tt.includes("{trial}") && nonEmptyMap(p.title_no_trial) && !nonEmptyMap(p.title))
+        add("info",n+" chỉ có <code>title_no_trial</code>, không có <code>title</code> — dùng được, nhưng user còn trial vẫn thấy tên gói bundled.");
+    });
+  }
+
+  /* Kích thước */
+  const bytes = new Blob([JSON.stringify(j)]).size;
+  if(bytes > 30000) add("warn","Payload "+bytes.toLocaleString("vi-VN")+" bytes — Remote Config giới hạn template tổng 1 MB, để ý nếu chạy nhiều variant.");
+
+  const rank = {error:0, warn:1, info:2};
+  return out.sort((a,b) => rank[a.sev] - rank[b.sev]);
+}
+
+/* ── PREVIEW: dựng lại ProScreen bằng đúng token của Ink ────────── */
+const BUNDLED_PRICES = { weekly:"4.99", annual:"29.99", lifetime:"79.99" };
+
+function envelopeRejected(c){
+  if(c.use_bundled_paywall) return "Kill switch đang bật";
+  const sv = Number(c.schema_version);
+  if(Number.isInteger(sv) && sv > 1) return "schema_version " + sv + " > 1";
+  const mav = c.min_app_version.trim();
+  if(mav && !/^\d+(\.\d+){0,3}$/.test(mav)) return "min_app_version sai định dạng";
+  return null;
+}
+
+function previewModel(c, loc){
+  const rejected = envelopeRejected(c);
+  const src = rejected ? blankCfg() : c;
+  const t = k => bundled(k, loc);
+
+  const headline = override(src.headline, loc) || t("headline");
+  const sRaw = resolveMap(src.subtitle, loc);
+  const subtitle = sRaw === null ? t("subtitle") : sRaw;
+
+  let benefits;
+  if(src.benefitsMode === "default" || rejected){
+    benefits = [
+      {icon:"calendar", tint:TINTS.accentPink,  title:t("b1")},
+      {icon:"sparkles", tint:TINTS.accentMint,  title:t("b2")},
+      {icon:"paintpalette", tint:TINTS.brandViolet, title:t("b3")}
+    ];
+  }else if(src.benefitsMode === "hidden"){
+    benefits = [];
+  }else{
+    benefits = src.benefits
+      .filter(b => b.icon.trim() && nonEmptyMap(b.title))
+      .slice(0,5)
+      .map(b => ({ icon:b.icon.trim(), tint:TINTS[b.tint] || TINTS.brandViolet,
+                   title:resolveMap(b.title, loc) || "" }));
+  }
+
+  let rows;
+  if(src.plansMode === "default" || rejected){
+    rows = [
+      {period:"weekly",  type:"subscription", price:BUNDLED_PRICES.weekly,  cur:"USD", badge:null,        discount:null, content:null},
+      {period:"annual",  type:"subscription", price:BUNDLED_PRICES.annual,  cur:"USD", badge:"best_value", discount:null, content:null},
+      {period:"lifetime",type:"lifetime",     price:BUNDLED_PRICES.lifetime,cur:"USD", badge:null,        discount:null, content:null}
+    ];
+    rows[1].preselected = true; /* recommended: true trong ProPlanConfig.defaults */
+  }else{
+    rows = src.plans
+      .filter(p => p.product_id.trim() && p.period && p.type && p.show)
+      .map(p => {
+        const d = parseFloat(p.discount);
+        return {
+          period:p.period, type:p.type, price:p._price || BUNDLED_PRICES[p.period] || "",
+          cur:p._cur || "USD", badge:p.badge || null,
+          discount:(isFinite(d) && d > 0 && d < 1) ? d : null,
+          preselected:p.preselected, content:p
+        };
+      });
+  }
+
+  const trialDays = Math.max(1, parseInt(S.sim.trialDays, 10) || 3);
+  const trialShort = bundled("dayFree", loc, trialDays);
+
+  rows.forEach(r => {
+    r.hasTrial = S.sim.trialEligible && r.type === "subscription";
+    const planName = t(r.period === "weekly" ? "weekly" : r.period === "annual" ? "annual" : "lifetime");
+    const tpl = r.content ? override(r.content.title, loc) : null;
+    if(r.hasTrial){
+      r.name = tpl ? tpl.replace(/\{trial\}/g, trialShort) : trialShort;
+    }else{
+      const noTrial = r.content ? override(r.content.title_no_trial, loc) : null;
+      r.name = noTrial || (tpl && !tpl.includes("{trial}") ? tpl : planName);
+    }
+
+    const confSub = r.content ? resolveMap(r.content.subtitle, loc) : null;
+    if(confSub !== null && confSub !== undefined){
+      r.sub = confSub === "" ? null : confSub;
+    }else if(r.hasTrial){
+      r.sub = planName;
+    }else if(r.period === "weekly"){
+      const m = money(r.price, r.cur, loc); r.sub = m ? fill(t("perWeek"), m) : null;
+    }else if(r.period === "annual"){
+      const pm = parseFloat(r.price);
+      const m = isFinite(pm) ? money(pm/12, r.cur, loc) : null;
+      r.sub = m ? fill(t("perMonth"), m) : t("billedYearly");
+    }else{
+      r.sub = t("oneTime");
+    }
+
+    r.badgeLabel = r.badge === "best_value" ? t("bestValue") : r.badge === "popular" ? t("popular") : null;
+    r.saveLabel = r.discount ? fill(t("save"), Math.round(r.discount*100) + "%") : null;
+    const pn = parseFloat(r.price);
+    r.priceLabel = money(r.price, r.cur, loc) || "—";
+    r.strike = (r.type === "lifetime" && r.discount && isFinite(pn))
+      ? money(pn/(1 - r.discount), r.cur, loc) : null;
+    r.cap = (r.period === "annual" && isFinite(pn))
+      ? fill(t("justPerWeek"), money(pn/52, r.cur, loc)) : null;
+  });
+
+  const selected = rows.find(r => r.preselected) || rows[0] || null;
+  if(selected) selected.isSelected = true;
+
+  return {
+    rejected, headline, subtitle, benefits, rows, selected,
+    hero: rejected ? {mode:"bundled"} : {mode:src.heroMode, anim:src.heroAnimation, url:src.heroImageUrl.trim()},
+    cta: selected && selected.hasTrial ? bundled("startTrial", loc, trialDays) : t("cont"),
+    showAutoRenew: !!selected && selected.type !== "lifetime",
+    t
+  };
+}
+
+function heroHtml(h){
+  if(h.mode === "animation"){
+    const label = (HERO_ANIMS[h.anim] || h.anim).split(" — ")[0];
+    return '<div class="pheroslot"><div class="tag"><b>' + esc(label) + '</b>hoạt hình vẽ sẵn trong app<br>172pt · chạy khi mở màn hình</div></div>';
+  }
+  if(h.mode === "image" && /^https:\/\//i.test(h.url)){
+    return '<div class="pheroslot"><img src="' + esc(h.url) + '" alt="hero"></div>';
+  }
+  if(h.mode === "image"){
+    return '<div class="pheroslot"><div class="tag"><b>URL không hợp lệ</b>decoder bỏ qua, app vẽ ảnh bundled</div></div>';
+  }
+  return '<div class="pheroslot"><div class="tag"><b>ProPaywallBanner</b>ảnh bundled trong app</div></div>';
+}
+
+function renderPreview(){
+  const c = cfg(), loc = S.locale;
+  const m = previewModel(c, loc);
+  const isDerived = loc === "zh-Hant";
+
+  const benefitsHtml = m.benefits.map(b =>
+    '<div class="pbrow"><div class="pbtile" style="background:' + b.tint + '29;color:' + b.tint + '">' +
+    iconSvg(b.icon) + '</div><div class="pbtitle">' + esc(b.title) + '</div></div>').join("");
+
+  const plansHtml = m.rows.length ? m.rows.map(r =>
+    '<div class="pplan' + (r.isSelected ? " sel" : "") + '">' +
+      (r.saveLabel ? '<div class="savebadge">' + esc(r.saveLabel) + '</div>' : '') +
+      '<div class="l"><div class="nameline"><span class="nm">' + esc(r.name) + '</span>' +
+        (r.badgeLabel ? '<span class="pillbadge">' + esc(r.badgeLabel) + '</span>' : '') +
+      '</div>' + (r.sub ? '<div class="sub">' + esc(r.sub) + '</div>' : '') + '</div>' +
+      '<div class="r"><div class="price">' + esc(r.priceLabel) + '</div>' +
+        (r.strike ? '<div class="strike">' + esc(r.strike) + '</div>' : '') +
+        (r.cap ? '<div class="cap">' + esc(r.cap) + '</div>' : '') +
+      '</div></div>').join("")
+    : '<div class="pplan"><div class="l"><div class="nm" style="font-size:13px;color:var(--p-muted)">Không có gói nào hiện — app dựng lại bằng danh sách bundled</div></div></div>';
+
+  return '' +
+  '<div class="previewpane">' +
+    '<div class="simbar">' +
+      '<span class="slabel">Giả lập store</span>' +
+      '<label><input type="checkbox" id="simTrial"' + (S.sim.trialEligible ? " checked" : "") + '> user còn free trial</label>' +
+      '<label>độ dài <input type="number" id="simDays" min="1" max="90" value="' + S.sim.trialDays + '"> ngày</label>' +
+      '<span style="font-size:11px;color:var(--subtle)">chỉ để xem trước — không xuất ra JSON</span>' +
+    '</div>' +
+    (m.rejected ? '<div class="check error" style="width:100%"><span class="sev">bỏ qua</span><div class="msg">' +
+      '<b>' + esc(m.rejected) + '</b> — app bỏ qua toàn bộ payload. Đây là màn hình bundled.</div></div>' : '') +
+    (isDerived ? '<div class="check info" style="width:100%"><span class="sev">zh-Hant</span><div class="msg">' +
+      'Máy Hán phồn thể đọc <b>chuỗi bundled zh-Hant</b> nhưng lấy override từ map <code>zh</code>.</div></div>' : '') +
+    '<div class="phonewrap"><div class="phonebox"><div class="phone">' +
+      '<div class="island"></div>' +
+      '<div class="pscroll">' +
+        '<div class="pherowash">' + heroHtml(m.hero) +
+          '<div class="pherotext"><div class="pheadline">' + esc(m.headline) + '</div>' +
+          (m.subtitle ? '<div class="psubtitle">' + esc(m.subtitle) + '</div>' : '') + '</div>' +
+        '</div>' +
+        '<div class="pbenefits">' + benefitsHtml + '</div>' +
+        '<div class="pplans">' + plansHtml + '</div>' +
+        '<div style="height:16px"></div>' +
+      '</div>' +
+      '<div class="pfooter">' +
+        '<div class="pauto" style="opacity:' + (m.showAutoRenew ? 1 : 0) + '">' + esc(m.t("autoRenew")) + '</div>' +
+        '<div class="pcta">' + esc(m.cta) + '</div>' +
+        '<div class="plegal"><span>' + esc(m.t("restore")) + '</span><span>' + esc(m.t("terms")) + '</span><span>' + esc(m.t("privacy")) + '</span></div>' +
+      '</div>' +
+    '</div></div></div>' +
+  '</div>';
+}
+
+/* ── JSON + checks views ───────────────────────────────────────── */
+function highlight(src){
+  return esc(src)
+    .replace(/&quot;([^&]*?)&quot;(\s*:)/g, '<span class="k">&quot;$1&quot;</span>$2')
+    .replace(/:\s*&quot;([\s\S]*?)&quot;/g, ': <span class="s">&quot;$1&quot;</span>')
+    .replace(/:\s*(-?\d+\.?\d*|true|false|null)/g, ': <span class="n">$1</span>');
+}
+function renderJson(){
+  return '<pre class="json">' + highlight(emitPretty(cfg())) + '</pre>';
+}
+function renderChecks(){
+  const list = checks(cfg());
+  if(!list.length)
+    return '<div class="checks"><div class="allclear">Không có cảnh báo — payload này chạy đúng như bạn thấy ở tab Xem trước.</div></div>';
+  const label = {error:"lỗi", warn:"cẩn thận", info:"lưu ý"};
+  return '<div class="checks">' + list.map(c =>
+    '<div class="check ' + c.sev + '"><span class="sev">' + label[c.sev] + '</span>' +
+    '<div class="msg">' + c.msg + (c.why ? '<em>' + c.why + '</em>' : '') + '</div></div>').join("") + '</div>';
+}
+
+/* ── Editor ────────────────────────────────────────────────────── */
+function locField(label, hint, map, attrs){
+  const loc = S.locale;
+  if(loc === "zh-Hant"){
+    const v = resolveMap(map, loc);
+    return '<div class="field"><span class="flabel">' + label + (hint ? '<span class="hint">' + hint + '</span>' : '') + '</span>' +
+      '<div class="locked">Máy zh-Hant đọc map <code>zh</code> — chuyển sang 简体中文 để sửa. ' +
+      'Hiện đang nhận: <b>' + (v === null ? "không có override" : (v === "" ? "chuỗi rỗng (ẩn)" : esc(v))) + '</b></div></div>';
+  }
+  const val = Object.prototype.hasOwnProperty.call(map, loc) ? map[loc] : "";
+  const isEmptied = Object.prototype.hasOwnProperty.call(map, loc) && map[loc] === "";
+  const filled = Object.keys(map).length;
+  const missing = RC_LOCALES.filter(l => !(l in map));
+  return '<div class="field">' +
+    '<span class="flabel">' + label + (hint ? '<span class="hint">' + hint + '</span>' : '') + '</span>' +
+    '<div class="loc">' +
+      '<input type="text" ' + attrs + ' value="' + esc(val) + '" placeholder="để trống = dùng chuỗi bundled">' +
+      '<button class="empty" type="button" data-empty="1" ' + attrs.replace(/^data-/, "data-") + ' aria-pressed="' + isEmptied + '" title="Gửi chuỗi rỗng cho ngôn ngữ này (ẩn dòng)">∅</button>' +
+    '</div>' +
+    '<div class="locmeta"><span class="filled">' + filled + '/' + RC_LOCALES.length + ' ngôn ngữ</span>' +
+      (filled && missing.length ? '<span>thiếu: ' + missing.join(" ") + '</span>' : '') +
+      (isEmptied ? '<span class="over">ngôn ngữ này gửi chuỗi rỗng</span>' : '') +
+    '</div></div>';
+}
+
+function segHtml(name, current, opts){
+  return '<div class="seg">' + opts.map(o =>
+    '<button type="button" data-seg="' + name + '" data-val="' + o[0] + '" aria-pressed="' + (current === o[0]) + '">' + o[1] + '</button>'
+  ).join("") + '</div>';
+}
+
+function renderEditor(){
+  const c = cfg();
+  const H = [];
+
+  /* Envelope */
+  H.push('<section class="card"><div class="chead"><h2>Phong bì</h2>' +
+    '<span class="rc">schema_version · min_app_version · use_bundled_paywall · variant</span></div><div class="cbody">' +
+    '<div class="fallback">Bốn field này là <b>được ăn cả ngã về không</b>: sai một cái là app bỏ nguyên payload và vẽ màn hình bundled — chứ không áp dụng một nửa.</div>' +
+    '<div class="grid3">' +
+      '<div class="field"><label for="f_sv">schema_version</label>' +
+        '<input id="f_sv" type="number" min="1" data-k="schema_version" value="' + esc(c.schema_version) + '"></div>' +
+      '<div class="field"><label for="f_mav">min_app_version</label>' +
+        '<input id="f_mav" type="text" data-k="min_app_version" value="' + esc(c.min_app_version) + '" placeholder="để trống = mọi build (vd 1.2.16)"></div>' +
+      '<div class="field"><label for="f_var">variant <span class="hint">nhãn analytics</span></label>' +
+        '<input id="f_var" type="text" data-k="variant" value="' + esc(c.variant) + '" placeholder="vd hero_matrix_vi"></div>' +
+    '</div>' +
+    '<div class="switchrow"><input type="checkbox" id="f_kill" data-k="use_bundled_paywall"' + (c.use_bundled_paywall ? " checked" : "") + '>' +
+      '<span class="t"><b>Kill switch</b> — bỏ qua toàn bộ payload, ship màn hình bundled' +
+      '<em>Dùng khi một experiment đang chạy hỏng: bật cái này publish là xong, không cần chờ build.</em></span></div>' +
+    '</div></section>');
+
+  /* Copy */
+  H.push('<section class="card"><div class="chead"><h2>Tiêu đề</h2><span class="rc">headline · subtitle</span></div><div class="cbody">' +
+    '<div class="fallback">Map theo ngôn ngữ, giải theo <b>ngôn ngữ máy → <code>en</code> → giá trị đầu tiên</b>. ' +
+    'Bỏ trống = dùng chuỗi trong <code>Localizable.xcstrings</code>. Chuỗi rỗng ẩn subtitle, nhưng <b>không</b> ẩn được headline.</div>' +
+    locField("headline", "32pt, tối đa 3 dòng", c.headline, 'data-loc="headline"') +
+    locField("subtitle", "14pt, ∅ để ẩn", c.subtitle, 'data-loc="subtitle"') +
+    '</div></section>');
+
+  /* Hero */
+  let heroExtra = "";
+  if(c.heroMode === "animation"){
+    heroExtra = '<div class="field"><label for="f_anim">Chọn hoạt hình</label><select id="f_anim" data-k="heroAnimation">' +
+      Object.keys(HERO_ANIMS).map(k => '<option value="' + k + '"' + (c.heroAnimation === k ? " selected" : "") + '>' + esc(HERO_ANIMS[k]) + '</option>').join("") +
+      '</select></div>';
+  }else if(c.heroMode === "image"){
+    heroExtra = '<div class="field"><label for="f_img">image_url <span class="hint">https bắt buộc</span></label>' +
+      '<input id="f_img" type="url" data-k="heroImageUrl" value="' + esc(c.heroImageUrl) + '" placeholder="https://cdn.example.com/paywall-hero-b.png"></div>';
+  }
+  H.push('<section class="card"><div class="chead"><h2>Hero</h2><span class="rc">hero.animation · hero.image_url</span></div><div class="cbody">' +
+    '<div class="fallback">Ba tầng, tầng trên thắng: <b>hoạt hình vẽ sẵn</b> → <b>ảnh https</b> → <b>ảnh bundled</b>. ' +
+    'Khung cố định 172pt nên artwork chỉ đổi được thứ được vẽ, không đổi được chỗ nó đứng.</div>' +
+    segHtml("heroMode", c.heroMode, [["bundled","Ảnh bundled"],["animation","Hoạt hình"],["image","Ảnh từ URL"]]) +
+    heroExtra + '</div></section>');
+
+  /* Benefits */
+  let benefitRows = "";
+  if(c.benefitsMode === "custom"){
+    benefitRows = '<div class="rowlist">' + c.benefits.map((b,i) => {
+      const t = resolveMap(b.title, S.locale) || "";
+      const over = i >= 5;
+      return '<div class="rowitem' + (over ? " off" : "") + '">' +
+        '<div class="rowhead"><span class="idx">' + (i+1) + '</span>' +
+          '<span class="swatch" style="background:' + (TINTS[b.tint] || TINTS.brandViolet) + '"></span>' +
+          '<span class="name">' + (t ? esc(t) : '<span style="color:var(--subtle)">chưa có tiêu đề</span>') + '</span>' +
+          (over ? '<span class="tag">bị cắt</span>' : '') +
+          '<button class="btn tiny ghost" data-move="up" data-bi="' + i + '" title="Lên">↑</button>' +
+          '<button class="btn tiny ghost" data-move="down" data-bi="' + i + '" title="Xuống">↓</button>' +
+          '<button class="btn tiny danger" data-del-b="' + i + '">Xoá</button>' +
+        '</div><div class="rowbody">' +
+        '<div class="grid2">' +
+          '<div class="field"><label>icon <span class="hint">tên SF Symbol</span></label>' +
+            '<input type="text" list="sfnames" data-bi="' + i + '" data-bk="icon" value="' + esc(b.icon) + '" placeholder="calendar"></div>' +
+          '<div class="field"><label>tint</label><select data-bi="' + i + '" data-bk="tint">' +
+            Object.keys(TINTS).map(k => '<option value="' + k + '"' + (b.tint === k ? " selected" : "") + '>' + k + '</option>').join("") +
+          '</select></div>' +
+        '</div>' +
+        locField("title", "tối đa 2 dòng", b.title, 'data-bi="' + i + '" data-loc="title"') +
+        '</div></div>';
+    }).join("") + '</div>' +
+    '<button class="btn" data-add-b="1"' + (c.benefits.length >= 5 ? " disabled" : "") + '>+ Thêm dòng lợi ích</button>';
+  }
+  H.push('<section class="card"><div class="chead"><h2>Lợi ích</h2><span class="rc">benefits[]</span></div><div class="cbody">' +
+    '<div class="fallback">Không gửi key = <b>3 dòng bundled</b>. Mảng rỗng = <b>ẩn cả khối</b>. ' +
+    'Tối đa <b>5</b> dòng, dòng thứ 6 trở đi bị decoder cắt. Tint là <b>tên token</b>, không phải mã hex — token nào cũng có sẵn nửa dark mode.</div>' +
+    segHtml("benefitsMode", c.benefitsMode, [["default","3 dòng bundled"],["hidden","Ẩn cả khối"],["custom","Tự cấu hình"]]) +
+    benefitRows + '</div></section>');
+
+  /* Plans */
+  let planRows = "";
+  if(c.plansMode === "custom"){
+    planRows = '<div class="rowlist">' + c.plans.map((p,i) => {
+      const short = p.product_id.trim() ? p.product_id.split(".").pop() : "chưa có product_id";
+      return '<div class="rowitem' + (p.show ? "" : " off") + '">' +
+        '<div class="rowhead"><span class="idx">' + (i+1) + '</span>' +
+          '<span class="name" data-name-for="' + i + '">' + esc(short) + '</span>' +
+          '<span class="tag">' + esc(p.period) + '</span>' +
+          '<button class="btn tiny ghost" data-move="up" data-pi="' + i + '" title="Lên">↑</button>' +
+          '<button class="btn tiny ghost" data-move="down" data-pi="' + i + '" title="Xuống">↓</button>' +
+          '<button class="btn tiny danger" data-del-p="' + i + '">Xoá</button>' +
+        '</div><div class="rowbody">' +
+        '<div class="field"><label>product_id</label>' +
+          '<input type="text" list="productids" data-pi="' + i + '" data-pk="product_id" value="' + esc(p.product_id) + '"></div>' +
+        '<div class="grid3">' +
+          '<div class="field"><label>period</label><select data-pi="' + i + '" data-pk="period">' +
+            ["weekly","annual","lifetime"].map(v => '<option value="' + v + '"' + (p.period === v ? " selected" : "") + '>' + v + '</option>').join("") + '</select></div>' +
+          '<div class="field"><label>type</label><select data-pi="' + i + '" data-pk="type">' +
+            ["subscription","lifetime"].map(v => '<option value="' + v + '"' + (p.type === v ? " selected" : "") + '>' + v + '</option>').join("") + '</select></div>' +
+          '<div class="field"><label>badge</label><select data-pi="' + i + '" data-pk="badge">' +
+            '<option value=""' + (p.badge === "" ? " selected" : "") + '>không có</option>' +
+            '<option value="best_value"' + (p.badge === "best_value" ? " selected" : "") + '>best_value</option>' +
+            '<option value="popular"' + (p.badge === "popular" ? " selected" : "") + '>popular</option>' +
+          '</select></div>' +
+        '</div>' +
+        '<div class="grid3">' +
+          '<div class="field"><label>discount <span class="hint">0…1</span></label>' +
+            '<input type="text" data-pi="' + i + '" data-pk="discount" value="' + esc(p.discount) + '" placeholder="vd 0.6"></div>' +
+          '<div class="field"><label>giá giả lập <span class="hint">chỉ xem trước</span></label>' +
+            '<input type="text" data-pi="' + i + '" data-pk="_price" value="' + esc(p._price) + '" placeholder="4.99"></div>' +
+          '<div class="field"><label>tiền tệ <span class="hint">chỉ xem trước</span></label>' +
+            '<input type="text" data-pi="' + i + '" data-pk="_cur" value="' + esc(p._cur) + '" placeholder="USD"></div>' +
+        '</div>' +
+        '<div class="grid2">' +
+          '<div class="switchrow"><input type="checkbox" data-pi="' + i + '" data-pk="show"' + (p.show ? " checked" : "") + '>' +
+            '<span class="t"><b>show</b><em>bỏ tick = ẩn hàng này</em></span></div>' +
+          '<div class="switchrow"><input type="checkbox" data-pi="' + i + '" data-pk="preselected"' + (p.preselected ? " checked" : "") + '>' +
+            '<span class="t"><b>preselected</b><em>hàng chọn sẵn khi mở màn hình</em></span></div>' +
+        '</div>' +
+        locField("title", "chứa {trial} nếu muốn quảng cáo dùng thử", p.title, 'data-pi="' + i + '" data-loc="title"') +
+        locField("title_no_trial", "khi store không có free trial", p.title_no_trial, 'data-pi="' + i + '" data-loc="title_no_trial"') +
+        locField("subtitle", "∅ để ẩn dòng phụ", p.subtitle, 'data-pi="' + i + '" data-loc="subtitle"') +
+        '</div></div>';
+    }).join("") + '</div>' +
+    '<button class="btn" data-add-p="1">+ Thêm gói</button>';
+  }
+  H.push('<section class="card"><div class="chead"><h2>Gói</h2><span class="rc">plans[]</span></div><div class="cbody">' +
+    '<div class="fallback">Thứ tự hiển thị là <b>thứ tự trong mảng</b> — key này không có field <code>index</code>. ' +
+    '<code>show</code> mặc định <b>true</b>. Giá luôn lấy từ StoreKit, file này không đặt giá được. ' +
+    '<code>{trial}</code> chỉ hiện khi StoreKit báo user còn free trial để nhận — độ dài dùng thử không bao giờ đến từ đây.</div>' +
+    segHtml("plansMode", c.plansMode, [["default","Không gửi (dùng pro_plan_config)"],["custom","Tự cấu hình"]]) +
+    planRows + '</div></section>');
+
+  H.push('<datalist id="sfnames">' + SF_SUGGEST.map(s => '<option value="' + s + '">').join("") + '</datalist>');
+  H.push('<datalist id="productids">' + KNOWN_PRODUCTS.map(s => '<option value="' + s + '">').join("") + '</datalist>');
+  return H.join("");
+}
+
+/* ── Render ────────────────────────────────────────────────────── */
+const $ = s => document.querySelector(s);
+
+function severityOf(c){
+  const l = checks(c);
+  if(l.some(x => x.sev === "error")) return "bad";
+  if(l.some(x => x.sev === "warn")) return "warn";
+  return "ok";
+}
+
+function renderVariantTabs(){
+  $("#variantTabs").innerHTML = S.variants.map((v,i) =>
+    '<button class="vtab" role="tab" aria-selected="' + (i === S.active) + '" data-v="' + i + '">' +
+    '<span class="dot ' + severityOf(v.cfg) + '"></span>' + esc(v.name) +
+    '<span style="opacity:.6;font-size:11px">' + esc(v.cfg.variant || "—") + '</span></button>').join("");
+}
+function renderLocaleChips(){
+  $("#localeChips").innerHTML = PREVIEW_LOCALES.map(l => {
+    return '<button class="lchip' + (l === "zh-Hant" ? " derived" : "") + '" aria-selected="' + (l === S.locale) + '" data-l="' + l + '">' +
+      esc(LOCALE_NAMES[l]) + '<span class="n">' + (l === "zh-Hant" ? "← zh" : l) + '</span></button>';
+  }).join("");
+}
+function renderRail(){
+  const body = $("#railBody");
+  body.innerHTML = S.tab === "preview" ? renderPreview() : S.tab === "json" ? renderJson() : renderChecks();
+  const list = checks(cfg());
+  const errs = list.filter(x => x.sev === "error").length;
+  const warns = list.filter(x => x.sev === "warn").length;
+  const badge = $("#checkCount");
+  badge.textContent = errs || warns || list.length;
+  badge.className = "count" + (errs ? " bad" : warns ? " warn" : "");
+  document.querySelectorAll(".railtabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === S.tab));
+  const bytes = new Blob([emitMin(cfg())]).size;
+  $("#sizeMeta").textContent = bytes.toLocaleString("vi-VN") + " bytes";
+  if(S.tab === "preview"){
+    const img = body.querySelector(".pheroslot img");
+    if(img) img.addEventListener("error", () => {
+      img.parentNode.innerHTML = '<div class="tag"><b>Không tải được ảnh</b>URL sai, hoặc trình duyệt đang chặn ảnh từ host ngoài</div>';
+    });
+    const t = $("#simTrial"), d = $("#simDays");
+    if(t) t.addEventListener("change", () => { S.sim.trialEligible = t.checked; save(); renderRail(); });
+    if(d) d.addEventListener("input", () => { S.sim.trialDays = d.value; save(); renderRail(); });
+  }
+}
+function renderAll(){
+  renderVariantTabs();
+  renderLocaleChips();
+  $("#editor").innerHTML = renderEditor();
+  renderRail();
+  save();
+}
+
+/* ── Bindings ──────────────────────────────────────────────────── */
+function mapFor(el){
+  const c = cfg(), key = el.dataset.loc;
+  if(el.dataset.bi !== undefined) return c.benefits[+el.dataset.bi][key];
+  if(el.dataset.pi !== undefined) return c.plans[+el.dataset.pi][key];
+  return c[key];
+}
+function refreshLocMeta(field, map){
+  const btn = field.querySelector(".empty");
+  const emptied = Object.prototype.hasOwnProperty.call(map, S.locale) && map[S.locale] === "";
+  if(btn) btn.setAttribute("aria-pressed", emptied);
+  const filled = Object.keys(map).length;
+  const missing = RC_LOCALES.filter(l => !(l in map));
+  const meta = field.querySelector(".locmeta");
+  if(meta) meta.innerHTML = '<span class="filled">' + filled + '/' + RC_LOCALES.length + ' ngôn ngữ</span>' +
+    (filled && missing.length ? '<span>thiếu: ' + missing.join(" ") + '</span>' : '') +
+    (emptied ? '<span class="over">ngôn ngữ này gửi chuỗi rỗng</span>' : '');
+}
+
+$("#editor").addEventListener("input", onEdit);
+$("#editor").addEventListener("change", onEdit);
+function onEdit(e){
+  const el = e.target;
+  if(!el.matches("input, select, textarea")) return;
+  const c = cfg();
+  if(el.dataset.loc !== undefined){
+    const map = mapFor(el);
+    if(el.value === "") delete map[S.locale]; else map[S.locale] = el.value;
+    const field = el.closest(".field");
+    if(field) refreshLocMeta(field, map);
+    if(el.dataset.bi !== undefined && el.dataset.loc === "title"){
+      const head = el.closest(".rowitem").querySelector(".name");
+      head.textContent = el.value || "chưa có tiêu đề";
+    }
+  }else if(el.dataset.bk !== undefined){
+    c.benefits[+el.dataset.bi][el.dataset.bk] = el.value;
+    if(el.dataset.bk === "tint"){
+      const sw = el.closest(".rowitem").querySelector(".swatch");
+      if(sw) sw.style.background = TINTS[el.value] || TINTS.brandViolet;
+    }
+  }else if(el.dataset.pk !== undefined){
+    const p = c.plans[+el.dataset.pi];
+    p[el.dataset.pk] = el.type === "checkbox" ? el.checked : el.value;
+    if(el.dataset.pk === "product_id"){
+      const head = el.closest(".rowitem").querySelector(".name");
+      head.textContent = el.value.trim() ? el.value.split(".").pop() : "chưa có product_id";
+    }
+    if(el.dataset.pk === "period"){
+      const tag = el.closest(".rowitem").querySelector(".tag");
+      if(tag) tag.textContent = el.value;
+    }
+    if(el.dataset.pk === "show") el.closest(".rowitem").classList.toggle("off", !el.checked);
+  }else if(el.dataset.k !== undefined){
+    c[el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
+    if(el.dataset.k === "variant") renderVariantTabs();
+  }
+  renderRail();
+  save();
+}
+
+$("#editor").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if(!b) return;
+  const c = cfg();
+  if(b.dataset.empty){
+    const map = mapFor(b);
+    if(Object.prototype.hasOwnProperty.call(map, S.locale) && map[S.locale] === "") delete map[S.locale];
+    else map[S.locale] = "";
+    const field = b.closest(".field");
+    const input = field.querySelector("input[type=text]");
+    input.value = map[S.locale] === "" ? "" : (map[S.locale] || "");
+    refreshLocMeta(field, map);
+    renderRail(); save(); return;
+  }
+  if(b.dataset.seg){ c[b.dataset.seg] = b.dataset.val; renderAll(); return; }
+  if(b.dataset.addB){ if(c.benefits.length < 5) c.benefits.push({icon:"sparkles", tint:"brandViolet", title:{}}); renderAll(); return; }
+  if(b.dataset.delB !== undefined){ c.benefits.splice(+b.dataset.delB, 1); renderAll(); return; }
+  if(b.dataset.addP){ c.plans.push(blankPlan()); renderAll(); return; }
+  if(b.dataset.delP !== undefined){ c.plans.splice(+b.dataset.delP, 1); renderAll(); return; }
+  if(b.dataset.move){
+    const arr = b.dataset.bi !== undefined ? c.benefits : c.plans;
+    const i = +(b.dataset.bi !== undefined ? b.dataset.bi : b.dataset.pi);
+    const j = b.dataset.move === "up" ? i - 1 : i + 1;
+    if(j >= 0 && j < arr.length){ const t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    renderAll(); return;
+  }
+});
+
+$("#variantTabs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-v]");
+  if(!b) return;
+  S.active = +b.dataset.v; renderAll();
+});
+$("#localeChips").addEventListener("click", e => {
+  const b = e.target.closest("button[data-l]");
+  if(!b) return;
+  S.locale = b.dataset.l; renderAll();
+});
+document.querySelector(".railtabs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]");
+  if(!b) return;
+  S.tab = b.dataset.tab; renderRail(); save();
+});
+
+/* prompt/confirm/alert không chạy được trong iframe sandbox — dùng <dialog> */
+function ask(opts){
+  return new Promise(resolve => {
+    const d = $("#dlgAsk"), inp = $("#askInput");
+    $("#askTitle").textContent = opts.title || "Xác nhận";
+    $("#askMsg").textContent = opts.message || "";
+    inp.hidden = !opts.input;
+    inp.value = opts.value || "";
+    $("#askCancel").hidden = !!opts.noCancel;
+    $("#askOk").textContent = opts.ok || "Đồng ý";
+    const done = v => { d.close(); resolve(v); };
+    $("#askOk").onclick = () => done(opts.input ? inp.value : true);
+    $("#askCancel").onclick = () => done(null);
+    d.onclose = () => resolve(null);
+    d.showModal();
+    if(opts.input){ inp.focus(); inp.select(); }
+  });
+}
+const tell = message => ask({title:"Lưu ý", message, noCancel:true, ok:"Đã hiểu"});
+
+$("#btnAddVariant").onclick = async () => {
+  const n = await ask({title:"Biến thể mới", message:"Tên hiển thị trong file này:",
+    input:true, value:"Variant " + String.fromCharCode(64 + S.variants.length), ok:"Tạo"});
+  if(n === null) return;
+  const c = blankCfg(); c.variant = n.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  S.variants.push({name:n || "Variant", cfg:c}); S.active = S.variants.length - 1; renderAll();
+};
+$("#btnDupVariant").onclick = () => {
+  const cur = S.variants[S.active];
+  const copy = JSON.parse(JSON.stringify(cur.cfg));
+  copy.variant = (copy.variant || "variant") + "_copy";
+  S.variants.push({name:cur.name + " (bản sao)", cfg:copy}); S.active = S.variants.length - 1; renderAll();
+};
+$("#btnRenameVariant").onclick = async () => {
+  const n = await ask({title:"Đổi tên", message:"Tên hiển thị của biến thể:",
+    input:true, value:S.variants[S.active].name, ok:"Lưu"});
+  if(n) { S.variants[S.active].name = n; renderAll(); }
+};
+$("#btnDelVariant").onclick = async () => {
+  if(S.variants.length === 1) return tell("Phải còn ít nhất một biến thể.");
+  const ok = await ask({title:"Xoá biến thể",
+    message:"Xoá “" + S.variants[S.active].name + "”? Payload của nó mất luôn.", ok:"Xoá"});
+  if(!ok) return;
+  S.variants.splice(S.active, 1); S.active = Math.max(0, S.active - 1); renderAll();
+};
+$("#btnReset").onclick = async () => {
+  const ok = await ask({title:"Đặt lại",
+    message:"Xoá hết biến thể đang có và quay lại hai ví dụ mặc định?", ok:"Đặt lại"});
+  if(!ok) return;
+  S = seed(); renderAll();
+};
+
+async function copyText(text, btn){
+  const old = btn.textContent;
+  try{ await navigator.clipboard.writeText(text); btn.textContent = "Đã copy"; }
+  catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); btn.textContent = "Đã copy"; }
+    catch(e2){ btn.textContent = "Copy thất bại"; }
+    ta.remove();
+  }
+  setTimeout(() => { btn.textContent = old; }, 1400);
+}
+$("#btnCopy").onclick = e => copyText(emitMin(cfg()), e.currentTarget);
+$("#btnCopyPretty").onclick = e => copyText(emitPretty(cfg()), e.currentTarget);
+$("#btnDownload").onclick = () => {
+  const name = (cfg().variant || S.variants[S.active].name || "paywall").replace(/[^a-z0-9_-]+/gi, "-");
+  const url = URL.createObjectURL(new Blob([emitPretty(cfg())], {type:"application/json"}));
+  const a = document.createElement("a");
+  a.href = url; a.download = "pro_paywall_config_v1." + name + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+/* ── Import ────────────────────────────────────────────────────── */
+function mapOf(v, dropped){
+  const out = {};
+  if(v && typeof v === "object" && !Array.isArray(v)){
+    Object.keys(v).forEach(k => {
+      if(typeof v[k] !== "string") return;
+      if(RC_LOCALES.includes(k)) out[k] = v[k];
+      else if(dropped) dropped.add(k);
+    });
+  }
+  return out;
+}
+function fromJson(o){
+  const dropped = new Set();
+  const c = blankCfg();
+  c.schema_version = Number.isInteger(o.schema_version) ? o.schema_version : 1;
+  c.min_app_version = typeof o.min_app_version === "string" ? o.min_app_version : "";
+  c.use_bundled_paywall = o.use_bundled_paywall === true;
+  c.variant = typeof o.variant === "string" ? o.variant : "";
+  c.headline = mapOf(o.headline, dropped);
+  c.subtitle = mapOf(o.subtitle, dropped);
+  if(o.hero && typeof o.hero === "object"){
+    if(typeof o.hero.animation === "string" && o.hero.animation){
+      c.heroMode = "animation"; c.heroAnimation = o.hero.animation;
+      if(!(c.heroAnimation in HERO_ANIMS)) HERO_ANIMS[c.heroAnimation] = c.heroAnimation + " — tên này không có trong build hiện tại";
+    }else if(typeof o.hero.image_url === "string" && o.hero.image_url){
+      c.heroMode = "image"; c.heroImageUrl = o.hero.image_url;
+    }
+  }
+  if(Array.isArray(o.benefits)){
+    c.benefitsMode = o.benefits.length ? "custom" : "hidden";
+    c.benefits = o.benefits.filter(b => b && typeof b === "object").map(b => ({
+      icon: typeof b.icon === "string" ? b.icon : "",
+      tint: (typeof b.tint === "string" && b.tint in TINTS) ? b.tint : "brandViolet",
+      title: mapOf(b.title, dropped)
+    }));
+  }
+  if(Array.isArray(o.plans) && o.plans.length){
+    c.plansMode = "custom";
+    c.plans = o.plans.filter(p => p && typeof p === "object").map(p => ({
+      product_id: typeof p.product_id === "string" ? p.product_id : "",
+      period: ["weekly","annual","lifetime"].includes(p.period) ? p.period : "weekly",
+      type: ["subscription","lifetime"].includes(p.type) ? p.type : "subscription",
+      show: p.show === false ? false : true,
+      preselected: p.preselected === true,
+      badge: ["best_value","popular"].includes(p.badge) ? p.badge : "",
+      discount: typeof p.discount === "number" ? String(p.discount) : "",
+      title: mapOf(p.title, dropped),
+      title_no_trial: mapOf(p.title_no_trial, dropped),
+      subtitle: mapOf(p.subtitle, dropped),
+      _price: "", _cur: "USD"
+    }));
+  }
+  return {cfg:c, dropped:[...dropped]};
+}
+$("#btnImport").onclick = () => { $("#importErr").hidden = true; $("#importText").value = ""; $("#dlgImport").showModal(); };
+$("#btnImportCancel").onclick = () => $("#dlgImport").close();
+$("#btnImportGo").onclick = () => {
+  const err = $("#importErr");
+  let o;
+  try{ o = JSON.parse($("#importText").value); }
+  catch(e){ err.textContent = "JSON không hợp lệ: " + e.message; err.hidden = false; return; }
+  if(!o || typeof o !== "object" || Array.isArray(o)){
+    err.textContent = "Payload phải là một object JSON."; err.hidden = false; return;
+  }
+  const r = fromJson(o);
+  S.variants[S.active].cfg = r.cfg;
+  $("#dlgImport").close();
+  renderAll();
+  if(r.dropped.length)
+    tell("Đã bỏ " + r.dropped.length + " khoá ngôn ngữ app không đọc được: " + r.dropped.join(", ") +
+         ". App giải chuỗi theo MÃ NGÔN NGỮ, nên máy zh-Hant đọc map \"zh\".");
+};
+$("#btnHelp").onclick = () => $("#dlgHelp").showModal();
+$("#btnHelpClose").onclick = () => $("#dlgHelp").close();
+
+renderAll();
+</script>
