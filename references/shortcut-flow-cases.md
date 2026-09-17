@@ -293,6 +293,82 @@ và support cũng không, nếu app không ghi lại trạng thái.
 
 ---
 
+## 5.1 · Cây chẩn đoán khi wallpaper hôm nay đổi đúng ngày nhưng thiếu event Google Calendar
+
+Cây ở mục 5 chỉ trả lời triệu chứng nhị phân *"wallpaper có đổi hay không"*. Mục này dành cho một triệu chứng
+**khác hẳn**: automation vẫn chạy, wallpaper vẫn đổi mỗi sáng — nhưng **thiếu một event cụ thể** từ Google
+Calendar.
+
+> Cập nhật 2026-09-16 theo [`references/pipeline.html`](pipeline.html) — tài liệu pipeline thật lấy từ code
+> ("Lịch tới màn khoá"), thay cho bản suy đoán ban đầu (giả định có tầng "sync" tách rời — **sai**: pipeline
+> xác nhận app gọi **trực tiếp Google Calendar API tại thời điểm render**, không có cache/webhook nào ở giữa).
+> Hệ quả: fetch luôn trả về **toàn bộ** event trong khung thời gian được hỏi hoặc **rỗng** — không có đường
+> nào khiến riêng 1 event bị thiếu trong khi các event Google khác cùng ngày vẫn đúng. Đây là lý do câu hỏi
+> đầu tiên của cây dưới đây ("thiếu hết hay chỉ thiếu 1 event") lại chính là câu hỏi quan trọng nhất.
+
+> Bắt nguồn từ [BUG-004](../bugs/bug-log.md#bug-004--event-tạo-trên-google-calendar-không-xuất-hiện-trên-wallpaper-hôm-sau) — user report, chưa reproduce, ghi ở đây để dùng lại khi test.
+
+```mermaid
+flowchart TD
+    S2([Wallpaper hôm nay đổi đúng ngày<br/>nhưng thiếu event Google Calendar]) --> Q0{Ngày trên wallpaper<br/>đúng là hôm nay?}
+    Q0 -->|Không, ảnh cũ| N25[N25 · Shortcut không set được<br/>wallpaper - tên shortcut và link<br/>iCloud lệch nhau]
+    Q0 -->|Có, đúng hôm nay| Q1{TOÀN BỘ event Google hôm đó<br/>đều thiếu, hay chỉ 1 event mới?}
+    Q1 -->|Thiếu hết| Q2{Settings → Google Calendar<br/>vẫn hiện Connected?}
+    Q2 -->|Không / đòi đăng nhập lại| N21[N21 · Refresh token bị thu hồi<br/>- Keychain vẫn khôi phục phiên<br/>thành công nhưng fetch luôn rỗng]
+    Q2 -->|Có, vẫn Connected| Q3{Mở tab Calendar trong Ink<br/>lúc app đang mở, event có hiện?}
+    Q3 -->|Không| N21
+    Q3 -->|Có, chỉ thiếu trên wallpaper| Q4{Máy có reboot đêm qua<br/>trước giờ automation chạy?}
+    Q4 -->|Có| N22[N22 · Keychain chưa đọc được vì máy<br/>chưa mở khoá lần nào kể từ khi<br/>khởi động lại]
+    Q4 -->|Không| N23[N23 · Timeout 10s/nhà cung cấp<br/>- fetch bị huỷ, render tiếp<br/>chỉ với lịch Apple]
+    Q1 -->|Chỉ 1 event mới thiếu,<br/>event Google khác vẫn đúng| N24[N24 · Bất thường - không khớp<br/>kiến trúc hiện tại, cần dev xác nhận]
+```
+
+#### N21 · Refresh token bị thu hồi hoặc hết hạn
+
+Token Google hết hạn hoặc bị user thu hồi ở `myaccount.google.com` mà Ink không biết — phiên vẫn "khôi phục
+thành công" từ Keychain vì SDK không chứng minh lại token còn sống, nên toggle vẫn hiện BẬT. Nhưng fetch thật
+luôn trả lỗi, bị quy tắc "mọi thất bại → `[]`" nuốt mất → **toàn bộ** event Google biến mất khỏi mọi bề mặt
+(wallpaper lẫn tab Calendar trong app), không riêng event mới. Cách phục hồi theo `pipeline.html`: đăng xuất
+rồi đăng nhập lại. Mức độ 🔴 — hỏng im lặng, không có tín hiệu nào cho user.
+
+#### N22 · Keychain chưa đọc được sau khi máy khởi động lại
+
+Phiên Google/Outlook lưu ở Keychain lớp `AfterFirstUnlockThisDeviceOnly` — chỉ đọc được sau khi máy đã mở
+khoá **ít nhất 1 lần** kể từ lúc khởi động. Nếu máy reboot (update iOS, hết pin qua đêm...) đúng lúc automation
+chạy trước khi user mở khoá máy lần đầu, app coi như Google đang TẮT, bỏ qua hoàn toàn. Tự hết ngay sau khi
+user mở khoá máy 1 lần — nên khó tái hiện lại theo yêu cầu, chỉ xác nhận được bằng cách hỏi lại lịch sử dùng
+máy đêm hôm đó. Mức độ 🟠 — điều kiện xảy ra hẹp, nhưng hoàn toàn im lặng.
+
+#### N23 · Timeout 10 giây mỗi nhà cung cấp
+
+Toàn bộ chuỗi khôi phục phiên → làm mới token → gọi calendar list → gọi events phải xong trong 10 giây, chạy
+trong App Intent nền do Shortcuts gọi (thường lúc máy khoá, không UI, không runloop, tài nguyên hạn chế). Quá
+hạn thì fetch bị huỷ và **bỏ mặc**, render tiếp tục chỉ với lịch Apple. Đặc điểm nhận dạng: lỗi **chập chờn
+theo ngày** (không phải lúc nào cũng xảy ra), và event **có hiện đúng** khi mở tab Calendar trong Ink lúc app
+đang foreground (không bị giới hạn 10s). Mức độ 🟠 — vấn đề timing trong môi trường chạy nền bị giới hạn tài
+nguyên, không phải mất kết nối vĩnh viễn.
+
+#### N24 · Bất thường — chỉ 1 event thiếu, không khớp kiến trúc hiện tại
+
+Nếu xác nhận được: ngày trên wallpaper đúng, các event Google **khác** cùng ngày vẫn hiện đúng, và event đó
+**có** hiện trong tab Calendar của Ink — thì đây không khớp bất kỳ cơ chế nào đã biết trong pipeline. Vì mỗi
+lần render, Google Calendar API luôn trả về **toàn bộ** event trong khung thời gian được hỏi (không có đường
+"chỉ lấy event mới"), nên fetch phải hoặc đúng hết hoặc rỗng hết — không có trạng thái thiếu đúng 1 event.
+**Cần dev xác nhận trực tiếp** — khả năng: event nằm trên 1 lịch Google chưa được bật trong danh sách lịch
+Ink dùng để fetch, edge case recurring/exception event, hoặc độ trễ lan truyền phía server Google nằm ngoài
+control của app. Mức độ 🔴 — vì không giải thích được bằng tài liệu hiện có, ưu tiên điều tra cao nhất.
+
+#### N25 · Shortcut không set được wallpaper — tên và link iCloud lệch nhau
+
+Ink mở shortcut qua `shortcuts://run-shortcut?name=…` — tên shortcut và link chia sẻ iCloud là một giá trị
+gồm hai nửa, link iCloud là ảnh chụp bất biến tại thời điểm chia sẻ. Nếu tên bị đổi mà link không cập nhật
+theo, Shortcuts có thể mở ra rồi bật lại ngay mà không thực sự chạy đúng bản mới. Triệu chứng: **toàn bộ**
+wallpaper là ảnh cũ (ngày cũ, event Apple cũng sai theo), không riêng thiếu 1 event Google — nên đây là nhánh
+loại trừ đầu tiên trước khi đi sâu vào các case Google ở trên. Mức độ 🟠 — thường là vấn đề phân phối/cấu hình
+shortcut hơn là hành vi hằng ngày của user.
+
+---
+
 ## 6 · Xếp hạng rủi ro tổng hợp
 
 | Hạng | Case | Vì sao xếp hạng này |

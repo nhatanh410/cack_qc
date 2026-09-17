@@ -15,6 +15,7 @@
 | BUG-001 | 2026-08-14 | 04_discover | create-note | editing | High | Nút ✓ đóng màn edit nhưng note không được lưu | Open |
 | BUG-002 | 2026-08-14 | 04_discover | collection | default | Medium | Lockscreen dạng Note hiển thị tên `(Untitled)` trong Your collection | Open |
 | BUG-003 | 2026-09-15 | 08_paywall | plan-list | default | Medium | `discount: 1` là giá trị invalid (`discount` phải nhỏ hơn 1) nhưng pill "SAVE 100%" vẫn hiện — thiếu 1 nhánh validate | Open |
+| BUG-004 | 2026-09-16 | 10_lockscreen | lock-screen | default | High | Event tạo trên Google Calendar không xuất hiện trên wallpaper hôm sau dù Google Calendar sync đang bật | Need info |
 
 ---
 
@@ -167,3 +168,103 @@ Sửa decoder: validate `discount ∈ (0,1)` **một lần**, dùng chung cho c�
 
 - Liên quan trực tiếp tới câu hỏi #5 (mục "`discount = 1` vẫn hiện pill...") đã gửi trong [`paywall-remote-config-questions-for-dev.md`](../requirements/test-plans/paywall-remote-config-questions-for-dev.md) — bug report này là bản mở rộng kèm khuyến nghị cụ thể, không thay thế câu hỏi đó.
 - TC-PLAN-12 trong [`test-cases/paywall-remote-config.md`](../test-cases/paywall-remote-config.md) đã cập nhật lại expected result theo Actual quan sát được — không đánh dấu Fail, chỉ ghi nhận deviation.
+
+---
+
+## BUG-004 · Event tạo trên Google Calendar không xuất hiện trên wallpaper hôm sau
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-09-16 |
+| **Flow** | `10_lockscreen` — triệu chứng quan sát ở đây, nhưng root cause khả năng nằm ở `09_settings` (Google Calendar sync) hoặc `03_shortcut-setup` (automation render) |
+| **Screen** | `lock-screen` — wallpaper thật trên máy sau khi Ink render |
+| **State** | `default` |
+| **Severity** | High — mất dữ liệu event khỏi tính năng lõi (wallpaper hiển thị lịch), không có toast/cảnh báo nào cho user biết là đang thiếu dữ liệu — "hỏng im lặng" |
+| **Status** | Need info — mới là báo cáo lời từ user, **chưa reproduce**, chưa có screenshot/log kèm theo |
+| **Device / Build** | ❓ chưa ghi nhận — cần bổ sung |
+
+### Steps to reproduce (theo lời user)
+
+1. Bật Google Calendar sync trong Ink (`09_settings` → toggle *"Google Calendar — Sign in to sync..."*).
+2. Tạo một event mới **trực tiếp trên Google Calendar** (app/web của Google, không qua Ink).
+3. Đợi qua hôm sau (giả định automation "Time of Day" đã chạy ít nhất 1 lần).
+4. Xem wallpaper (lock screen) đã render.
+
+### Expected
+
+Event vừa tạo trên Google Calendar xuất hiện trên wallpaper của ngày tương ứng, cùng với các event khác.
+
+### Actual
+
+Event không xuất hiện trên wallpaper, dù sync đang bật.
+
+### Evidence
+
+Chưa có — đây là báo cáo lời của user, chưa kèm screenshot của wallpaper thực tế hay của tab Calendar trong
+Ink. Cần thu thập khi reproduce.
+
+### Root cause hypotheses (đã đối chiếu với code thật)
+
+> Cập nhật 2026-09-16: có tài liệu pipeline thật lấy trực tiếp từ code —
+> [`references/pipeline.html`](../references/pipeline.html) ("Lịch tới màn khoá"). Toàn bộ phần dưới đã viết
+> lại theo tài liệu này, thay cho phần suy đoán "2 tầng sync" ban đầu (sai — không có tầng sync tách rời).
+
+Theo `pipeline.html`, **không có bước "sync" nào lưu bản sao Google Calendar cả** — mỗi lần render, app gọi
+**trực tiếp Google Calendar API** (`calendar/v3`, `singleEvents=true`) ngay tại thời điểm vẽ wallpaper, không
+qua cache/webhook. Hệ quả kiến trúc quan trọng: **fetch luôn trả về toàn bộ event trong khung thời gian được
+hỏi (kể cả event vừa tạo) hoặc trả về rỗng** — không có cơ chế "chỉ lấy event mới" nên về nguyên tắc, không
+event nào bị thiếu riêng lẻ nếu Google fetch thành công.
+
+**Nhóm A — nếu TOÀN BỘ event Google hôm đó bị thiếu** (không riêng event mới), do render chạy trong App
+Intent nền (Shortcuts automation, thường lúc máy khoá, không UI):
+
+1. 🔴 **Refresh token đã bị thu hồi/hết hạn.** Phiên vẫn "khôi phục thành công" từ Keychain (SDK không chứng
+   minh lại token còn sống), toggle vẫn hiện BẬT — nhưng fetch thật trả lỗi, bị quy tắc "mọi thất bại → `[]`"
+   nuốt mất, không có tín hiệu gì cho user. Đúng khớp mục troubleshooting có sẵn trong `pipeline.html`:
+   *"Toggle Google bật nhưng không có sự kiện nào → refresh token đã bị thu hồi... Đăng xuất rồi đăng nhập
+   lại."*
+2. 🔴 **Timeout 10 giây/nhà cung cấp.** Cả chuỗi khôi phục phiên → làm mới token → gọi calendar list → gọi
+   events phải xong trong 10s, chạy trong tiến trình nền hạn chế tài nguyên. Quá hạn thì bị huỷ, bỏ mặc,
+   render tiếp chỉ với lịch Apple. Lỗi dạng này **không ổn định theo ngày** (chập chờn theo mạng/tải máy).
+3. 🟠 **Keychain không đọc được vì máy chưa mở khoá lần nào kể từ khi khởi động lại** (Keychain class
+   `AfterFirstUnlockThisDeviceOnly`). Nếu máy reboot (update iOS, hết pin qua đêm...) đúng lúc automation chạy
+   trước khi user mở khoá máy lần đầu, app coi như Google đang TẮT — tự hết sau khi mở khoá máy 1 lần.
+
+**Nhóm B — wallpaper không thực sự được render/áp dụng lại sáng hôm đó** (không liên quan gì Google):
+
+4. 🟡 **Shortcut trả file nhưng không set được wallpaper** — do tên shortcut và link chia sẻ iCloud lệch
+   nhau. Nếu đúng nguyên nhân này, **toàn bộ** wallpaper là ảnh cũ (ngày cũ, event Apple cũng sai theo) chứ
+   không riêng thiếu 1 event Google — kiểm ngày hiển thị trên wallpaper để loại trừ.
+
+**Nhóm C — không khớp kiến trúc hiện tại, cần dev xác nhận riêng:**
+
+5. Nếu xác nhận được **các event Google khác cùng ngày vẫn hiện đúng**, chỉ riêng event mới tạo bị thiếu, và
+   ngày trên wallpaper đúng là hôm nay → **không khớp bất kỳ cơ chế nào trong pipeline hiện tại** (vì fetch
+   luôn lấy full window, không có đường "chỉ lấy event mới" để mà lỗi riêng nó). Cần dev xác nhận trực tiếp —
+   khả năng: event nằm trên 1 lịch Google chưa được bật trong danh sách lịch của Ink, edge case
+   recurring/exception event, hoặc độ trễ lan truyền phía server Google — nằm ngoài phạm vi tài liệu pipeline.
+
+### Notes
+
+- Xem thêm cây chẩn đoán mới [§5.1 "Wallpaper hôm nay đổi đúng ngày nhưng thiếu event Google Calendar"](../references/shortcut-flow-cases.md#51--cây-chẩn-đoán-khi-wallpaper-hôm-nay-đổi-đúng-ngày-nhưng-thiếu-event-google-calendar) trong `shortcut-flow-cases.md` — case `N21`-`N25` map trực tiếp với các hypothesis ở trên.
+- [`references/pipeline.html`](../references/pipeline.html) là nguồn thật lấy từ code (`WallpaperDataProvider`, `WallpaperRemoteEventSource`, `GenerateLatestWallpaperIntent`...) — ưu tiên đối chiếu tài liệu này trước khi suy đoán thêm về kiến trúc.
+- [`references/permissions-matrix.md`](../references/permissions-matrix.md) §3 đã cảnh báo trước đúng case token revoked (hypothesis #1) như một risk item, trước khi có tài liệu pipeline xác nhận — nay đã có bằng chứng code khớp với cảnh báo đó.
+- Pipeline xác nhận Google Calendar **đã được nối thật** vào renderer (không phải tích hợp dở dang) — loại bỏ hoàn toàn hypothesis "integration chưa từng hoạt động" trong bản phân tích trước đó.
+
+### Cần xác minh thêm
+
+- [ ] **Quan trọng nhất:** các event Google **khác** cùng ngày (tạo từ trước) có hiện đúng trên wallpaper
+      không, hay **toàn bộ** event Google đều thiếu? → phân biệt Nhóm A (mất hết, lỗi đã biết) với Nhóm C
+      (chỉ thiếu đúng 1 event, bất thường, cần dev xác nhận riêng).
+- [ ] Ngày hiển thị trên wallpaper có đúng là **hôm nay** không, hay là ảnh render từ hôm trước? (loại trừ
+      Nhóm B — wallpaper cũ do shortcut không set được, không liên quan Google).
+- [ ] Trong Ink có màn nào hiển thị "lần cuối automation chạy" không (pipeline có ghi log
+      `InkWallpaperRunLog`/`InkAutomationRunLog`) — xem automation có thực sự chạy sáng nay không.
+- [ ] `Settings → Google Calendar` còn hiện **Connected** hay đòi đăng nhập lại?
+- [ ] Mở **tab Calendar trong Ink** (app đang mở, không bị giới hạn 10s như lúc chạy nền) → event có hiện
+      không? Có → loại trừ token revoked, nghiêng về timeout/keychain-reboot (đặc thù chạy nền). Không hiện
+      dù app đang mở có mạng → gần như chắc chắn token bị revoke (hypothesis #1).
+- [ ] Thử **đăng xuất rồi đăng nhập lại** Google Calendar trong Settings, sau đó chạy tay Shortcut → event có
+      xuất hiện không? (test trực tiếp hypothesis #1).
+- [ ] Máy có bị khởi động lại (update iOS, hết pin...) đêm trước khi phát hiện bug không? (test hypothesis #3).
+- [ ] Thu thập screenshot: wallpaper thực tế + tab Calendar trong Ink + màn `Settings → Google Calendar`.
