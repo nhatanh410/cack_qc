@@ -1,0 +1,493 @@
+<title>Ink — Định danh, Chia sẻ, Đồng bộ, Sao lưu</title>
+<style>
+  :root {
+    --ink: #111827;
+    --ink-soft: #3B3A4A;
+    --muted: #6B6880;
+    --faint: #9A97AC;
+    --ground: #FBFAFE;
+    --surface: #FFFFFF;
+    --sunken: #F4F1FA;
+    --line: #E6E1F0;
+    --violet: #7B3FE4;
+    --violet-bright: #C491FF;
+    --violet-wash: #F2E9FF;
+    --cyan: #D1FBFE;
+    --mint: #1F9D64;
+    --mint-wash: #E4F6EC;
+    --coral: #D8503C;
+    --coral-wash: #FCEAE6;
+    --amber: #B5761B;
+    --amber-wash: #FBF0DC;
+    --shadow: 0 1px 2px rgba(17, 24, 39, .04), 0 8px 24px rgba(17, 24, 39, .06);
+    --shadow-lift: 0 2px 4px rgba(17, 24, 39, .06), 0 18px 40px rgba(123, 63, 228, .10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #F3F1F9; --ink-soft: #D6D2E4; --muted: #A5A1B8; --faint: #77738A;
+      --ground: #121019; --surface: #1B1825; --sunken: #232032; --line: #322E43;
+      --violet: #C491FF; --violet-bright: #C491FF; --violet-wash: #2A2140;
+      --cyan: #1C3A42;
+      --mint: #6FDCA4; --mint-wash: #17301F;
+      --coral: #FF9686; --coral-wash: #34201C;
+      --amber: #E6B25F; --amber-wash: #322613;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+      --shadow-lift: 0 2px 4px rgba(0,0,0,.45), 0 18px 40px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F3F1F9; --ink-soft: #D6D2E4; --muted: #A5A1B8; --faint: #77738A;
+    --ground: #121019; --surface: #1B1825; --sunken: #232032; --line: #322E43;
+    --violet: #C491FF; --violet-bright: #C491FF; --violet-wash: #2A2140;
+    --cyan: #1C3A42;
+    --mint: #6FDCA4; --mint-wash: #17301F;
+    --coral: #FF9686; --coral-wash: #34201C;
+    --amber: #E6B25F; --amber-wash: #322613;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.45), 0 18px 40px rgba(0,0,0,.5);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink-soft);
+    font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; }
+  h1, h2, h3, .num, .eyebrow, .chip, .pill {
+    font-family: "Nunito", "Trebuchet MS", system-ui, sans-serif;
+  }
+  h1 { font-size: clamp(30px, 5.4vw, 46px); line-height: 1.1; font-weight: 800; color: var(--ink);
+       margin: 0 0 14px; letter-spacing: -.02em; text-wrap: balance; }
+  h2 { font-size: clamp(21px, 3vw, 27px); font-weight: 800; color: var(--ink);
+       margin: 0 0 6px; letter-spacing: -.01em; text-wrap: balance; }
+  h3 { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
+  p { margin: 0 0 12px; max-width: 62ch; }
+  a { color: var(--violet); }
+
+  .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+             color: var(--violet); margin: 0 0 10px; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 60ch; margin: 0; }
+
+  /* ---- flow doc ---- */
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:16px;
+          padding:18px 20px; box-shadow:var(--shadow); }
+  .card h3 { margin-bottom:6px; }
+  .card p:last-child { margin-bottom:0; }
+
+  /* horizontal pipeline */
+  .flow { display:flex; flex-wrap:wrap; align-items:stretch; gap:0; margin:22px 0 6px; }
+  .node { flex:1 1 150px; min-width:150px; background:var(--surface); border:1px solid var(--line);
+          border-radius:14px; padding:13px 15px; box-shadow:var(--shadow); }
+  .node .who { font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+               color:var(--faint); margin-bottom:4px; }
+  .node .what { font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.35; }
+  .node .sub { font-size:12.5px; color:var(--muted); margin-top:5px; line-height:1.45; }
+  .node.app    { border-color:var(--violet); background:var(--violet-wash); }
+  .node.server { border-color:var(--mint);   background:var(--mint-wash); }
+  .node.store  { border-color:var(--amber);  background:var(--amber-wash); }
+  .arrow { flex:0 0 30px; display:flex; align-items:center; justify-content:center;
+           color:var(--faint); font-size:19px; font-weight:700; }
+
+  /* sequence */
+  .seq { border:1px solid var(--line); border-radius:16px; overflow:hidden; margin:20px 0; }
+  .seq-row { display:grid; grid-template-columns:132px 1fr; gap:0; border-top:1px solid var(--line); }
+  .seq-row:first-child { border-top:0; }
+  .seq-actor { padding:12px 14px; font-size:12.5px; font-weight:800; color:var(--ink);
+               background:var(--sunken); border-right:1px solid var(--line);
+               display:flex; align-items:center; }
+  .seq-body { padding:12px 16px; font-size:14px; background:var(--surface); }
+  .seq-body code { font-size:12.5px; }
+  .seq-note { display:block; font-size:12.5px; color:var(--muted); margin-top:4px; }
+
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px;
+         background:var(--sunken); padding:1.5px 6px; border-radius:6px; color:var(--ink); }
+
+  table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+  th, td { text-align:left; padding:10px 13px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint);
+       font-weight:800; }
+  td code { white-space:nowrap; }
+
+  .note { border-left:3px solid var(--violet); background:var(--violet-wash);
+          padding:13px 17px; border-radius:0 12px 12px 0; margin:18px 0; font-size:14.5px; }
+  .note.warn { border-left-color:var(--coral); background:var(--coral-wash); }
+  .note.ok   { border-left-color:var(--mint);  background:var(--mint-wash); }
+  .note strong { color:var(--ink); }
+  .note p:last-child { margin-bottom:0; }
+
+  .pill { display:inline-block; font-size:11.5px; font-weight:800; padding:3px 10px;
+          border-radius:999px; letter-spacing:.04em; }
+  .pill.yes  { background:var(--mint-wash);  color:var(--mint); }
+  .pill.no   { background:var(--coral-wash); color:var(--coral); }
+  .pill.soon { background:var(--amber-wash); color:var(--amber); }
+
+  ul { margin:0 0 12px; padding-left:20px; max-width:62ch; }
+  li { margin-bottom:5px; }
+
+  @media (max-width:640px) {
+    .flow { display:block; }
+    .arrow { display:block; height:22px; transform:rotate(90deg); }
+    .node { margin-bottom:0; }
+    .seq-row { grid-template-columns:1fr; }
+    .seq-actor { border-right:0; border-bottom:1px solid var(--line); }
+  }
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Ink · Kiến trúc</p>
+  <h1>Định danh, chia sẻ, đồng bộ, sao lưu</h1>
+  <p class="lede">Bốn luồng, một sợi chỉ xuyên qua tất cả: <strong>uid</strong>. Tài liệu
+  này mô tả hệ thống <em>sau</em> loạt thay đổi backend 2026-09-18 (worker PR #16–#20).</p>
+  <div class="legend">
+    <span class="chip"><span class="dot send"></span>App (iOS)</span>
+    <span class="chip"><span class="dot recv"></span>Worker (Cloudflare)</span>
+    <span class="chip"><span class="dot web"></span>D1 (dữ liệu)</span>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head">
+    <h2>0. Sợi chỉ chung</h2>
+  </div>
+  <p>Trước đây hệ thống nhận dạng người gọi bằng <code>device_id</code> — một chuỗi
+  <em>do chính request khai</em>. Nó không chứng minh được gì: ai cũng khai được
+  device_id của người khác. Giờ mọi thứ đều treo vào <strong>Firebase uid</strong>,
+  thứ do Firebase ký và server tự xác minh được.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>uid trả lời được</h3>
+      <ul style="margin-bottom:0">
+        <li>Lịch này của ai (<code>calendars.owner_uid</code>)</li>
+        <li>Ai sửa event này (<code>updated_by</code>)</li>
+        <li>Ai được đồng bộ (<code>share_members.uid</code>)</li>
+        <li>Đếm trần rate limit theo ai</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><code>device_id</code> còn lại gì</h3>
+      <p>Chỉ còn ở ba endpoint AI (<code>/ink/help</code>, <code>/ink/chat</code>,
+      <code>/suggest-event</code>) — vốn <em>cố ý không cần đăng nhập</em>, nên không
+      có uid nào để đếm.</p>
+      <p style="margin-bottom:0">Trong toàn bộ luồng chia sẻ: <span class="pill no">không còn</span></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>1. Đăng nhập — thứ người dùng không bao giờ thấy</h2>
+    <p>Ink không có màn hình đăng nhập bắt buộc. Mọi máy đều có uid, kể cả người chưa
+    đăng nhập bao giờ.</p>
+  </div>
+
+  <div class="flow">
+    <div class="node app">
+      <div class="who">App khởi động</div>
+      <div class="what">Cần token</div>
+      <div class="sub">Trước mỗi lần tạo share / sync</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node app">
+      <div class="who">InkAccountService</div>
+      <div class="what">currentUser == nil?</div>
+      <div class="sub">Nếu có rồi thì dùng lại, không tạo mới</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node app">
+      <div class="who">Firebase</div>
+      <div class="what">signInAnonymously()</div>
+      <div class="sub">Chỉ chạy khi thật sự chưa có</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node store">
+      <div class="who">Keychain</div>
+      <div class="what">uid sống qua cài lại</div>
+      <div class="sub">Đây là nền của khôi phục</div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <p><strong>Một dòng <code>if</code> là toàn bộ câu chuyện liên tục.</strong>
+    <code>signInAnonymously()</code> tạo tài khoản MỚI mỗi lần gọi. Gọi mà không kiểm
+    <code>currentUser == nil</code> thì mỗi lần mở app là một uid khác, và mọi thứ treo
+    vào uid — lịch sở hữu, tư cách thành viên — đều rơi mất.</p>
+  </div>
+
+  <div class="note ok">
+    <p><strong>Đăng nhập Apple/Google chỉ là nâng cấp, không phải tạo mới.</strong>
+    <code>link(with:)</code> giữ nguyên uid, nên người dùng không mất gì khi chuyển từ
+    ẩn danh sang có tài khoản.</p>
+  </div>
+
+  <p><strong>Ẩn danh ≠ đã đăng nhập.</strong> Trong app, một tài khoản ẩn danh vẫn hiện
+  là <em>chưa đăng nhập</em> (<code>session(for:)</code> trả <code>.signedOut</code> khi
+  <code>isAnonymous</code>). Nếu không, người dùng thấy một tài khoản Google ma mà họ
+  chưa từng tạo và không đăng xuất được.</p>
+
+  <div class="note warn">
+    <p><strong>Đừng bật "Enable Auto clean-up" ở Firebase Console.</strong> Nó xoá tài
+    khoản ẩn danh quá 30 ngày — tức là làm mồ côi <code>calendars.owner_uid</code>, và
+    máy đó nhận uid mới ở lần mở app kế tiếp.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>2. Chia sẻ — link là cửa, không phải chìa</h2>
+  </div>
+
+  <div class="seq">
+    <div class="seq-row">
+      <div class="seq-actor">Người gửi</div>
+      <div class="seq-body">Chọn lịch → <strong>Share</strong>. Không hỏi thêm gì.
+        <span class="seq-note">Chia sẻ là chia sẻ ĐẦY ĐỦ — địa điểm, ghi chú, liên kết.
+        Không còn công tắc bật/tắt từng loại.</span></div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-actor">App → Worker</div>
+      <div class="seq-body"><code>POST /api/ink/share</code> + <code>Bearer &lt;uid token&gt;</code>
+        <span class="seq-note">Token BẮT BUỘC. Không có thì 401 — share không tạo được.</span></div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-actor">Worker → D1</div>
+      <div class="seq-body">Một batch, ba bảng: <code>calendars</code> · <code>shares</code> · <code>calendar_events</code>
+        <span class="seq-note">Cùng batch để không bao giờ tồn tại một share trỏ vào
+        calendar không có thật.</span></div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-actor">Người nhận</div>
+      <div class="seq-body">Mở <code>inkcalendar.app/s/&lt;id&gt;</code> trong trình duyệt
+        <span class="seq-note">Trang công khai chỉ hiện <strong>tên · mô tả · SỐ LƯỢNG
+        event</strong>. Không bao giờ hiện nội dung event.</span></div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-actor">Người nhận</div>
+      <div class="seq-body">Bấm Join → <code>POST /api/ink/share/:id/join</code>
+        <span class="seq-note">Ghi một dòng <code>share_members</code>. Nhãn mặc định do
+        server sinh: <code>"&lt;tên lịch&gt; · &lt;ngày&gt;"</code> — cố ý KHÔNG lấy tên
+        thiết bị, thứ gần như luôn chứa tên thật.</span></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><strong>Chủ share cũng là một sync client của chính mình.</strong> Ngay khi tạo
+    link, máy của owner tự seed bản sao local và push lên — nếu không, share vừa tạo
+    trông có dữ liệu ở trang xem trước nhưng <code>calendar_events</code> lại rỗng.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>3. Đồng bộ — push rồi pull, ai đến sau thắng</h2>
+  </div>
+
+  <div class="flow">
+    <div class="node app">
+      <div class="who">1 · App</div>
+      <div class="what">push</div>
+      <div class="sub">Gửi các dòng <code>isDirty</code></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node server">
+      <div class="who">2 · Worker</div>
+      <div class="what">Kiểm quyền</div>
+      <div class="sub">revoked → read_only → ghi</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node store">
+      <div class="who">3 · D1</div>
+      <div class="what">Upsert LWW</div>
+      <div class="sub">Chỉ ghi đè khi <code>updated_at</code> mới hơn</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node app">
+      <div class="who">4 · App</div>
+      <div class="what">pull theo cursor</div>
+      <div class="sub">Nhận mọi thay đổi sau <code>since</code></div>
+    </div>
+  </div>
+
+  <p>Câu SQL upsert <em>tự nó</em> là luật last-write-wins — <code>WHERE excluded.updated_at
+  &gt; calendar_events.updated_at</code> — nên không cần đọc-rồi-so. Server trả lại dòng
+  <strong>thật sự đang lưu</strong> cho mọi mutation, kể cả cái vừa thua, để máy client
+  thấy ngay bản thắng thay vì đợi lần pull sau.</p>
+
+  <h3 style="margin-top:26px">Ai được ghi</h3>
+  <p>Link đặt <strong>mặc định</strong> cho mọi người; membership là <strong>ngoại lệ</strong>
+  cho từng người.</p>
+
+  <div class="note ok">
+    <p style="font-size:15px"><strong>quyền thật = <code>member.role</code> ?? <code>shares.link_role</code></strong>
+    &nbsp;(owner thì luôn ghi được)</p>
+  </div>
+
+  <table>
+    <thead><tr><th>Tình huống</th><th>link_role</th><th>member.role</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td>Người xem bình thường</td><td><code>viewer</code></td><td><code>NULL</code></td><td><span class="pill no">read_only</span></td></tr>
+      <tr><td>Owner cấp riêng quyền sửa</td><td><code>viewer</code></td><td><code>editor</code></td><td><span class="pill yes">ghi được</span></td></tr>
+      <tr><td>Hạ riêng một người</td><td><code>editor</code></td><td><code>viewer</code></td><td><span class="pill no">read_only</span></td></tr>
+      <tr><td>Owner hạ cả link</td><td><code>viewer</code></td><td><code>NULL</code></td><td><span class="pill no">tất cả bị hạ ngay</span></td></tr>
+      <tr><td>Đã bị thu hồi</td><td>bất kỳ</td><td>—</td><td><span class="pill no">revoked</span></td></tr>
+      <tr><td>Chủ lịch</td><td>bất kỳ</td><td>—</td><td><span class="pill yes">luôn ghi được</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note warn">
+    <p><strong><code>member.role = NULL</code> nghĩa là "theo link", không phải "không có
+    quyền" — và mặc định đó là thứ giữ cho hệ thống an toàn.</strong> Nếu lúc join mà
+    chụp lại <code>link_role</code>, thì trong lúc link đang <code>editor</code>, ai sync
+    một lần cũng được ghi <code>editor</code> vào dòng riêng — và từ đó owner hạ link
+    không gỡ được ai nữa. Quyền bị nới vĩnh viễn bởi một thao tác không ai coi là cấp
+    quyền.</p>
+  </div>
+
+  <h3 style="margin-top:26px">Thu hồi một người</h3>
+  <p><code>DELETE /api/ink/share/:id/members/:uid</code> đặt <code>revoked_at</code> —
+  <strong>tombstone, không xoá dòng</strong>. Vì push tự ghi danh thành viên lần đầu gặp,
+  xoá hẳn dòng thì ngay request sau nó được tạo lại và việc thu hồi tự huỷ chính nó.</p>
+
+  <div class="note warn">
+    <p><strong>Hai giới hạn, nói thẳng để không bán quá lời:</strong></p>
+    <ul style="margin-bottom:0">
+      <li><strong>Thu hồi chặn GHI, chưa chặn ĐỌC.</strong> Pull hiện chưa bắt buộc token
+      ở phía server, nên chưa lọc được theo người. Đây là lý do client phải bắt đầu gửi
+      token khi pull <em>trước</em>.</li>
+      <li><strong>Không phải hàng rào kín.</strong> Ai còn giữ link thì đăng nhập ẩn danh
+      lần nữa là có uid mới và vào lại được. Cắt thật = đổi link.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>4. Sao lưu — chỉ lịch <code>.ink</code> mới thật sự cần</h2>
+  </div>
+
+  <table>
+    <thead><tr><th>Nguồn</th><th>Mất máy có mất dữ liệu?</th><th>Server giữ gì</th></tr></thead>
+    <tbody>
+      <tr><td><code>.apple</code></td><td>Không — iCloud có</td><td>chỉ con trỏ (tên, màu)</td></tr>
+      <tr><td><code>.google</code> / <code>.outlook</code></td><td>Không — đăng nhập lại là có</td><td>chỉ con trỏ</td></tr>
+      <tr><td><code>.ink</code></td><td><strong>Có, mất vĩnh viễn</strong></td><td><span class="pill yes">toàn bộ nội dung</span></td></tr>
+      <tr><td><code>.joined</code></td><td>Không — share vẫn còn</td><td>chỉ tư cách thành viên</td></tr>
+    </tbody>
+  </table>
+
+  <p>Giữ nội dung event của Apple/Google <em>không mua thêm khả năng khôi phục nào</em>,
+  mà phải khai báo thu thập dữ liệu và ôm thêm một mặt phơi nhiễm. Nên không giữ.</p>
+
+  <h3 style="margin-top:26px">Khôi phục sau khi cài lại</h3>
+  <div class="flow">
+    <div class="node store">
+      <div class="who">Keychain</div>
+      <div class="what">uid còn nguyên</div>
+      <div class="sub">Người dùng không phải nhớ gì</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node app">
+      <div class="who">App</div>
+      <div class="what">GET /api/ink/calendars</div>
+      <div class="sub">Endpoint duy nhất trả lời "tôi với tới được gì"</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node server">
+      <div class="who">Worker</div>
+      <div class="what">calendars + memberships</div>
+      <div class="sub">Kèm quyền ĐANG SỐNG của từng membership</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="node app">
+      <div class="who">App</div>
+      <div class="what">Dựng lại store</div>
+      <div class="sub">Rồi sync từng lịch như bình thường</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><strong>Endpoint này còn sửa một lỗi âm thầm khác: lệch quyền.</strong> Hôm nay
+    <code>linkRole</code> trên máy người tham gia chỉ đổi khi tình cờ có một lượt sync
+    chạy. Owner hạ quyền xong mà máy kia chưa sync thì nó vẫn tưởng mình sửa được — mở
+    form sửa rồi mới ăn 403. Gọi lúc khởi động là chốt lại quyền thật.</p>
+  </div>
+
+  <div class="note warn">
+    <p><strong>Bẫy cho slice backup sau này.</strong> Hôm nay <code>DELETE
+    /api/ink/share/:id</code> xoá luôn hàng <code>calendars</code> — giữ đúng hành vi cũ
+    ("ngừng chia sẻ" = xoá sạch). Khi backup thật lên sóng thì điều đó SAI: một lịch
+    <code>.ink</code> sống độc lập với việc nó có được công bố hay không, và xoá
+    publication mà kéo theo bản backup là làm mất dữ liệu của người ta.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>5. Mã lỗi — mỗi mã dẫn tới một hành động khác nhau</h2>
+  </div>
+  <table>
+    <thead><tr><th>Mã</th><th>Nghĩa</th><th>Client nên làm gì</th></tr></thead>
+    <tbody>
+      <tr><td><code>unauthorized</code> <span class="pill no">401</span></td>
+          <td>Không có token hợp lệ</td><td>Lấy token mới rồi thử lại</td></tr>
+      <tr><td><code>read_only</code> <span class="pill soon">403</span></td>
+          <td>Chưa được quyền sửa</td><td><strong>Tạm thời</strong> — ẩn nút sửa, vẫn sync đọc</td></tr>
+      <tr><td><code>revoked</code> <span class="pill no">403</span></td>
+          <td>Đã bị gỡ khỏi lịch</td><td><strong>Trạng thái cuối</strong> — mời gỡ lịch khỏi máy, đừng thử lại</td></tr>
+      <tr><td><code>app_check_failed</code> <span class="pill soon">401</span></td>
+          <td>App Check từ chối</td><td>Thử lại MỘT lần với token vừa attest lại</td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">
+    <p><strong><code>read_only</code> và <code>revoked</code> không được lẫn.</strong> Một
+    cái sẽ hết khi owner mở quyền; cái kia thì không bao giờ. Trả nhầm mã là để người dùng
+    ngồi đợi một quyền không bao giờ quay lại. Đó là lý do server kiểm
+    <code>revoked</code> TRƯỚC.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>6. Bảng dữ liệu</h2>
+  </div>
+  <table>
+    <thead><tr><th>Bảng</th><th>Là gì</th><th>Khoá</th></tr></thead>
+    <tbody>
+      <tr><td><code>calendars</code></td><td>Cái lịch. Tồn tại được dù chưa từng chia sẻ.</td><td><code>id</code></td></tr>
+      <tr><td><code>calendar_events</code></td><td>Event. Đổi tên từ <code>shared_events</code>.</td><td><code>(id, calendar_id)</code></td></tr>
+      <tr><td><code>shares</code></td><td>Bản ghi <em>công bố</em> một lịch. Không còn LÀ cái lịch.</td><td><code>id</code></td></tr>
+      <tr><td><code>share_members</code></td><td>Ai được đồng bộ, ai có ngoại lệ quyền.</td><td><code>(share_id, uid)</code></td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">
+    <p><strong>Vì sao bắt buộc đổi tên <code>shared_events</code>.</strong> Bảng đó sắp
+    chứa cả backup RIÊNG TƯ của lịch <code>.ink</code> chưa từng được chia sẻ. Một bảng
+    tên <code>shared_events</code> mà giữ dữ liệu không chia sẻ thì chỉ cách một câu query
+    ẩu là rò.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><h2>7. Còn chưa làm</h2></div>
+  <ul>
+    <li><strong>Luật provider</strong> — <code>link_role === 'editor'</code> mà
+      <code>provider !== 'ink'</code> phải 403. Chưa làm vì hôm nay mọi hàng đều là
+      <code>ink</code>, viết ra là code chết. Phải đi cùng lần client bắt đầu gửi provider
+      thật; quên là lời hứa "share lịch Apple thì chỉ-đọc" chỉ còn là luật phía client.</li>
+    <li><strong>Pull bắt buộc token ở server</strong> — điều kiện để thu hồi chặn được cả
+      đọc. Client phải gửi trước.</li>
+    <li><strong>Màn hình quản lý thành viên</strong> — API đã có, UI chưa.</li>
+  </ul>
+</section>
+
+<p style="color:var(--faint);font-size:13px;border-top:1px solid var(--line);padding-top:20px">
+Nguồn: <code>docs/superpowers/plans/2026-09-18-unified-calendar-store.md</code> §3b ·
+worker PR #16–#20 · cập nhật 2026-09-18.
+</p>
+
+</div>
