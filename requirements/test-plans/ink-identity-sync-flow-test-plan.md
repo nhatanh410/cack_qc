@@ -1,14 +1,17 @@
 # Test Plan — Ink: Định danh, Chia sẻ, Đồng bộ, Sao lưu (kiến trúc final trước release)
 
-> **Test basis (nguồn duy nhất, độc lập):**
-> [ink-identity-sync-flow.html](../specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html)
-> — tự khai là mô tả hệ thống **sau** loạt thay đổi backend 2026-09-18 (worker PR #16–#20), nguồn:
-> `docs/superpowers/plans/2026-09-18-unified-calendar-store.md` §3b.
-> **Phạm vi đối chiếu:** theo yêu cầu, test plan này đọc tài liệu **độc lập**, không đối chiếu/không giả định
-> dựa trên bất kỳ spec sharing nào khác đã có trước đó trong repo. Mọi trích dẫn "§N" dưới đây đều trỏ về đúng
-> 8 mục (0–7) của chính tài liệu HTML này.
+> **Test basis:**
+> 1. [ink-identity-sync-flow.html](../specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html)
+>    — kiến trúc backend, tự khai mô tả hệ thống **sau** loạt thay đổi 2026-09-18 (worker PR #16–#20), nguồn:
+>    `docs/superpowers/plans/2026-09-18-unified-calendar-store.md` §3b. Đọc **độc lập**, không đối chiếu spec
+>    sharing nào khác có trước trong repo (mục 1–12 dưới đây). Mọi trích dẫn "§N" trỏ về đúng 8 mục (0–7) của
+>    tài liệu HTML này.
+> 2. [qc-sharing-account-pro.md](qc-sharing-account-pro.md) — bàn giao QC cho **UI/UX thật đã lên `main`**:
+>    PR **#260** (`380bc6b2`) + PR **#274** (`ef996605`), bổ sung 2026-09-19. Đây là **lớp UI/UX** dựng trên
+>    đúng backend đã phân tích ở nguồn 1 — tích hợp vào **mục 13**, đối chiếu ngược lại F1–F13 đã có thay vì
+>    tách file riêng, để toàn bộ vòng đời tính năng (backend → UI thật) nằm trong 1 tài liệu liền mạch.
 > **Chuẩn:** ISTQB Foundation Level
-> **Ngày lập:** 2026-09-18 · **Người lập:** QC
+> **Ngày lập:** 2026-09-18 · **Cập nhật:** 2026-09-19 · **Người lập:** QC
 
 ---
 
@@ -453,9 +456,9 @@ dung event riêng tư vẫn tồn tại vĩnh viễn trên D1 dù owner tin đã
 | # | Flow | Nội dung | Nguồn |
 |---|---|---|---|
 | F1 | Định danh nền (uid) | uid trả lời được: chủ lịch, người sửa, ai được đồng bộ, đếm rate limit; device_id chỉ còn ở 3 endpoint AI | §0 |
-| F2 | Đăng nhập ngầm | Anonymous sign-in có điều kiện (`currentUser == nil`), Keychain giữ uid qua cài lại, link Apple/Google giữ nguyên uid, phân biệt ẩn danh ≠ đã đăng nhập | §1 |
-| F3 | Tạo & mở share | Share full (không toggle từng phần), batch ghi 3 bảng, trang preview công khai giới hạn thông tin, owner tự seed dữ liệu | §2 |
-| F4 | Join | Ghi `share_members`, label mặc định server-sinh không dùng tên thiết bị | §2 |
+| F2 | Đăng nhập ngầm | Anonymous sign-in có điều kiện (`currentUser == nil`), Keychain giữ uid qua cài lại, link Apple/Google giữ nguyên uid, phân biệt ẩn danh ≠ đã đăng nhập. **+ UI thật:** Settings/Account screen, Sign out/Delete account (mục 13.6) | §1, mục 13.6 |
+| F3 | Tạo & mở share | Share full (không toggle từng phần), batch ghi 3 bảng, trang preview công khai giới hạn thông tin, owner tự seed dữ liệu. **+ UI thật:** tên bắt buộc, Time range, màn Calendars/Manage sharing (mục 13.2–13.4) | §2, mục 13.2–13.4 |
+| F4 | Join | Ghi `share_members`, label mặc định server-sinh không dùng tên thiết bị. **+ UI thật:** paste-link, màn preview-join, **chống lộ lịch `Ink · <tên>` vào 4 danh sách sai** (rủi ro cao nhất toàn PR, mục 13.1/13.5) | §2, mục 13.1, 13.5 |
 | F5 | Đồng bộ push/pull | Kiểm quyền theo thứ tự revoked → read_only → ghi; upsert LWW theo `updated_at`; trả lại dòng đang lưu thật cho mọi mutation | §3 |
 | F6 | Ma trận quyền | `member.role ?? shares.link_role`, owner luôn ghi được, 6 tổ hợp trong bảng gốc | §3 |
 | F7 | Thu hồi (revoke) | Tombstone `revoked_at`, không xoá dòng; 2 giới hạn tự thừa nhận (chưa chặn đọc, không phải hàng rào kín) | §3 |
@@ -463,6 +466,13 @@ dung event riêng tư vẫn tồn tại vĩnh viễn trên D1 dù owner tin đã
 | F9 | Khôi phục sau cài lại | `GET /api/ink/calendars`, kèm fix ngầm lỗi lệch quyền (linkRole chỉ đổi khi tình cờ sync) | §4 |
 | F10 | Mã lỗi | 4 mã: `unauthorized`, `read_only`, `revoked`, `app_check_failed` — thứ tự kiểm `revoked` TRƯỚC | §5 |
 | F11 | Mô hình dữ liệu | 4 bảng, đổi tên `shared_events` → `calendar_events`, rationale chống rò dữ liệu riêng tư | §6 |
+| F12 | Xoá tài khoản | `DELETE /api/ink/account` — cascading xoá events→calendars→shares theo `owner_uid`. **Ngoài phạm vi §0–§7 gốc**, chỉ lộ ra qua câu trả lời Q15 của dev (mục 12.1) | Q15 (answers-from-dev.md), **không có trong tài liệu HTML gốc** |
+| F13 | Unlock | `POST /share/:id/unlock` — tồn tại thật (có rate limit riêng: 30/giờ/share · 60/giờ/IP), nhưng **chức năng chưa được phân tích** vì không xuất hiện ở bất kỳ đâu ngoài bảng rate limit (Q17). **Ngoài phạm vi §0–§7 gốc** | Q17 (answers-from-dev.md), **không có trong tài liệu HTML gốc** |
+
+⚠️ **F12/F13 khác các F1–F11 khác ở một điểm quan trọng:** test plan này tuyên bố ở đầu tài liệu là đọc
+**độc lập, chỉ dựa trên** `ink-identity-sync-flow.html` (§0–§7). F12/F13 phá vỡ giả định đó — chúng là backend
+thật, đang chạy, nhưng nằm **ngoài** phạm vi 8 mục của tài liệu kiến trúc được giao ban đầu. Giữ nguyên tắc
+"không tự suy đoán nội dung chưa được xác nhận": xem mục 10.8 và Open (mục 12.7) cho chi tiết.
 
 ## 3. Out of scope (tự khai trong chính tài liệu, §7 "Còn chưa làm")
 
@@ -575,6 +585,12 @@ revoked --push lần nữa của chính người bị revoke--> PHẢI vẫn gi�
 giả tài liệu đã tự nhận diện, không phải suy diễn của QC.
 
 **P1 — mất dữ liệu / lộ riêng tư / quyền bị nới vĩnh viễn:**
+- **TC-F4-08 (mới nhất, ưu tiên cao nhất toàn tài liệu, mục 13.1)** — lịch `Ink · <tên>` (tạo khi join) lộ vào
+  danh sách chọn lịch để **chia sẻ**: nếu chọn được, người dùng đăng lại lịch của người khác dưới tên mình.
+  Dev tự đánh giá đây là mục rủi ro cao nhất trong PR #260/#274.
+- **TC-F4-05/06/07/20 (mục 13.1/13.5)** — cùng 1 lịch `Ink · <tên>` lộ vào 3 danh sách khác (tạo event mới,
+  Ink AI chọn lịch đích, danh sách bật/tắt hiện lịch) — mức độ nhẹ hơn TC-F4-08 nhưng vẫn là rò danh tính/dữ
+  liệu qua UI không kiểm soát.
 - **TC-F2-03** — thiếu check `currentUser == nil` → mỗi lần mở app là 1 uid khác → mồ côi toàn bộ
   `owner_uid`/`share_members`. Tài liệu tự gọi đây là "toàn bộ câu chuyện liên tục" (§1).
 - **TC-F6-07** — join-time snapshot `link_role` vào `member.role`: nếu code sai theo đúng cách tài liệu cảnh
@@ -598,13 +614,20 @@ giả tài liệu đã tự nhận diện, không phải suy diễn của QC.
 - **TC-F9-06 (mới)** — `GET /api/ink/calendars` (endpoint restore) có thể lộ chéo dữ liệu giữa các uid nếu
   access-control sai — endpoint này tiết lộ cả lịch owned lẫn joined, tức gián tiếp lộ quan hệ với người mời
   nếu trả nhầm dữ liệu của uid khác (xem mục 1.4).
-- **TC-F10-08 (mới)** — đường tự-undo-revoke thứ 2, qua **Join** thay vì push: uid đã bị revoke, còn giữ
-  link, bấm lại Join bằng đúng uid cũ — nếu `revoked_at` bị xoá/reset, đây là lỗ hổng nghiêm trọng ngang
-  TC-F7-02 nhưng dễ kích hoạt hơn nhiều vì Join là action user bấm bình thường qua UI (xem mục 1.5, Open #16
-  — ⚠️ cần confirm với dev).
-- **TC-F11-04 (mới)** — "ngừng chia sẻ = xoá sạch" (§4) có thể không đúng ở tầng `calendar_events` nếu xoá
-  `calendars` không cascade xuống — nội dung event riêng tư (địa điểm, ghi chú) có nguy cơ tồn tại vĩnh viễn
-  trên D1 dưới dạng dòng mồ côi dù owner tin đã xoá (xem mục 1.6, Open #17).
+- ~~**TC-F10-08** — đường tự-undo-revoke qua Join~~ **✅ ĐÃ ĐÓNG (2026-09-18, xem mục 12/Q3).** Dev xác nhận
+  Join kiểm `revoked_at` TRƯỚC khi upsert, và câu upsert không đụng cột `role`/`revoked_at`. Không có đường
+  tự-undo qua Join. Giữ lại làm **regression test P2** (verify đúng code path này không đổi ở release sau),
+  không còn là rủi ro treo.
+- ~~**TC-F11-04** — nguy cơ `calendar_events` mồ côi~~ **✅ ĐÃ ĐÓNG (2026-09-18, xem mục 12/Q15).** Dev xác
+  nhận batch xoá theo đúng thứ tự `calendar_events` → `calendars` → `shares`, cộng thêm D1 đã bật foreign key
+  (2 lớp bảo vệ, đã verify thực nghiệm). "Ngừng chia sẻ = xoá sạch" đúng ở tầng dữ liệu thật. ⚠️ **Nhưng sắp
+  đổi** — dev đang sửa `DELETE /share/:id` để **thôi xoá `calendars`** (chuẩn bị cho backup thật) — khi đổi
+  xong, hành vi này KHÔNG còn áp dụng, phải viết lại expected result và test lại toàn bộ luồng. Xem mục 12.
+- **MỚI, P1 — TC-F7-05 (từ Q14, dev tự phát hiện):** khi owner Stop sharing, member `.joined` đang hoạt động
+  bình thường nhận 404 ở cả pull/push nhưng client hiện **nuốt lỗi im lặng** (`try?`) — lịch đứng yên hiển thị
+  dữ liệu cũ **vĩnh viễn trên máy member, không có bất kỳ thông báo nào**. Khác hẳn `revoked` (có mã lỗi
+  riêng, client xử lý đàng hoàng) — "share bị owner xoá hẳn" hiện **không có đường báo cho member**. Dev tự
+  xếp đây là khoảng trống UX thật, chưa có mã lỗi riêng. Xem mục 12/Q14.
 
 **P2 — đúng hành vi nhưng ảnh hưởng vừa, hoặc phụ thuộc gap đã tự công bố:**
 - Ma trận quyền đầy đủ 6 dòng DT1 (mục 5.4) ngoài 2 dòng đã lên P1.
@@ -612,15 +635,23 @@ giả tài liệu đã tự nhận diện, không phải suy diễn của QC.
 - `GET /api/ink/calendars` fix lệch quyền lúc khởi động (§4) — nếu không gọi đúng lúc khởi động, member vẫn
   thấy form sửa được trước khi ăn 403 — trải nghiệm xấu nhưng không mất dữ liệu.
 - `app_check_failed` retry đúng 1 lần, không lặp vô hạn.
-- Revoke chưa chặn đọc (§3 tự công bố là giới hạn đã biết, không phải bug) — tạm xếp P2 vì đây là lộ riêng tư
-  thật dù đã được tài liệu hoá, cần QC xác nhận hành vi khớp đúng giới hạn đã khai, không lệch thêm. ⚠️ **Có
-  thể phải nâng lên P1** nếu dev xác nhận theo hướng xấu hơn ở Open #9 (mục 11) — tức là pull không chỉ hở với
-  người từng là member/bị revoke, mà hở với **bất kỳ ai biết `share_id`**, kể cả chưa từng Join. Chưa đổi mức
-  ưu tiên ở đây cho tới khi có câu trả lời từ dev.
+- ~~Revoke chưa chặn đọc~~ **✅ ĐÃ ĐÓNG (2026-09-18, xem mục 12/Q1).** Dev xác nhận `share_id` là chuỗi 24 ký
+  tự ngẫu nhiên (~143 bit entropy, `crypto.getRandomValues`), KHÔNG đoán được/không tuần tự — kịch bản dò quét
+  toàn hệ thống ở Open #9 **không tồn tại**. Phạm vi thật đúng như đã nghi ngờ (bất kỳ ai biết link — kể cả bị
+  revoke, kể cả người được forward link — vẫn pull được), nhưng đây là hành vi **cố ý** của link sharing, dev
+  xác nhận đang sửa để pull bắt buộc token ở bản build tới. Giữ P2, theo dõi lại khi bản đó ra (mục 12).
+- **MỚI, P3 (Q2, tech debt dev tự ghi nhận):** `ensureMembership()` ghi danh **trước khi** kiểm quyền —
+  1 uid chưa từng Join, push thẳng vào 1 `share_id` hợp lệ, vẫn để lại dòng `share_members` (role=NULL) rồi
+  mới bị 403 nếu không đủ quyền. Không giành thêm quyền gì (role=NULL giống hệt Join bình thường), nhưng làm
+  bẩn danh sách thành viên của owner. Dev ghi nhận là nợ kỹ thuật, dự định đảo thứ tự để sửa.
+- **MỚI, P3 (Q6, tech debt dev tự ghi nhận):** không có giới hạn số `shares` cho 1 calendar — mỗi lần bấm
+  Share (kể cả double-tap) mint 1 link + 1 hàng `calendars` **hoàn toàn mới**, không tái sử dụng/chặn gì. Dev
+  xác nhận đây là nợ kỹ thuật thật, chưa xử lý.
 
 **P3 — cosmetic / chưa đủ thông tin để viết case chi tiết:**
 - Định dạng label mặc định lúc join (`"<tên lịch> · <ngày>"`) với tên lịch rất dài/ký tự đặc biệt.
-- Ngưỡng rate limit cụ thể theo uid — tài liệu chỉ nói "đếm trần rate limit theo ai", không có số (mục 10).
+- ~~Ngưỡng rate limit~~ **✅ ĐÃ ĐÓNG (2026-09-18).** Dev cung cấp bảng đầy đủ theo endpoint — xem mục 12/Q17,
+  đã đủ để viết BVA cụ thể (không còn P3 "thiếu thông tin", chuyển thành case BVA thật ở mục 12).
 
 ## 7. Test environment
 
@@ -637,6 +668,19 @@ giả tài liệu đã tự nhận diện, không phải suy diễn của QC.
 - Khả năng gửi request thủ công (Postman/curl) tới các endpoint chưa có UI: `DELETE
   /api/ink/share/:id/members/:uid`, `GET /api/ink/calendars` — vì §7 tự xác nhận UI quản lý thành viên chưa
   tồn tại.
+
+**Bổ sung cho mục 13 (UI/UX thật, theo đúng ma trận của qc-sharing-account-pro.md §1):**
+
+| Máy/tài khoản | Bắt buộc | Lý do |
+|---|---|---|
+| 2 iPhone (hoặc 1 iPhone + 1 iPad) | ✅ | Gần như mọi case ở mục 13 cần 1 máy gửi + 1 máy nhận |
+| iPhone iOS 26.x | ✅ | Header Discover + pill Pro dùng Liquid Glass (13.8, ngoài scope chính nhưng cùng build) |
+| iPhone iOS 18.x | ✅ | Đối chiếu fallback khi không có Liquid Glass |
+| iPad (dọc + ngang) | Nếu có | Manage sharing và màn Join giới hạn bề ngang |
+| Tài khoản Google | ✅ | TC-F3-09, TC-F2-14 (tên/nút tự điền từ Google) |
+| Tài khoản Apple | ✅ | TC-F3-10, TC-F2-18 — Apple thường **không** trả tên, case hay vỡ nhất nhóm Account |
+| Máy đã mua Pro / chưa mua Pro | Nếu test 13.8 | Không bắt buộc cho scope chính (identity/share/sync/backup) |
+| Lịch mẫu: 2–3 lịch Apple, ≥1 lịch có event lặp hằng ngày + event xa hơn 12 tháng | ✅ | Cần cho TC-F3-15…20 (Time range) và TC-F3-24 (bỏ cap 500 event) |
 
 ## 8. Entry criteria
 
@@ -746,6 +790,7 @@ giả tài liệu đã tự nhận diện, không phải suy diễn của QC.
 | TC-F10-06 | §5 | So sánh toàn bộ 4 mã với UI copy tương ứng | Kích hoạt lần lượt cả 4 mã | Mỗi mã có message/hành động UI **khác biệt rõ ràng**, không có 2 mã nào dùng chung 1 copy/1 hành vi UI | P2 |
 | TC-F10-07 (mới) | §5 (suy luận: 2 cặp mã dùng chung HTTP status) | Có thể kích hoạt riêng biệt `unauthorized` và `app_check_failed` (cả 2 đều 401) | Kích hoạt lần lượt 2 mã | Client phải rẽ nhánh theo **field `code`** trong response body, không theo status 401 chung chung — 2 hành vi (lấy token thường vs retry-attest-1-lần) phải khác nhau rõ ràng trên thực tế, không chỉ trên giấy | P2 |
 | TC-F10-08 (mới, P1) | §5 + §2 (Join) + §3 (revoke) | Uid X đã bị owner revoke khỏi 1 share (`revoked_at` có giá trị), X vẫn còn giữ link | X bấm lại nút **Join** trên trang preview (dùng đúng uid X cũ, KHÔNG đăng nhập ẩn danh lại để lấy uid mới) | `revoked_at` của dòng `share_members` cũ **không được** bị xoá/reset bởi chính hành động Join — nếu bị xoá, đây là đường tự-undo-revoke thứ 2 (qua Join), độc lập với TC-F7-02 (qua push) | P1 |
+| TC-F10-09 (mới) | Q10 (answers-from-dev.md) — App Check chạy trong router `src/index.ts`, **trước** khi handler được gọi | Request thiếu cả token hợp lệ **lẫn** App Check attestation hợp lệ, gửi đồng thời | Gọi API bất kỳ thuộc luồng share | Mã trả về phải là `app_check_failed` (401), **không phải** `unauthorized` — vì App Check chặn ở router trước khi request chạm tới bước verify Firebase token; verify đúng bằng test thật, không chỉ đọc code | P2 |
 
 ### 10.7 F11 — Mô hình dữ liệu
 
@@ -756,31 +801,360 @@ giả tài liệu đã tự nhận diện, không phải suy diễn của QC.
 | TC-F11-03 | §6, `.note.warn` (rationale đổi tên bảng) | Lịch `.ink` **chưa từng share** (private) | Gọi bất kỳ endpoint nào có mục đích trả "dữ liệu đã share" (vd trang preview, hoặc API liệt kê theo `shares`) | Không được trả về event của lịch private này qua bất kỳ đường nào dành cho "shared" — **lưu ý:** vì backup riêng cho `.ink` chưa thật sự lưu nội dung hôm nay (TC-F8-03 xác nhận mất vĩnh viễn), case này hiện có thể chưa áp dụng được đầy đủ — phải chạy lại bắt buộc ngay khi tính năng backup `.ink` được bật | **P1** (nâng từ P2 — xem mục 1.4/mục 6: §6 tự xác nhận bảng này "sắp chứa cả backup RIÊNG TƯ của lịch `.ink` chưa từng share", cùng chỗ với dữ liệu đã share công khai — không còn là giả thuyết xa vời) |
 | TC-F11-04 (mới, P1) | §6 (suy luận từ cấu trúc khoá `calendar_events`) + §4 | Lịch `.ink` đang active share, có `calendar_events` với nội dung thật (địa điểm, ghi chú) | Owner gọi `DELETE /api/ink/share/:id` (Stop sharing), sau đó kiểm tra trực tiếp D1 | Toàn bộ `calendar_events` có `calendar_id` tương ứng với `calendars` row vừa bị xoá cũng phải **biến mất theo** — không còn dòng mồ côi nào chứa nội dung event cũ, đúng như lời khẳng định "ngừng chia sẻ = xoá sạch" ở §4 | P1 |
 
+### 10.8 F12/F13 — Xoá tài khoản & Unlock (ngoài phạm vi §0–§7 gốc, phát hiện qua dev Q&A)
+
+> ⚠️ 2 flow này **không nằm trong tài liệu kiến trúc HTML gốc** (§0–§7) — chỉ được biết tới qua câu trả lời
+> của dev (Q15, Q17). Case dưới đây viết ở mức **suy luận từ những gì đã biết** (tên endpoint + hành vi
+> tương tự đã xác nhận cho các endpoint khác + số rate limit) — không tự suy đoán thêm phần chưa biết. Xem
+> mục 12.7 cho câu hỏi mở cần dev làm rõ trước khi viết case chi tiết hơn.
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F12-04 (mới) | Q15 — dev xác nhận cùng thứ tự xoá `events → calendars → shares`, quét theo `calendars.owner_uid` | Uid sở hữu ít nhất 1 calendar có share active, có `calendar_events` | Gọi `DELETE /api/ink/account` | Toàn bộ `calendar_events`/`calendars`/`shares` mà uid này **sở hữu** (owner_uid) bị xoá theo đúng thứ tự đã xác nhận cho share-delete (mục 1.6/Q15) — verify D1 trực tiếp, không chỉ tin response | P1 |
+| TC-F12-05 (mới) | Suy luận — chưa xác nhận | Uid A vừa gọi `DELETE /api/ink/account` (xoá tài khoản của A); uid A trước đó có Join (là member, không phải owner) 1 share của uid B khác | Kiểm tra `share_members` của share thuộc uid B sau khi A xoá tài khoản | **Chưa rõ hành vi** — dòng `share_members` của A trong share của B có bị xoá/tombstone theo không, hay còn "mồ côi" (uid A không còn tồn tại nhưng dòng member vẫn còn)? Xem Open mới ở mục 12.7 — không assert kết quả cụ thể tới khi dev xác nhận | P2 (cần xác nhận trước khi coi là P1/P2 chính thức) |
+| TC-F13-01 (mới) | Q17 — chỉ biết rate limit, chưa biết chức năng | Có 1 `share_id` hợp lệ | Gọi `POST /share/:id/unlock` đúng 30 lần/giờ cho 1 share | Request thứ 30 thành công (theo nghĩa "không bị rate-limit" — **chức năng thật của response** chưa xác định), thứ 31 bị chặn bởi rate limit — **chỉ verify được ranh giới rate limit**, không verify được hành vi chức năng vì chưa biết endpoint này làm gì | P3 |
+| TC-F13-02 (mới) | Q17 | — | Gọi `POST /share/:id/unlock` 60 lần/giờ từ cùng 1 IP (khác share) | Request thứ 61 bị chặn theo ngưỡng IP, độc lập với ngưỡng theo share | P3 |
+
 ## 11. Open — chỉ từ chính tài liệu này, không suy đoán thêm
 
-| # | Câu hỏi | Vị trí | Ảnh hưởng test |
+> ✅ **Toàn bộ 17 câu hỏi (18 dòng, #4/#11 trùng nhau) đã được dev trả lời ngày 2026-09-18** — xem nguyên văn
+> ở [ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md) và bản tóm tắt
+> tác động lên test plan ở **mục 12** ngay dưới đây. Bảng dưới giữ lại nguyên trạng câu hỏi gốc (giá trị lịch
+> sử — cho thấy QC đã suy luận đúng/sai ở đâu trước khi có câu trả lời thật), mỗi dòng đánh dấu ✅ kèm 1 dòng
+> tóm tắt kết luận.
+
+| # | Câu hỏi | Vị trí | Kết luận (✅ đã trả lời — chi tiết ở mục 12) |
 |---|---|---|---|
-| 1 | Ngưỡng rate limit theo uid là bao nhiêu? Tính theo endpoint nào, cửa sổ thời gian nào? | §0 chỉ nói "đếm trần rate limit theo ai", không có số | Không viết được case boundary cụ thể cho rate limit, chỉ xác nhận được nguyên tắc "đếm theo uid" |
-| 2 | Sau khi `app_check_failed` retry 1 lần vẫn thất bại, hành vi cuối cùng là gì (báo lỗi, chặn hẳn tính năng, hay gì khác)? | §5 chỉ nói "thử lại MỘT lần", không nói nhánh thất bại tiếp theo | TC-F10-04 chỉ verify được retry đúng 1 lần, không verify được trạng thái kết thúc |
-| 3 | `.ink` calendar có bất kỳ cảnh báo nào cho user về rủi ro mất vĩnh viễn khi mất máy không? | §4 chỉ nói dữ liệu mất, không nhắc UI/copy cảnh báo | TC-F8-03 chỉ test được đúng hành vi mất dữ liệu, không test được phần cảnh báo UX vì chưa có mô tả |
-| 4 | Batch push nhiều dòng `isDirty` trong 1 request: nếu 1 dòng bị từ chối quyền (vd đã revoked), các dòng khác trong cùng batch có được ghi tiếp không, hay cả batch bị chặn? | §3 không mô tả chi tiết mức granularity của kiểm quyền trong 1 batch | Cần bổ sung test thực nghiệm (mục TC-F5, hiện đang giả định per-row) trước khi coi là đã cover đầy đủ |
-| 5 | Firebase ID token hết hạn giữa phiên (thông thường ~1 giờ) có được app tự refresh trong suốt session dài không? | Không được nhắc tới ở §1 lẫn §5 (chỉ có `app_check_failed` có quy tắc retry rõ) | Chưa viết được case cho "token Firebase tự hết hạn" tách biệt với `unauthorized`/`app_check_failed` — cần hỏi dev cơ chế refresh thật |
-| 6 | "Bấm Join" trên trang preview (mở trong trình duyệt) lấy uid từ đâu — anonymous sign-in ngay trên web (uid riêng), hay deep-link mở app Ink để dùng uid của chính app? | §2 chỉ nói "Mở ... trong trình duyệt" rồi "Bấm Join → ghi share_members", không mô tả cơ chế lấy uid ở bước này | Rủi ro: nếu không hợp nhất đúng, 1 người có thể có 2 uid khác nhau (web vs app) cho cùng 1 lần join — TC-F4-01 hiện chỉ giả định 1 luồng uid duy nhất |
-| 7 | 1 lịch có được phép có nhiều `shares` (nhiều link) active cùng lúc không? | §2 không đề cập giới hạn số lượng share/lịch | Chưa viết được case cho double-tap Share/re-share ở mức "có tạo link thứ 2 hay không" — hiện chỉ có TC-F4-04 (double-tap Join, không phải double-tap Share) |
-| 8 | Join đúng lúc share vừa bị Stop/xoá bởi owner (race giữa 2 người) — báo lỗi gì? | §2 không mô tả nhánh lỗi này | Chưa viết được case cụ thể cho race condition Join-vs-Stop, chỉ ghi nhận là thiếu |
-| 9 | ⚠️ **QUAN TRỌNG — cần confirm với dev trước.** "Pull chưa bắt buộc token ở server" (§3) — phạm vi thật rộng tới đâu? Chỉ người **từng là member** (kể cả đã bị revoke) mới pull được, hay **bất kỳ ai** biết đúng `share_id` (kể cả chưa từng Join) cũng pull được? **Gộp thêm câu hỏi từ §6:** `shares.id` là chuỗi đoán được (số tự tăng) hay UUID ngẫu nhiên? | §3, dòng "Pull hiện chưa bắt buộc token ở phía server, nên chưa lọc được theo người"; §6 không nói rõ kiểu dữ liệu của khoá `id` | Nếu `share_id` vừa đoán được vừa không gate token khi pull, kết hợp trang preview không cần đăng nhập (§2) = công thức đầy đủ cho dò quét toàn bộ share trong hệ thống bằng cách duyệt tuần tự — rủi ro riêng tư **rộng hơn nhiều** mức đã ghi ở P1 mục 6 (không chỉ giới hạn người bị revoke). Cần dev xác nhận CẢ 2 vế TRƯỚC khi QC xác định lại mức ưu tiên và viết case IDOR cụ thể |
-| 10 | ⚠️ **Cần confirm với dev.** "Push tự ghi danh thành viên lần đầu gặp" (§3, lý do tombstone thay vì xoá dòng) áp dụng trong điều kiện nào? Bất kỳ uid nào push dữ liệu cho 1 `share_id` hợp lệ đều tự động có dòng `share_members` (dù chưa từng Join qua §2), hay chỉ áp dụng riêng cho owner tự seed? | §3, lý do đưa ra cho quyết định dùng tombstone thay vì xoá dòng khi revoke | Nếu áp dụng rộng cho mọi uid: cần case mới — 1 uid **chưa từng Join** nhưng gọi thẳng API push cho 1 `share_id` đã biết, có tự trở thành member (`role=NULL`, theo link) không? Ảnh hưởng cách viết TC-F7 và có thể mở thêm 1 đường vào share ngoài luồng Join chính thức ở §2 |
-| 11 | Batch push nhiều dòng `isDirty` trong 1 request, 1 dòng bị chặn quyền (vd revoked) — các dòng khác trong cùng batch có tiếp tục được ghi không, hay cả batch bị chặn theo? | §3 không mô tả granularity kiểm quyền trong 1 batch (trùng với Open #4 cũ, nhắc lại vì liên quan trực tiếp) | Cần thực nghiệm trước khi coi TC-F5 đã cover đầy đủ hành vi batch |
-| 12 | Lịch `.ink` **chưa từng share** hôm nay có được push/lưu nội dung lên D1 dưới bất kỳ hình thức nào không, hay hoàn toàn chỉ tồn tại local? | §4 ("mất vĩnh viễn" + bẫy backup tương lai) + §6 ("sắp chứa cả backup RIÊNG TƯ" — thì tương lai) gợi ý câu trả lời là KHÔNG, nhưng chưa có câu nào xác nhận tường minh 100% | Ảnh hưởng cách đọc TC-F8-03/TC-F11-03 — cần dev xác nhận trạng thái backup `.ink` hôm nay là 0% hay đã có 1 phần âm thầm chạy, trước khi coi TC-F11-03 là "hiện chưa áp dụng được" |
-| 13 | Owner có thay đổi local chưa push, ngay lúc đó bấm Stop sharing (xoá `calendars` row phía server) — request push dở dang đó thất bại kiểu gì? | §4 không mô tả race này | Chưa viết được case cho race Stop-sharing-giữa-lúc-đang-push |
-| 14 | Member `.joined` offline dài, owner Stop sharing (xoá hẳn `calendars`, không chỉ đổi cờ) trong lúc đó — khi member có mạng lại, họ thấy "No longer shared" rõ ràng hay lỗi kỹ thuật khó hiểu vì `calendar_id` phía server đã biến mất hoàn toàn? | §4 xác nhận `DELETE share` xoá hẳn `calendars`, không chỉ đổi trạng thái | Cần verify receiver nhận đúng thông báo dễ hiểu, không phải lỗi lạ do dữ liệu biến mất đột ngột |
-| 15 | Nếu App Check fail **và** không có token hợp lệ cùng lúc — mã trả về là `app_check_failed` hay `unauthorized`? | §5 không công bố thứ tự ưu tiên giữa 2 mã này (khác hẳn cặp `revoked`/`read_only` đã nói rõ thứ tự) | Chưa viết được case xác định mã nào thắng khi cả 2 điều kiện cùng đúng |
-| 16 | ⚠️ **QUAN TRỌNG — cần confirm với dev trước.** Uid đã bị revoke (`revoked_at` có giá trị), vẫn giữ link, bấm lại nút **Join** tường minh (§2, KHÔNG đổi uid) — Join endpoint có kiểm `revoked_at` trước khi upsert không, hay coi đây là "chưa có dòng" và vô tình xoá/reset `revoked_at`? | §5 (ý nghĩa "vĩnh viễn" của `revoked`) + §2 (Join) + §3 (tombstone) — không mục nào mô tả rõ tương tác giữa Join và revoked_at | Nếu Join không kiểm, đây là đường tự-undo-revoke **thứ 2**, độc lập với TC-F7-02 (qua push) — nguy hiểm hơn vì Join là action user chủ động bấm bình thường qua UI, không cần hiểu cơ chế ngầm nào. Cần dev xác nhận TRƯỚC khi QC chốt mức ưu tiên cuối cho TC-F10-08 |
-| 17 | `calendar_events` có bị cascade-xoá ở tầng DB khi `calendars` row bị xoá không, hay trở thành dòng mồ côi (`calendar_id` trỏ vào chỗ không tồn tại, nội dung vẫn còn)? | §6 (cấu trúc khoá `(id, calendar_id)`) + §4 (`DELETE share` xoá `calendars`) — không mục nào xác nhận hành vi cascade | Ảnh hưởng trực tiếp tính đúng của TC-F11-04 và lời khẳng định "ngừng chia sẻ = xoá sạch" ở §4 — nếu mồ côi, đây là rủi ro data-retention/privacy chưa từng được ghi nhận |
-| 18 | Có tài liệu schema đầy đủ (danh sách cột) cho 4 bảng `calendars`/`calendar_events`/`shares`/`share_members` ở nơi khác không? | §6 chỉ mô tả khái niệm + khoá, không liệt kê cột — các cột như `owner_uid`, `updated_by` (§0), `link_role` (§3) nằm rải rác nhiều mục | Không ảnh hưởng case đã viết, nhưng giới hạn khả năng viết thêm case EP/BVA chi tiết hơn cho từng cột nếu cần |
+| 1 | Ngưỡng rate limit theo uid là bao nhiêu? | §0 không có số | ✅ Có bảng đầy đủ theo endpoint (Q17, mục 12) — đủ viết BVA thật |
+| 2 | Sau khi `app_check_failed` retry 1 lần vẫn thất bại, hành vi cuối cùng là gì? | §5 không nói nhánh này | ✅ Không xử lý đặc biệt — 401 đi theo đường lỗi bình thường của từng call site, khác nhau giữa push/join/createShare (Q9, mục 12) |
+| 3 | `.ink` calendar có cảnh báo nào cho user về mất vĩnh viễn không? | §4 không nhắc UI | ✅ **Chưa có cảnh báo nào** — dev xác nhận đây là khoảng trống sản phẩm có thật (Q11, mục 12) |
+| 4 | Batch push: 1 dòng bị từ chối quyền, các dòng khác có ghi tiếp không? | §3 không mô tả granularity | ✅ Kiểm quyền ở mức **CẢ REQUEST**, không phải per-row — giả định ban đầu của QC **sai** (Q8, mục 12) |
+| 5 | Firebase ID token hết hạn giữa phiên có tự refresh không? | Không nhắc ở §1/§5 | ✅ Có, SDK tự refresh qua `getIDToken()` — "hết hạn giữa phiên" gần như không phải case người dùng gặp được (Q4, mục 12) |
+| 6 | "Bấm Join" trên web lấy uid từ đâu — web hay app? | §2 không mô tả | ✅ App làm việc join bằng uid của chính nó qua deep link `ink://`; web không có Firebase Auth — rủi ro 2 uid **không tồn tại** (Q5, mục 12) |
+| 7 | 1 lịch có nhiều `shares` active cùng lúc được không? | §2 không đề cập | ✅ **Được, không giới hạn** — mỗi lần Share mint link + `calendars` row mới. Tech debt thật, chưa xử lý (Q6, mục 12) |
+| 8 | Join đúng lúc share vừa bị Stop — báo lỗi gì? | §2 không mô tả | ✅ 404 "Share not found", client map đúng thành "link không còn khả dụng" (Q7, mục 12) |
+| 9 | ⚠️ Pull chưa gate token rộng tới đâu? `shares.id` đoán được không? | §3/§6 không nói rõ | ✅ `share_id` **không đoán được** (~143 bit entropy) — kịch bản dò quét không tồn tại. Phạm vi "ai biết link cũng pull được" đúng như nghi ngờ nhưng là hành vi **cố ý**, đang sửa để pull gate token (Q1, mục 12) |
+| 10 | ⚠️ Push tự ghi danh áp dụng cho mọi uid hay chỉ owner? | §3 không nói rõ | ✅ Áp dụng **mọi uid** — ghi danh trước khi kiểm quyền. Không giành thêm quyền, nhưng làm bẩn danh sách member — tech debt thật (Q2, mục 12) |
+| 11 | (trùng #4) |||
+| 12 | `.ink` chưa share có được lưu gì trên server hôm nay không? | §4/§6 gợi ý KHÔNG | ✅ **0%, hoàn toàn local** — chỉ 2 chỗ ghi `calendar_events`: seed-lúc-share và sync-của-share (Q12, mục 12) |
+| 13 | Race: local chưa push + Stop sharing cùng lúc? | §4 không mô tả | ✅ Không mất dữ liệu local (vẫn `isDirty` trên máy owner), nhưng thay đổi không bao giờ tới người khác — chấp nhận được (Q13, mục 12) |
+| 14 | Race: member offline dài + share bị xoá hẳn? | §4 không mô tả | ✅ **404 bị nuốt im lặng** — lịch đứng yên hiển thị dữ liệu cũ vĩnh viễn, KHÔNG có thông báo nào. Gap UX thật, P1 mới (Q14, mục 12) |
+| 15 | `app_check_failed` hay `unauthorized` thắng khi cả 2 đúng? | §5 không công bố thứ tự | ✅ `app_check_failed` thắng — App Check chạy ở router, trước cả bước verify token (Q10, mục 12) |
+| 16 | ⚠️ Join lại bằng uid đã revoke có xoá `revoked_at` không? | Không mục nào mô tả | ✅ **Không** — Join kiểm `revoked_at` trước khi upsert, upsert không đụng cột `role`/`revoked_at`. Không có đường tự-undo qua Join (Q3, mục 12) |
+| 17 | `calendar_events` cascade-xoá hay mồ côi khi `calendars` bị xoá? | Không mục nào xác nhận | ✅ **Không mồ côi** — batch xoá đúng thứ tự events→calendars→shares + D1 có FK constraint (2 lớp bảo vệ). ⚠️ Nhưng sắp đổi — xem mục 12/Q15 | 
+| 18 | Có schema đầy đủ ở nơi khác không? | §6 chỉ có khái niệm + khoá | ✅ Có — `migrations/0008_calendar_store.sql`, `0009_share_members.sql` (Q16, mục 12) |
 
 ---
 
-Nguồn duy nhất của test plan này: [ink-identity-sync-flow.html](../specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) —
+## 12. Cập nhật sau khi dev trả lời (2026-09-18)
+
+> Nguồn: [ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md), đối chiếu
+> trực tiếp với `worker-ink-lockscreen-calendar@main` và `lockscreen-calendar@main`. Mục này là bản tóm tắt
+> **hành động cần làm** trong test plan — đọc file answers để có đầy đủ trích dẫn code.
+
+### 12.1 Đóng 3 rủi ro P1 nghi ngờ trước đó
+
+- **TC-F11-04 (mồ côi `calendar_events`) → ĐÓNG, an toàn.** Batch xoá đúng thứ tự (`calendar_events` →
+  `calendars` → `shares`), cộng D1 có FK constraint làm lớp bảo vệ thứ 2 (verify thực nghiệm bởi dev,
+  2026-09-18). ⚠️ **Nhưng dev đang sửa `DELETE /share/:id` để thôi xoá `calendars`** (chuẩn bị cho backup
+  thật) — khi đổi xong, toàn bộ TC-F9-05/TC-F11-04 phải viết lại expected result, không giữ nguyên được.
+- **TC-F10-08 (tự-undo-revoke qua Join) → ĐÓNG, an toàn.** Join kiểm `revoked_at` trước khi upsert; upsert
+  chỉ đổi `display_name`, không đụng `role`/`revoked_at`. Giữ làm regression test, hạ từ "rủi ro treo" xuống
+  P2 (verify code path không đổi ở release sau).
+- **Open #9 (phạm vi pull-không-gate-token) → ĐÓNG phần "dò quét toàn hệ thống", MỞ phần "ai biết link đều
+  đọc được".** `share_id` là chuỗi 24 ký tự ngẫu nhiên thật (~143 bit entropy từ `crypto.getRandomValues`),
+  không phải số tự tăng — không dò quét được. Nhưng đúng là bất kỳ ai giữ link (kể cả người bị revoke, kể cả
+  người được forward lại link) vẫn pull được hôm nay — dev xác nhận đây là hành vi **cố ý** của link sharing
+  ("có link là xem được"), không phải lỗ hổng mới phát sinh, và đang sửa: **pull sắp bắt buộc token + kiểm
+  membership ở bản build tới.** → Giữ TC-F7-03 nguyên trạng làm regression cho hành vi hiện tại; thêm ghi chú
+  "test lại toàn bộ khi bản build gate-token ra".
+
+### 12.2 1 rủi ro P1 MỚI phát hiện (dev tự báo, QC không hỏi trực tiếp)
+
+**TC-F7-05 (mới) — share bị Stop, member không được thông báo, dữ liệu cũ hiển thị vĩnh viễn.**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F7-05 | Q14 (answers-from-dev.md) | Member `.joined` đang hoạt động bình thường, share active | Owner Stop sharing; member tiếp tục pull/push bình thường sau đó | **Hành vi HIỆN TẠI (bug thật, chưa fix):** request nhận 404, `SharedCalendarSyncEngine` nuốt lỗi qua `try?` — lịch trên máy member đứng yên, hiển thị dữ liệu cũ, **không có bất kỳ thông báo nào** cho tới khi user tự nhận ra. Khác hẳn xử lý của mã `revoked` (có UI riêng). Verify đúng hành vi này tồn tại; đây là gap cần PM/dev ưu tiên sửa (thêm mã lỗi riêng như `revoked`), không phải case "phải pass" | P1 |
+
+⚠️ Dev đang sửa `DELETE /share/:id` để thôi xoá `calendars` (mục 12.1) — sau khi đổi, **TC-F7-05 phải hỏi lại
+từ đầu** vì cơ chế 404 hiện tại dựa trên việc `calendars` bị xoá hẳn.
+
+### 12.3 2 rủi ro P3 mới (tech debt dev tự ghi nhận, không phải bug khai thác được)
+
+**TC-F6-08 (mới) — push tự ghi danh làm bẩn danh sách member:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F6-08 | Q2 | Uid X chưa từng Join 1 share | X gọi thẳng API push cho `share_id` hợp lệ (biết được id, không qua Join) | `ensureMembership()` tạo dòng `share_members` cho X (`role=NULL`) TRƯỚC khi kiểm quyền — nếu link không phải `editor`, X vẫn bị 403 `read_only` như bình thường (không giành thêm quyền), nhưng dòng member "rác" đã được tạo và còn lại vĩnh viễn trong danh sách của owner | P3 |
+
+**TC-F3-08 (mới) — không giới hạn số share cho 1 calendar:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-08 | Q6 | Có lịch sở hữu, chưa share | Bấm Share 2 lần liên tiếp (double-tap thật hoặc 2 request riêng biệt) | Tạo ra **2 link độc lập**, mỗi link trỏ vào **1 hàng `calendars` riêng** (server tự mint calendar mới mỗi lần, không tái sử dụng) — xác nhận đúng hành vi hiện tại (tech debt đã biết, chưa fix, không phải case "phải chặn") | P3 |
+
+### 12.4 Cập nhật kỹ thuật cho case đã có
+
+- **TC-F5-04** — giữ nguyên expected result (server không tin `role` client tự khai), nhưng bổ sung: kiểm tra
+  diễn ra **1 lần cho cả batch** (trước vòng lặp ghi từng mutation), không phải kiểm lại cho từng dòng.
+- **TC-F5-05 (mới)** — ghi 1 phần vì lý do **KHÁC** quyền: vòng lặp ghi từng mutation **không nằm trong 1
+  transaction**. Nếu D1 lỗi giữa chừng vòng lặp (không liên quan quyền), các dòng ghi trước đó vẫn được giữ,
+  dòng sau bị mất. Client chịu được vì LWW theo `updated_at` (dòng mất sẽ được đồng bộ lại ở lần push kế). P3
+  — ghi nhận hành vi, không phải bug.
+- **TC-F4-01** — cập nhật mô tả cơ chế đúng thật: web chỉ render preview + đưa deep link `ink://share?url=...`;
+  app đọc payload rồi tự gọi Join bằng uid của chính nó. Không có bước "anonymous sign-in trên web".
+- **TC-F10-04** — tách theo call site khi retry `app_check_failed` thất bại lần 2 (không có xử lý đặc biệt
+  chung): **push** → nuốt lỗi qua `try?`, dòng ở lại `isDirty`, tự thử lại lần sync sau (im lặng, không báo
+  user); **join** → rơi vào `catch`, hiện snackbar; **createShare** → ném lỗi, UI báo lỗi trực tiếp cho user.
+- **TC-F11-03** — bỏ phần hedge "cần dev xác nhận trạng thái backup `.ink` hôm nay" — đã xác nhận **0%**, chỉ
+  2 đường ghi `calendar_events` (seed-lúc-share, sync-của-share), không có đường nào cho calendar chưa share.
+
+### 12.5 2 thay đổi sắp ra mắt — cần lên lịch test lại khi ship
+
+| Thay đổi | Ảnh hưởng | Case cần test lại |
+|---|---|---|
+| **Pull sẽ bắt buộc token + kiểm membership** | Đóng hoàn toàn phần còn mở của Open #9/TC-F7-03 | TC-F7-03, TC-F7-04 (verify sau khi đổi, revoke chặn được cả đọc) |
+| **`DELETE /share/:id` sẽ thôi xoá `calendars`** (chuẩn bị cho backup thật) | TC-F9-05, TC-F11-04, TC-F7-05 đều dựa trên hành vi cũ (xoá hẳn `calendars`) | Viết lại cả 3 case theo hành vi mới ngay khi thay đổi này lên production — **không** giữ nguyên expected result hiện tại |
+
+### 12.6 Rate limit — bảng đầy đủ, đủ để viết BVA thật (đóng Open #1/#17 cũ)
+
+| Endpoint | Ngưỡng | Đếm theo | Hằng số |
+|---|---|---|---|
+| `POST /api/ink/share` | 20/giờ | IP | `CREATE_LIMIT` |
+| `POST /share/:id/sync` | 120/giờ | **(share, uid)** | `SYNC_PUSH_LIMIT_PER_USER` |
+| `POST /share/:id/unlock` | 30/giờ/share · 60/giờ/IP | share / IP | `UNLOCK_LIMIT_PER_*` |
+| `/ink/help`, `/suggest-event` | 10/phút · 60/giờ | deviceId (đã băm) | `src/ink-help.ts` |
+| Lưới trên endpoint AI | 30/phút · 200/giờ | IP | `src/quota.ts` |
+| Quota ngày `/suggest-event` | 1000/ngày | deviceId | `src/quota.ts` |
+
+> **Lưu ý ID:** 3 case rate limit dưới đây đặt tên `TC-RATE-xx` (không dùng `TC-F12-xx`) để tránh trùng với
+> nhóm `TC-F12-xx` của flow F12 "Xoá tài khoản" thêm ở mục 10.8 — rate limit là cross-cutting, không thuộc
+> riêng 1 flow F nào.
+
+**TC-RATE-01 (mới, BVA)** — sync đúng 120 request/giờ cho 1 `(share, uid)`: request thứ 120 thành công, thứ
+121 bị rate-limit trong cùng khung giờ. **Lưu ý:** ngưỡng tính theo **từng lịch**, không phải theo tài khoản
+— 1 uid có 10 lịch có thể đạt 1.200 request/giờ tổng, không có trần tổng nào. P2.
+
+**TC-RATE-02 (mới)** — verify rate limit **fail-open**: khi D1 lỗi, request vẫn được đi tiếp
+(`hitRateLimit` trả `count ?? 1`) — đây là hàng rào chi phí, KHÔNG phải điều kiện đúng đắn. Test case không
+được kỳ vọng request bị chặn khi giả lập D1 lỗi. P3.
+
+**TC-RATE-03 (mới, BVA)** — `POST /api/ink/share` đúng 20 request/giờ theo IP: request thứ 20 thành công, thứ
+21 bị chặn — verify đếm theo **IP**, không phải uid (khác hẳn sync). P3.
+
+### 12.7 Phát hiện backend ngoài phạm vi tài liệu gốc — cần dev làm rõ (vòng 2, 2026-09-19)
+
+Kiểm tra lại toàn bộ file `answers-from-dev.md` để rà xem có phần backend nào bị bỏ sót lộ ra 2 endpoint
+**hoàn toàn không có trong `ink-identity-sync-flow.html` gốc (§0–§7)**, chỉ xuất hiện như chi tiết phụ trong
+câu trả lời của dev:
+
+- **`DELETE /api/ink/account`** — nhắc tới trong Q15 (đối chiếu cùng thứ tự xoá với share-delete), nhưng
+  không có mô tả UX/product nào đi kèm (khác Sign out/Delete account thế nào, có xác nhận 2 bước không, ảnh
+  hưởng gì tới các share mà uid đó **đang là member** của người khác — không phải owner).
+- **`POST /share/:id/unlock`** — chỉ xuất hiện trong bảng rate limit ở Q17. Không rõ chức năng, không rõ khi
+  nào client gọi endpoint này, không rõ liên quan gì tới `read_only`/`revoked`/`link_role` hay không.
+
+Đã thêm case suy luận ở mức tối thiểu (mục 10.8, TC-F12-04/05, TC-F13-01/02) nhưng **2 câu hỏi dưới đây cần
+dev trả lời** trước khi viết case chi tiết hơn — đã bổ sung vào
+[ink-identity-sync-flow-open-questions-for-dev.md](ink-identity-sync-flow-open-questions-for-dev.md) mục
+"Vòng 2":
+
+| # | Câu hỏi | Vì sao cần biết |
+|---|---|---|
+| Q18 | `DELETE /api/ink/account` là gì trong sản phẩm — khác Sign out ra sao? Uid A xoá tài khoản trong khi A đang là **member** (không phải owner) của 1 share thuộc uid B — dòng `share_members` của A trong share của B có bị dọn theo không, hay trở thành mồ côi (uid không còn tồn tại nhưng dòng member vẫn còn)? | TC-F12-05 hiện không assert được kết quả cụ thể; nếu mồ côi, đây là rủi ro data-integrity tương tự nhóm đã tìm thấy ở mục 1.6 |
+| Q19 | `POST /share/:id/unlock` dùng để làm gì? Ai gọi (owner hay member), gọi khi nào, liên quan gì tới các mã lỗi `read_only`/`revoked` đã có ở §5 không? | TC-F13-01/02 hiện chỉ test được ranh giới rate limit, hoàn toàn không test được hành vi chức năng vì chưa biết endpoint làm gì |
+
+## 13. Tích hợp UI/UX thật — PR #260 (`380bc6b2`) + PR #274 (`ef996605`)
+
+> Nguồn: [qc-sharing-account-pro.md](qc-sharing-account-pro.md), bàn giao QC 2026-09-19. Đây là **lớp UI/UX
+> thật đã lên `main`**, dựng trên đúng backend đã phân tích ở mục 1–12 (F1–F13). Mỗi mục con dưới đây nối
+> thẳng vào 1 flow đã có — TC mới tiếp tục đúng dãy số ID của flow đó, không mở flow song song. 3 mục cuối
+> (Discover header, quy ước nút ✕, Widget) **không thuộc phạm vi Định danh/Chia sẻ/Đồng bộ/Sao lưu** — liệt
+> kê ở 13.8 để không mất thông tin, nhưng không mở rộng scope chính của test plan này.
+
+### 13.1 Lịch join bị lộ sai chỗ — rủi ro cao nhất, nối vào F4
+
+**Cơ chế:** khi máy B join 1 link, Ink tạo một **lịch EventKit thật** tên `Ink · <tên lịch>` để đẩy sự kiện
+sang app Lịch của Apple. Ở tầng OS, đây là **một lịch bình thường** — không có cách nào phân biệt nó với lịch
+tự tạo của chính người dùng. Trước bản fix này, nó lọt vào 4 danh sách không nên có mặt — nghiêm trọng nhất
+là danh sách #4 (bên dưới): nếu chọn được ở đó, người dùng **đăng lại lịch của người khác dưới tên mình**.
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F4-05 | qc-sharing-account-pro §2 | Máy B đã join ít nhất 1 link | Tạo sự kiện mới → mở dòng chọn lịch | **Không** có `Ink · …` trong danh sách chọn | P1 |
+| TC-F4-06 | qc-sharing-account-pro §2 | Máy B đã join ít nhất 1 link | Mở Ink AI → chỗ chọn lịch đích | **Không** có `Ink · …` | P1 |
+| TC-F4-07 | qc-sharing-account-pro §2 | Máy B đã join ít nhất 1 link | Calendars → danh sách bật/tắt hiện lịch | Lịch chia sẻ xuất hiện **đúng 1 lần** (dạng lịch được chia sẻ) — không có thêm dòng `Ink · …` song song | P1 |
+| TC-F4-08 | qc-sharing-account-pro §2 (dev tự đánh giá **nghiêm trọng nhất**) | Máy B đã join ít nhất 1 link, đồng thời cũng sở hữu lịch riêng | Mở Chia sẻ lịch → danh sách lịch để chọn chia sẻ | **Không** có `Ink · …` — không thể chọn lịch của người khác để tự publish lại dưới tên mình | **P1 — ưu tiên cao nhất trong toàn bộ mục 13** |
+| TC-F4-09 | qc-sharing-account-pro §2 (regression) | Máy **chưa join link nào** | Kiểm tra cả 4 danh sách trên | Đầy đủ như cũ — không bị lọc mất lịch hợp lệ nào của chính người dùng | P2 |
+
+### 13.2 Chia sẻ lịch (owner) — tên bắt buộc, Time range, tạo link — nối vào F3
+
+**Tên người gửi nay bắt buộc:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-09 | §3.1 | Đăng nhập Google | Mở sheet Share | Ô "Your name" tự điền tên tài khoản, **không** bật bàn phím | P2 |
+| TC-F3-10 | §3.1 | Đăng nhập Apple (không tên) hoặc chưa đăng nhập | Mở sheet Share | Ô trống, **tự động focus** (bàn phím bật) | P2 |
+| TC-F3-11 | §3.1 | Ô tên trống | Quan sát nút Create link | Nút **mờ/không bấm được** | P1 |
+| TC-F3-12 | §3.1 | — | Gõ tên | Nút Create link sáng lên | P2 |
+| TC-F3-13 | §3.1 (BVA — dễ sai nếu code chỉ check `.isEmpty`) | — | Nhập toàn dấu cách vào ô tên | Nút **vẫn mờ** — không được coi chuỗi toàn space là hợp lệ | P2 |
+| TC-F3-14 | §3.1 | Đã share 1 lần với tên X | Share lịch khác | Tên X được nhớ lại; **mô tả lịch thì không** (mỗi lịch 1 mô tả riêng) | P3 |
+
+**Time range (khái niệm mới — xem thêm 13.7 về câu hỏi mở nối với §3 backend):**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-15 | §3.2 | Mở sheet Share | — | Time range mặc định **"All upcoming"** | P2 |
+| TC-F3-16 | §3.2 | — | Mở picker Time range | Đủ 4 lựa chọn: Next 3/6/12 months, All upcoming | P3 |
+| TC-F3-17 | §3.2 | — | Đổi lựa chọn Time range | Dòng tóm tắt đổi theo dạng "128 events · 18 thg 9 – 18 thg 3" | P2 |
+| TC-F3-18 | §3.2 | Chọn "All upcoming" | — | Phần sau dấu `·` hiện chữ **"All upcoming"**, không hiện khoảng ngày cụ thể | P3 |
+| TC-F3-19 | §3.2 | Đã bấm Create link | Đổi lại Time range | Link cũ **biến mất**, phải tạo lại — verify link cũ thật sự chết ở máy B (không chỉ ẩn trên UI máy A), cross-ref F7 revoke | P1 |
+| TC-F3-20 | §3.2 | — | Thử lần lượt 3/6/12 tháng/All upcoming trên cùng 1 lịch | Số sự kiện **tăng dần** đúng thứ tự | P2 |
+
+**Tạo link:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-21 | §3.3 | Lần chia sẻ đầu tiên trên máy (chưa từng share) | Bấm Create link | Hiện popup xin xác nhận trước khi tải lên | P2 |
+| TC-F3-22 | §3.3 | Lịch quá lớn so với giới hạn dung lượng | Tạo link | Dòng cảnh báo "Only the first N events fit in the link", kèm **icon dấu chấm than** (không phải tick) | P3 |
+| TC-F3-23 | §3.3 | Link vừa tạo xong | — | Dòng ghi chú nằm giữa sheet, không đè lên nút CTA | P3 |
+| TC-F3-24 | §3.3 (đã bỏ cap 500 event — regression quan trọng nếu có case cũ nào giả định cap 500) | Lịch có 600+ event | Share toàn bộ | Đi trọn theo giới hạn dung lượng mới, **không** còn bị cắt cứng ở mốc 500 — nếu có test case cũ nào kỳ vọng "cắt còn 500" thì expected result đó **đã lỗi thời** | P2 |
+
+**Không còn toggle chi tiết (xác nhận lại đúng những gì §2 kiến trúc gốc đã nói ở mục 1.2 — không phải phát hiện mới, chỉ verify UI khớp đúng backend):**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-25 | §3.4 | Mở sheet Share | — | **Không còn** dòng bật/tắt "Include location, notes and links" | P3 |
+| TC-F3-26 | §3.4 | — | Đọc câu disclosure | Nói rõ chia sẻ **gồm cả** location, notes, links | P3 |
+
+### 13.3 Màn Calendars — điểm vào sharing đổi cấu trúc — nối vào F3
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-27 | §4 | — | Mở Calendars | Màn **full screen** (không phải sheet), ✕ ở góc trái | P3 |
+| TC-F3-28 | §4 | — | — | Header có 2 nút tròn bên phải: chia sẻ (mũi tên lên) và + | P3 |
+| TC-F3-29 | §4 | — | Bấm + | Popup "New calendar" có 2 nhóm tách rời: mẫu lịch, và "Add a shared calendar" bên dưới | P3 |
+| TC-F3-30 | §4 | — | Xem thẻ sharing trong thân màn | Chỉ còn "Manage sharing" — 2 dòng "Share a calendar"/"Add a shared calendar" đã chuyển lên header/popup, **không xuất hiện trùng lặp** ở cả 2 nơi | P2 |
+| TC-F3-31 | §4 | Có lịch đã join | — | Lịch đã join nằm **phía trên** dòng Manage sharing | P3 |
+| TC-F3-32 | §4 (điểm nối quan trọng — xem 13.7) | **Chưa đăng nhập** | Bấm nút chia sẻ trên header | Ra màn **mời đăng nhập**, không phải mở sheet chia sẻ trực tiếp | **P1** |
+| TC-F3-33 | §4 (đã biết, không report nếu khác) | Chưa đăng nhập | Join 1 link | Join thành công **không cần đăng nhập** — đây là chủ ý sản phẩm | P3 |
+
+### 13.4 Manage sharing (owner) — nối vào F3, chạm trực tiếp F6 (quyền) và F7 (revoke)
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-34 | §5 | — | Vào Manage sharing | Full screen, ✕ góc trái | P3 |
+| TC-F3-35 | §5 (mới ở PR #274) | Có ≥1 share | — | Nút "Share a calendar" **ghim đáy màn**; nội dung cuộn xuống dưới nút và mờ dần, không bị cắt cụt | P2 |
+| TC-F3-36 | §5 | — | Bấm nút ghim đáy → tạo link → đóng sheet | Thẻ mới xuất hiện **ngay** trong danh sách, không cần thao tác refresh | P2 |
+| TC-F3-37 | §5 | Chưa chia sẻ gì | Mở Manage sharing | Màn trống chỉ 1 dòng chữ, **không** có CTA riêng ở giữa (tránh mời cùng 1 hành động 2 lần vì nút đã ghim đáy) | P3 |
+| TC-F3-38 | §5 | Có ≥1 share active | Xem thẻ | Dòng "Shared" hiện "42 events · 8 thg 9 – 1 thg 3" — **không còn** hiện URL, **không còn** hiện ngày tạo link | P2 |
+| TC-F3-39 | §5 | — | Xem nút copy | Ghi **"Copy link"** (trước là "Copy"), nằm cạnh nhãn Access | P3 |
+| TC-F3-40 | §5 | — | Bấm copy | Đổi thành "Copied" ~1 giây rồi trở lại; copy thẻ khác không làm thẻ này đổi theo | P3 |
+| TC-F3-41 | §5 | — | Dán link đã copy ra ngoài app | Dán được và mở được | P2 |
+| TC-F3-42 | §5 (= verify F6 qua UI thật) | Có member đã join | Đổi Access giữa xem/sửa cho 1 người | Máy B nhận đúng quyền tương ứng — cross-ref TC-F6-01/02 | **P1** |
+| TC-F3-43 | §5 (= verify F7 qua UI thật) | Có share active | Bấm Stop sharing, xác nhận | Link chết ở máy B — cross-ref TC-F7-01 | **P1** |
+| TC-F3-44 | §5 (= verify F8/F9 qua UI thật, quan trọng) | Có share active với event thật | Xoá app, cài lại, mở Manage sharing | Danh sách link **vẫn còn** nhưng dữ liệu sự kiện **thì không** — dòng "Shared" **quay về hiện ngày tạo link** thay vì "N events · khoảng ngày". Dev xác nhận đây là hành vi ĐÚNG, không phải bug — chính là triệu chứng UI-quan-sát-được của việc `calendar_events` cache local rỗng sau cài lại tới khi sync lần đầu chạy lại (mục 1.4) | P2 |
+
+### 13.5 Nhận link chia sẻ (máy B) — nối vào F4
+
+**Dán link — "Add a shared calendar":**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F4-10 | §6.1 | — | Mở "Add a shared calendar" | Ô dán link có nút paste **bên trong ô**, mờ khi clipboard rỗng | P3 |
+| TC-F4-11 | §6.1 | — | Dán link hợp lệ | Hiện thẻ tóm tắt (tên, "42 events · khoảng ngày") | P2 |
+| TC-F4-12 | §6.1 | — | Dán URL không phải Ink (vd `https://example.com/…`) | Báo lỗi **ngay**, không gọi mạng | P2 |
+| TC-F4-13 | §6.1 | Link Ink hợp lệ nhưng đã chết | Dán link | Câu lỗi hiện dưới ô, ô **vẫn sửa được** (không văng màn lỗi riêng) — cross-ref khái niệm expired/revoked ở F7/F10 nhưng ở tầng UI | P2 |
+| TC-F4-14 | §6.1 | Mất mạng | Dán link | Báo lỗi tương ứng, thử lại được | P2 |
+| TC-F4-15 | §6.1 | Đang hiện lỗi từ link cũ | Sửa lại link | Lỗi cũ **biến mất ngay** khi gõ | P3 |
+
+**Màn xem trước rồi Join:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F4-16 | §6.2 | Mở link https trực tiếp hoặc bấm Continue | — | Thẻ tóm tắt đầu màn + ngay dưới là ghi chú "tên/mô tả là lời người gửi… lịch cũng xuất hiện trong app Lịch của Apple" | P3 |
+| TC-F4-17 | §6.2 | — | — | Đáy màn chỉ còn nút "Join calendar" — đoạn chữ dài trước đây đã chuyển lên trên | P3 |
+| TC-F4-18 | §6.2 | Link của người gửi ẩn danh (không tên/mô tả) | — | Các dòng tên/mô tả **biến mất hẳn**, không để trống | P2 |
+| TC-F4-19 | §6.2 | — | Bấm Join calendar | Lịch hiện trong Calendars **và** trong app Lịch của Apple — cross-ref cơ chế 13.1 | P2 |
+| TC-F4-20 | §6.2 (regression, nối 13.1) | Vừa join qua đường paste-link (khác đường mở trực tiếp link web) | Chạy lại 4 case ở 13.1 | Kết quả phải giống hệt dù join qua đường nào — cả 2 entry point (paste-link và mở trực tiếp) đều phải an toàn như nhau | P1 |
+
+### 13.6 Tài khoản (UI) — nối vào F2
+
+**Chưa đăng nhập:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F2-11 | §7.1 | Chưa đăng nhập | Mở Cài đặt | Dòng tài khoản có mascot Ink + câu mời, **không còn** ghi "Account · Not signed in" | P3 |
+| TC-F2-12 | §7.1 | — | Mở màn Account | Có hình minh hoạ + 3 dòng lợi ích | P3 |
+| TC-F2-13 | §7.1 (điểm nối quan trọng — xem 13.7) | — | Đọc 3 dòng lợi ích | Chỉ hứa những gì tài khoản thật sự mở ra (**tạo** link chia sẻ) — **không** hứa việc **join** link (việc đó miễn phí) | **P1** |
+| TC-F2-14 | §7.1 | — | Xem nút đăng nhập Google | Dùng logo màu thật, không phải chữ G xám | P3 |
+| TC-F2-15 | §7.1 | — | Mở màn mời đăng nhập (login gate) | **Không còn** nút Cancel — chỉ thoát bằng vuốt xuống | P2 |
+
+**Đã đăng nhập:**
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F2-16 | §7.2 | Đã đăng nhập | Mở Cài đặt | Thẻ tài khoản là MỘT dòng (ảnh đại diện · tên/email · mũi tên) — không còn 3 dòng riêng, không còn "Signed in with Google" | P3 |
+| TC-F2-17 | §7.2 | — | — | Cạnh tên có logo nhà cung cấp (Apple/Google) cỡ nhỏ | P3 |
+| TC-F2-18 | §7.2 (case hay vỡ theo chính dev cảnh báo — Apple thường không trả tên) | Đăng nhập Apple, tài khoản không có tên | — | Chỗ tên hiện **"Apple Account"**; ảnh đại diện là **icon người trên nền tròn**, không phải vòng tròn trống | P2 |
+| TC-F2-19 | §7.2 | — | Mở màn Account | Sign out và Delete account **cùng kiểu nút ở chân màn**, chỉ khác màu (thường vs đỏ/coral) | P2 |
+| TC-F2-20 | §7.2 | — | Bấm Sign out | Thoát đúng, không ảnh hưởng dữ liệu đã share/joined | P2 |
+| TC-F2-21 | §7.2 (= điểm vào UI thật của TC-F12-04) | — | Bấm Delete account | Hỏi xác thực lại **trước** khi xoá — sau khi xác thực, kích hoạt đúng `DELETE /api/ink/account` (TC-F12-04, mục 10.8) | **P1** |
+
+### 13.7 Đối chiếu ngược UI thật với backend — 2 câu hỏi mở mới
+
+**1. "Time range" (3/6/12 tháng · All upcoming) hoạt động ở tầng nào của backend?** Khái niệm này **không hề
+xuất hiện** ở `ink-identity-sync-flow.html` (§0–§7) lẫn trong toàn bộ câu trả lời của dev (§3 xác nhận cơ chế
+sync là push/pull row-level theo `isDirty` + cursor `since` — không có khái niệm "chỉ đồng bộ N tháng tới").
+Giả thuyết hợp lý nhất: Time range chỉ là bộ lọc áp dụng **lúc seed ban đầu** (§2, batch ghi `calendar_events`
+lần đầu khi tạo share), không phải một ràng buộc còn hiệu lực cho các lần sync sau. Nếu đúng vậy: 1 event
+owner tạo **sau** khi share (vd 13 tháng sau, với Time range đã chọn là "12 months") có được đồng bộ sang
+receiver hay bị chặn vĩnh viễn vì "ngoài time range lúc tạo"? Ảnh hưởng trực tiếp lời hứa "đồng bộ sống động"
+của toàn bộ §3. → **Thêm vào round 2** của
+[ink-identity-sync-flow-open-questions-for-dev.md](ink-identity-sync-flow-open-questions-for-dev.md) (Q20).
+
+**2. UI gate "chưa đăng nhập → màn mời đăng nhập" (TC-F3-32) không mâu thuẫn với backend cho phép uid ẩn danh
+tạo share (TC-F2-09), nhưng cần 1 case bảo mật xác nhận rõ:** nếu gọi thẳng `POST /api/ink/share` bằng token
+ẩn danh (bỏ qua UI), backend có tạo share thành công không? Nếu có — đúng như thiết kế linh hoạt đã xác nhận,
+không phải bug — nhưng QC cần biết trước để không báo nhầm khi test trực tiếp bằng Postman/curl thấy hành vi
+"khác" so với UI.
+
+| ID | Nguồn | Precondition | Steps | Expected Result | Priority |
+|---|---|---|---|---|---|
+| TC-F3-45 (mới) | Đối chiếu TC-F3-32 (UI gate) với TC-F2-09 (backend permissive) | Có uid ẩn danh hợp lệ (chưa link Apple/Google) | Gọi thẳng `POST /api/ink/share` bằng token ẩn danh, không qua UI | Xác nhận: tạo share thành công (đúng thiết kế linh hoạt của backend) — nếu bị chặn, đây là điểm KHÔNG khớp với TC-F2-09 đã verify trước đó, cần báo lại | P2 |
+
+### 13.8 Ngoài phạm vi Định danh/Chia sẻ/Đồng bộ/Sao lưu — cùng PR nhưng khác feature area
+
+Không mở rộng scope chính của test plan này — liệt kê để không mất thông tin từ bàn giao gốc, tham chiếu trực
+tiếp [qc-sharing-account-pro.md](qc-sharing-account-pro.md) khi cần test:
+
+- **§8 Header Discover** — nền tím, wordmark to hơn, pill Pro 2 trạng thái (chưa mua/đã mua), hiệu ứng sao
+  trôi + Reduce Motion + pin drain khi để Discover chạy nền lâu. Thuộc feature Discover/Pro, không phải
+  identity/share/sync.
+- **§9 Quy ước nút ✕ sang trái + CTA sát đáy** — quy ước UI áp dụng toàn app (Pro paywall, chọn màu event,
+  chọn nhắc nhở, màn giải thích lock screen). Cross-cutting UI convention, không riêng sharing.
+- **§10 Collection → tab Widget** — hiển thị đúng ghi chú đã chọn cho widget note. Thuộc feature
+  Discover/Widget, không liên quan identity/share/sync/backup.
+
+**Ghi chú hữu ích rút ra từ §11–12 của bàn giao gốc, đáng giữ lại dù không viết thành TC riêng:**
+
+- "Manage sharing" chưa dịch ở 11 ngôn ngữ — đã biết, không report.
+- Sửa event trực tiếp trong app Lịch Apple cho 1 lịch đã join **không được giữ lại** — đúng thiết kế, nhưng
+  **không có copy nào trong app nói điều này**. Đáng chú ý về mặt kỹ thuật: enforcement "read-only" của F6/§3
+  chỉ chặn được ở tầng **sync** (push bị từ chối + lần pull sau ghi đè lại đúng bản server) — **không** chặn
+  được việc user tự sửa trực tiếp qua EventKit ở tầng OS, vì đó là 1 lịch thật, không có cơ chế khoá nào của
+  Apple Calendar biết tới khái niệm "read_only" của Ink. Không phải bug, nhưng nên hiểu đúng ranh giới enforcement thật (chỉ ở lớp sync, không ở lớp OS) khi review case liên quan.
+- Rà hồi quy thêm: `InkPopupScaffold` (padding đáy), `InkTextField` (nút trong ô + dòng lỗi) — 2 component
+  dùng chung, ảnh hưởng nhiều sheet/form khác ngoài phạm vi sharing — nên rà lướt nhanh các màn hình khác
+  dùng chung 2 component này dù không phải trọng tâm test plan.
+
+---
+
+Nguồn gốc của test plan này: [ink-identity-sync-flow.html](../specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) —
 worker PR #16–#20 · cập nhật 2026-09-18. Không đối chiếu với bất kỳ tài liệu sharing nào khác trong repo theo
-đúng yêu cầu.
+đúng yêu cầu ban đầu. **Mục 12 (2026-09-18)** bổ sung câu trả lời trực tiếp từ dev, đối chiếu code thật ở
+`worker-ink-lockscreen-calendar@main`/`lockscreen-calendar@main` — xem đầy đủ ở
+[ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md). **Mục 13
+(2026-09-19)** tích hợp UI/UX thật từ PR #260/#274 — xem đầy đủ ở
+[qc-sharing-account-pro.md](qc-sharing-account-pro.md).

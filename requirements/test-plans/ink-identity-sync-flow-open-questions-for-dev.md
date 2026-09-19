@@ -6,6 +6,9 @@
 > **Mục đích:** 17 câu hỏi dưới đây tài liệu không trả lời được — cần dev xác nhận trước khi QC chốt mức độ
 > ưu tiên rủi ro và hoàn thiện test case. Các trích dẫn "§N" trỏ về đúng 8 mục (0–7) của tài liệu HTML gốc.
 > **Test plan đầy đủ (nội bộ QC):** [ink-identity-sync-flow-test-plan.md](ink-identity-sync-flow-test-plan.md)
+> **Trạng thái:** mục A–H (Q1–Q17) **đã được trả lời** ngày 2026-09-18 — xem
+> [ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md). Mục **I (Q18–Q19)**
+> ở cuối file là câu hỏi **mới, chưa trả lời** — gửi riêng phần này cho dev nếu chỉ muốn hỏi phần còn thiếu.
 
 ---
 
@@ -210,6 +213,66 @@ Tính theo endpoint nào, cửa sổ thời gian nào (vd bao nhiêu request/ph�
 
 ---
 
-*File này trích xuất từ phần "Open" của test plan nội bộ QC để tiện gửi trực tiếp cho dev. Sau khi có câu trả
-lời, cập nhật ngược lại vào
-[ink-identity-sync-flow-test-plan.md](ink-identity-sync-flow-test-plan.md) mục 11.*
+## I. Vòng 2 (2026-09-19) — phát hiện backend + đối chiếu UI/UX thật (PR #260/#274)
+
+> Q18–Q19: đọc lại câu trả lời vòng 1 lộ ra 2 endpoint backend **có thật, đang chạy**, nhưng **không nằm
+> trong `ink-identity-sync-flow.html` gốc** (§0–§7) — chỉ xuất hiện như chi tiết phụ trong câu trả lời Q15/Q17.
+> Q20: phát hiện khi tích hợp bàn giao QC cho PR #260/#274 (`qc-sharing-account-pro.md`) vào test plan — UI
+> có 1 khái niệm mới ("Time range") hoàn toàn không khớp với bất kỳ mô tả sync nào ở vòng 1.
+
+### Q18. `DELETE /api/ink/account` là gì trong sản phẩm, và ảnh hưởng gì tới share của NGƯỜI KHÁC?
+
+Endpoint này khác Sign out ra sao (có xác nhận 2 bước không, UI nào dẫn tới nó)? Và cụ thể hơn: uid A gọi
+`DELETE /api/ink/account` trong khi A đang là **member** (không phải owner) của 1 share thuộc về uid B khác
+— dòng `share_members` của A trong share của B có bị dọn/tombstone theo không, hay trở thành **mồ côi** (uid
+A không còn tồn tại nhưng dòng member vẫn còn nguyên trên D1)?
+
+- **Vị trí trong tài liệu:** không có ở §0–§7. Chỉ được nhắc tới trong câu trả lời Q15 (answers-from-dev.md):
+  *"`DELETE /api/ink/account` cũng cùng thứ tự: events → calendars → shares, quét theo `calendars.owner_uid`"*
+  — câu trả lời đó chỉ nói về dữ liệu **uid đó sở hữu** (owner_uid), không nói về vai trò **member** của uid
+  đó trong share của người khác.
+- **Vì sao cần biết:** nếu mồ côi, đây là rủi ro data-integrity — dòng `share_members` trỏ tới 1 uid không
+  còn tồn tại có thể gây lỗi khi owner B xem danh sách thành viên, hoặc khi hệ thống tính rate limit/quyền
+  dựa trên uid đó.
+- **Trả lời của dev:**
+
+### Q19. `POST /share/:id/unlock` dùng để làm gì?
+
+Ai gọi (owner hay member), gọi vào lúc nào trong luồng sản phẩm, có liên quan gì tới các mã lỗi
+`read_only`/`revoked` đã có ở §5, hay tới `link_role`/`member.role` ở §3 không?
+
+- **Vị trí trong tài liệu:** không có ở §0–§7. Chỉ xuất hiện đúng 1 lần, trong bảng rate limit ở câu trả lời
+  Q17: *"`POST /share/:id/unlock` — 30/giờ mỗi share · 60/giờ mỗi IP"* — không có mô tả chức năng nào kèm theo.
+- **Vì sao cần biết:** hiện chỉ viết được test case đo ranh giới rate limit (TC-F13-01/02 trong test plan),
+  hoàn toàn không test được hành vi chức năng thật vì chưa biết endpoint này làm gì.
+- **Trả lời của dev:**
+
+### Q20. "Time range" (Next 3/6/12 months · All upcoming) ở màn Share hoạt động ở tầng nào của backend?
+
+Đây là bộ lọc chỉ áp dụng **lúc seed ban đầu** (khi tạo share, quyết định event nào được đưa vào batch ghi
+`calendar_events` lần đầu), hay là một ràng buộc **còn hiệu lực cho mọi lần sync sau đó**?
+
+Cụ thể: owner tạo 1 event **mới** sau khi đã share (vd 13 tháng sau ngày share, với Time range đã chọn lúc
+tạo là "12 months") — event đó có được đồng bộ sang receiver bình thường, hay bị chặn vĩnh viễn vì "ngoài
+time range đã chốt lúc tạo link"?
+
+- **Vị trí trong tài liệu:** không có ở `ink-identity-sync-flow.html` (§0–§7) — khái niệm "window"/khoảng thời
+  gian giới hạn hoàn toàn không được nhắc tới trong bất kỳ câu trả lời nào ở vòng 1 (Q1–Q17); §3 mô tả cơ chế
+  sync là push/pull row-level theo `isDirty` + cursor `since`, không có khái niệm bounded date range. "Time
+  range" chỉ xuất hiện trong tài liệu UI/UX PR #260/#274 (`qc-sharing-account-pro.md` §3.2), không có trong
+  tài liệu kiến trúc backend.
+- **Vì sao cần biết:** nếu Time range chỉ áp dụng lúc seed và không ảnh hưởng sync về sau, thì lời hứa "đồng
+  bộ sống động" của §3 vẫn đúng hoàn toàn. Nếu nó là 1 ràng buộc còn hiệu lực mãi mãi (giống khái niệm
+  "window" ở phiên bản kiến trúc cũ hơn), đây là 1 giới hạn quan trọng chưa được tài liệu hoá ở bất kỳ đâu,
+  ảnh hưởng trực tiếp cách viết test case cho TC-F3-19 (đổi Time range sau khi đã tạo link) và toàn bộ kỳ
+  vọng về tính "sống động" của mọi share.
+- **Trả lời của dev:**
+
+---
+
+*File này trích xuất từ phần "Open" của test plan nội bộ QC để tiện gửi trực tiếp cho dev. Vòng 1 (Q1–Q17) đã
+được trả lời đầy đủ ngày 2026-09-18 — xem
+[ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md). Sau khi có câu trả
+lời cho Vòng 2, cập nhật ngược lại vào
+[ink-identity-sync-flow-test-plan.md](ink-identity-sync-flow-test-plan.md) — Q18/Q19 vào mục 12.7, Q20 vào
+mục 13.7.*
