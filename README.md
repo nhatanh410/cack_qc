@@ -94,12 +94,17 @@ requirements/test-plans/ink-identity-sync-flow-test-plan.md    ← Test Plan (IS
 requirements/test-plans/ink-identity-sync-flow-open-questions-for-dev.md  ← câu hỏi vượt phạm vi tài liệu, gộp gửi dev — nhiều vòng, đánh số tiếp nối (Q1–Q17 vòng 1, Q18+ vòng 2)
 requirements/test-plans/ink-identity-sync-flow-answers-from-dev.md        ← câu trả lời trực tiếp từ dev, trích code thật (file/line), phát hiện thêm nợ kỹ thuật ngoài câu hỏi
 requirements/test-plans/qc-sharing-account-pro.md                         ← bàn giao QC cho UI/UX thật đã lên `main` (PR cụ thể) — tích hợp thẳng vào mục 13 của test plan, không tách file riêng
+requirements/specs/login-backup-share-sync.md                             ← tài liệu tham chiếu hệ thống, verified against `main` — nguồn thẩm quyền cao nhất khi có xung đột, tích hợp vào mục 14
+test-cases/ink-identity-sync-flow/                                        ← Test Case (ISTQB) chốt tại 1 thời điểm — tách theo flow (10 file + README), rút ra từ đúng test plan sống ở trên; không tự sống theo thời gian như test plan — khi test plan đổi mạnh, quay lại sinh lại bộ này
 ```
 
 **Nguyên tắc riêng của bundle này:** test plan là **tài liệu sống**, không viết 1 lần rồi đóng băng — mỗi
 vòng hỏi-đáp hoặc mỗi lần UI thật lên `main` đều **quay lại sửa đúng file test plan gốc** (thêm mục mới, đóng
 câu hỏi cũ, nâng/hạ mức ưu tiên rủi ro theo bằng chứng mới), giữ toàn bộ vòng đời tính năng — từ kiến trúc tới
-UI thật — trong 1 nơi duy nhất, có thể lần lại lịch sử suy luận.
+UI thật — trong 1 nơi duy nhất, có thể lần lại lịch sử suy luận. Bộ test case (`test-cases/ink-identity-sync-flow/`)
+là ảnh chụp **thực thi được** của test plan tại 1 mốc thời gian — chỉ giữ bản chốt hiện tại của mỗi case (case
+lỗi thời bị loại, xem mục "Case đã loại bỏ" trong `00-README.md` của bộ đó), không mang theo lịch sử suy luận
+như test plan.
 
 ---
 

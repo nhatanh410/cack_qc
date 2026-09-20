@@ -270,9 +270,55 @@ time range đã chốt lúc tạo link"?
 
 ---
 
+## J. Vòng 3 (2026-09-20) — phát hiện khi đối chiếu `login-backup-share-sync.md`
+
+> Tài liệu tham chiếu hệ thống mới (`requirements/specs/login-backup-share-sync.md`, verified against `main`
+> 2026-09-20) trả lời phần lớn Q18–Q20 ở vòng 2, nhưng mở ra 3 câu hỏi mới khi đọc kỹ — chủ yếu vì nó giới
+> thiệu 2 tính năng hoàn toàn mới (Backup sync, Unlock mật khẩu) mà chưa mô tả đủ chi tiết vận hành.
+
+### Q21. Mật khẩu cho 1 share được đặt ở đâu/khi nào? Unlock token dùng tiếp thế nào?
+
+`POST /share/:id/unlock` đổi mật khẩu lấy unlock token (đã xác nhận, đóng Q19) — nhưng tài liệu không nói
+mật khẩu được **đặt** ở route nào (một field trong `POST /share` lúc tạo? một route `PATCH` riêng sau đó?),
+và unlock token nhận được dùng tiếp ra sao — có bắt buộc gửi kèm khi gọi `GET /share/:id` hoặc
+`GET /share/:id/page` không, hay chỉ ảnh hưởng phía UI web?
+
+- **Vị trí trong tài liệu:** `login-backup-share-sync.md` §4, dòng `POST /share/:id/unlock` — chỉ ghi "Password
+  → unlock token", không mô tả luồng đặt mật khẩu hay cách dùng token sau đó.
+- **Vì sao cần biết:** TC-F16-01 (đặt mật khẩu để test unlock) và TC-F16-03 (share không đặt mật khẩu thì
+  `/unlock` làm gì) hiện chưa viết được đầy đủ.
+- **Trả lời của dev:**
+
+### Q22. `identity-model.md` (device-vs-account grant tiering) — xin file này, và `subject_type` có gì ngoài uid?
+
+`share_members` đã đổi khoá chính thành `(share_id, subject_type, subject_id)` thay vì `(share_id, uid)` như
+tài liệu kiến trúc cũ (§6, `ink-identity-sync-flow.html`). `login-backup-share-sync.md` trỏ tới 1 companion
+doc `identity-model.md` mô tả "device-vs-account grant tiering" nhưng QC chưa có file này.
+
+- **Vị trí trong tài liệu:** `login-backup-share-sync.md`, bảng companion docs (đầu file) + §1 (định nghĩa khoá
+  `share_members`).
+- **Vì sao cần biết:** nếu `subject_type` có giá trị khác ngoài "uid" (vd "device_id" như 1 trục cấp quyền
+  song song), ma trận quyền DT1 (mục 5.4 test plan, dựa hoàn toàn vào `member.role`/`link_role` theo uid) có
+  thể **chưa đầy đủ** — cần xin file `identity-model.md` để đọc trực tiếp, không suy đoán thêm.
+- **Trả lời của dev:**
+
+### Q23. `GET /share/:id/sync` (pull) hôm nay có thật sự check quyền/`revoked` theo subject không?
+
+Route table mới ghi pull nhận "anonymous OR Bearer (owner-device bypass via `X-Device-Id`)" — khác hẳn mô tả
+cũ (`handleInkShareSyncPull` không nhận `request`, tức hoàn toàn không có auth check nào). Đây có phải là
+phần fix "pull sắp bắt buộc token" đã được dev nhắc ở vòng 1 (đóng 1 phần Open #9), hay chỉ là chấp nhận thêm
+1 loại auth mà vẫn trả full data không lọc theo quyền?
+
+- **Vị trí trong tài liệu:** `login-backup-share-sync.md` §4, dòng `GET /share/:id/sync?since=<cursor>`.
+- **Vì sao cần biết:** quyết định trực tiếp TC-F7-03/TC-F7-04 (mục 10.4) có cần viết lại theo hành vi mới hay
+  giữ nguyên như hành vi cũ (revoke chỉ chặn ghi, chưa chặn đọc).
+- **Trả lời của dev:**
+
+---
+
 *File này trích xuất từ phần "Open" của test plan nội bộ QC để tiện gửi trực tiếp cho dev. Vòng 1 (Q1–Q17) đã
 được trả lời đầy đủ ngày 2026-09-18 — xem
-[ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md). Sau khi có câu trả
-lời cho Vòng 2, cập nhật ngược lại vào
-[ink-identity-sync-flow-test-plan.md](ink-identity-sync-flow-test-plan.md) — Q18/Q19 vào mục 12.7, Q20 vào
-mục 13.7.*
+[ink-identity-sync-flow-answers-from-dev.md](ink-identity-sync-flow-answers-from-dev.md). Vòng 2 (Q18–Q20)
+phần lớn đã được trả lời gián tiếp qua tài liệu `login-backup-share-sync.md` (2026-09-20) — xem mục 14.2 của
+test plan. Sau khi có câu trả lời cho Vòng 3 (Q21–Q23), cập nhật ngược lại vào
+[ink-identity-sync-flow-test-plan.md](ink-identity-sync-flow-test-plan.md) mục 14.6.*
