@@ -1,8 +1,8 @@
 # Test Cases — Tạo & Quản lý Share (F3)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.2,
-> 10.2, 12.3, 13.2–13.4, 13.7 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §2 ·
-> [qc-sharing-account-pro.md](../../requirements/test-plans/qc-sharing-account-pro.md) §3–§5.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.2,
+> 10.2, 12.3, 13.2–13.4, 13.7 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §2 ·
+> [qc-sharing-account-pro.md](../../requirements/test-plans/ink-identity-sync-flow/qc-sharing-account-pro.md) §3–§5.
 > **Phạm vi:** owner tạo/quản lý share — từ backend (batch atomic 3 bảng, token bắt buộc) tới toàn bộ UI thật
 > đã lên `main` (tên bắt buộc, Time range, màn Calendars, Manage sharing). Xem [00-README.md](00-README.md)
 > cho quy ước ID/priority.
@@ -50,7 +50,7 @@
 ## Suite SH3 — Time range (UI §3.2, khái niệm mới)
 
 > ⚠️ Cơ chế backend của "Time range" chưa được xác nhận đầy đủ — xem Open Q20 trong
-> [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow-open-questions-for-dev.md).
+> [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-open-questions-for-dev.md).
 > TC-F3-19 dưới đây là case quan trọng nhất để verify hành vi thật khi chưa có câu trả lời.
 
 | ID | Nguồn | Precondition | Steps | Expected Result | Priority |

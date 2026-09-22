@@ -53,7 +53,7 @@ screenshots/
 ```
 
 🚧 = tính năng Phase 2 **chưa build trong app** — folder đã tạo sẵn (kèm `.gitkeep`) để chụp ngay
-khi feature ra mắt. Chi tiết map với feedback Phase 2 nằm ở flow map [§7 rule đặt tên](../../../../.claude/rules/screenshot-naming.md#7-flow-map--ink-calendar-ios) và [`requirements/specs/phase-2-feedback.md`](../../specs/phase-2-feedback.md).
+khi feature ra mắt. Chi tiết map với feedback Phase 2 nằm ở flow map [§7 rule đặt tên](../../../../.claude/rules/screenshot-naming.md#7-flow-map--ink-calendar-ios) và [`requirements/specs/phase-2-feedback/phase-2-feedback.md`](../../../specs/phase-2-feedback/phase-2-feedback.md).
 
 Trong mỗi device, thư mục flow là **phẳng — không có thư mục con**. Mọi phân cấp nằm trong `screen-no` của tên file.
 

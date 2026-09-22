@@ -2,7 +2,7 @@
 
 **Mục tiêu:** trang trí wallpaper (vẽ tay, chữ, emoji, ảnh/cắt nền) ngay trong màn chỉnh wallpaper, trước khi lưu thành lock screen thật.
 
-**Nguồn:** 16 screenshot trong [`screenshots/iphone/14_edit-wallpaper/`](../screenshots/iphone/14_edit-wallpaper/) — build TestFlight **1.2.15 (56)**, PR [#185](https://github.com/sfunvn/lockscreen-calendar/pull/185), change note [qc-wallpaper-decoration.md](../../specs/qc-wallpaper-decoration.md).
+**Nguồn:** 16 screenshot trong [`screenshots/iphone/14_edit-wallpaper/`](../screenshots/iphone/14_edit-wallpaper/) — build TestFlight **1.2.15 (56)**, PR [#185](https://github.com/sfunvn/lockscreen-calendar/pull/185), change note [qc-wallpaper-decoration.md](../../../specs/wallpaper-decoration/qc-wallpaper-decoration.md).
 
 > ⚠️ Flow **mới hoàn toàn**, chưa từng có wireframe trước đó — khác các file khác trong bộ này vốn đã có ít nhất 1 phiên bản cũ để đối chiếu. Mọi mô tả dưới đây dựng lần đầu, hoàn toàn từ ảnh.
 > Bộ ảnh **iPad** (15 ảnh, cả 2 chiều) cũng tồn tại ở [`screenshots/ipad/14_edit-wallpaper/`](../screenshots/ipad/14_edit-wallpaper/) nhưng theo đúng quy ước của thư mục này (nguồn chính là iPhone), wireframe chính dựng từ iPhone — khác biệt/bổ sung quan sát được từ iPad gom riêng ở mục cuối.
@@ -340,6 +340,6 @@ Bộ [`screenshots/ipad/14_edit-wallpaper/`](../screenshots/ipad/14_edit-wallpap
 
 - **`filled` / `filled-landscape`** (không có sticker nào đang chọn) — cho thấy canvas ở trạng thái nghỉ sau khi trang trí xong, cả 2 chiều xoay. Vị trí sticker giữ nguyên khi xoay ngang.
 - **`text-collapsed`** — cùng tool Text nhưng bàn phím đã tắt (chạm ra ngoài), thanh format vẫn còn hiện — trạng thái trung gian mà bộ iPhone chưa chụp.
-- **`drawing`** (chỉ có ở iPad) — ⚠️ cho thấy **toàn bộ header (✕/↶/↷/✓) và toolbar biến mất hoàn toàn** trong lúc đang kéo nét vẽ, không chỉ ẩn brush bar. Chưa xác nhận đây là ẩn tạm chủ ý (hiện lại khi buông tay) hay là dấu hiệu của bug đã biết (toolbar kẹt cứng sau thao tác resize, ghi trong change note) — **cần verify trên máy thật trước tiên**, xem [test plan mục 11](../../test-plans/1.2.15-decoration-inkai.md).
+- **`drawing`** (chỉ có ở iPad) — ⚠️ cho thấy **toàn bộ header (✕/↶/↷/✓) và toolbar biến mất hoàn toàn** trong lúc đang kéo nét vẽ, không chỉ ẩn brush bar. Chưa xác nhận đây là ẩn tạm chủ ý (hiện lại khi buông tay) hay là dấu hiệu của bug đã biết (toolbar kẹt cứng sau thao tác resize, ghi trong change note) — **cần verify trên máy thật trước tiên**, xem [test plan mục 11](../../../test-plans/decoration-inkai/1.2.15-decoration-inkai.md).
 - **Emoji picker trên iPad landscape** không giãn theo chiều ngang — giữ nguyên bề rộng như bản portrait, nổi giữa màn hình rộng, hai bên trống trải.
 - iPad **không có** state `tooltip`, `sticker-selected`, `sticker-settings`, hay `discard-dialog` trong bộ đã chụp — chưa rõ hành vi coach-mark, sheet cài đặt sticker, và popup Discard trên iPad có giống iPhone không (chưa chụp, không suy diễn).

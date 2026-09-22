@@ -1,7 +1,7 @@
 # Test Cases — Xoá tài khoản, Quản lý member, Unlock, Xoá calendar (F12/F13/F15/F16/F17)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 10.8,
-> 12.6, 12.7, 14.1, 14.2 · [login-backup-share-sync.md](../../requirements/specs/login-backup-share-sync.md) §2, §4.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 10.8,
+> 12.6, 12.7, 14.1, 14.2 · [login-backup-share-sync.md](../../requirements/specs/ink-identity-sync-flow/login-backup-share-sync.md) §2, §4.
 > **Phạm vi:** 4 flow **ngoài phạm vi tài liệu kiến trúc gốc** `ink-identity-sync-flow.html` §0–§7 — chỉ lộ ra
 > qua câu trả lời của dev (2026-09-18) và tài liệu hệ thống mới nhất (2026-09-20). Gồm: xoá tài khoản
 > (`DELETE /account`), quản lý member qua route đặt tên rõ, unlock link có mật khẩu, và 2 loại xoá đã tách
@@ -43,7 +43,7 @@
 ## Suite AC3 — Unlock link có mật khẩu (F13/F16)
 
 > ⚠️ Cách đặt mật khẩu cho 1 share chưa được xác nhận đầy đủ — xem Open Q21 trong
-> [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow-open-questions-for-dev.md).
+> [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-open-questions-for-dev.md).
 > TC-F16-01/03 phụ thuộc câu trả lời này.
 
 | ID | Nguồn | Precondition | Steps | Expected Result | Priority |

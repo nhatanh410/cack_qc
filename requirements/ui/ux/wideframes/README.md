@@ -22,9 +22,9 @@ Wireframe được dựng **từ screenshot thật**, mỗi flow một file. Dù
 | 09 | [Settings](09_settings.md) | 1 | 1 | ⚠️ Chỉ trạng thái chưa mua |
 | 10 | [Lock Screen](10_lockscreen.md) | 1 | 1 | Kết quả cuối, ngoài app — xác minh cả 03 + 04 |
 | | | **45** | **57** | |
-| 11 | Share | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P3](../../specs/phase-2-feedback.md#p3--share-lịch-tạo-lịch-gss) |
-| 12 | AI Assistant | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P4](../../specs/phase-2-feedback.md#p4--ai-assistant-vào-calendarevent-improve-home-theo-category) |
-| 13 | Community | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P6](../../specs/phase-2-feedback.md#p6--build-community-co-edit-lịch-âm---tâm-linh) |
+| 11 | Share | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P3](../../../specs/phase-2-feedback/phase-2-feedback.md#p3--share-lịch-tạo-lịch-gss) |
+| 12 | AI Assistant | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P4](../../../specs/phase-2-feedback/phase-2-feedback.md#p4--ai-assistant-vào-calendarevent-improve-home-theo-category) |
+| 13 | Community | — | 0 | 🚧 Phase 2 — chưa build, chưa có wireframe. Xem [phase-2-feedback.md § P6](../../../specs/phase-2-feedback/phase-2-feedback.md#p6--build-community-co-edit-lịch-âm---tâm-linh) |
 | 14 | [Edit Wallpaper (Decorate)](14_edit-wallpaper.md) | 2 | 16 | Mới hoàn toàn, build 1.2.15 (56) · còn thiếu eyedropper, limit-warning, và trạng thái giữa lúc resize/xoay |
 
 ---

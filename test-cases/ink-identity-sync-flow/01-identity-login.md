@@ -1,8 +1,8 @@
 # Test Cases — Định danh & Đăng nhập ngầm (F1/F2)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục
-> 1.1, 10.1, 13.6 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §0–§1 ·
-> [qc-sharing-account-pro.md](../../requirements/test-plans/qc-sharing-account-pro.md) §7 (UI Account).
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục
+> 1.1, 10.1, 13.6 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §0–§1 ·
+> [qc-sharing-account-pro.md](../../requirements/test-plans/ink-identity-sync-flow/qc-sharing-account-pro.md) §7 (UI Account).
 > **Phạm vi:** Ink không có màn đăng nhập bắt buộc — mọi máy có sẵn `uid` ẩn danh (Firebase) ngay từ lần mở app
 > đầu tiên; đăng nhập Apple/Google chỉ là **nâng cấp** (`link(with:)`), không tạo tài khoản mới. Xem
 > [00-README.md](00-README.md) cho quy ước ID/priority.
@@ -63,6 +63,6 @@
 
 **Tổng: 21 case** (10 backend/định danh nền + 5 UI chưa đăng nhập + 6 UI đã đăng nhập).
 
-**Câu hỏi mở liên quan** (xem [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow-open-questions-for-dev.md)):
+**Câu hỏi mở liên quan** (xem [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-open-questions-for-dev.md)):
 Firebase ID token hết hạn giữa phiên — đã trả lời (Q4, vòng 1): SDK tự refresh qua `getIDToken()` trước mỗi
 request, "hết hạn giữa phiên" gần như không phải case người dùng gặp được trong điều kiện bình thường.

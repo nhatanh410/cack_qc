@@ -1,8 +1,8 @@
 # Test Cases — Thu hồi (Revoke) & Share bị Stop (F7)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.3,
-> 10.4, 12.2, 14.3 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §3 ·
-> [login-backup-share-sync.md](../../requirements/specs/login-backup-share-sync.md) §5.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.3,
+> 10.4, 12.2, 14.3 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §3 ·
+> [login-backup-share-sync.md](../../requirements/specs/ink-identity-sync-flow/login-backup-share-sync.md) §5.
 > **Phạm vi:** thu hồi 1 member cụ thể (tombstone, không xoá dòng) và hành vi khi share bị Stop hẳn — Suite
 > RV2 đã được **viết lại 2026-09-20** theo bảng terminal-failure mới, thay bản 2026-09-18 (xem
 > [00-README.md](00-README.md), mục "Case đã loại bỏ").

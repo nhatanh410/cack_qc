@@ -1,8 +1,8 @@
 # Test Cases — Sao lưu & Khôi phục (F8/F9/F14)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.4,
-> 10.5, 14.0, 14.1, 14.2 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §4 ·
-> [login-backup-share-sync.md](../../requirements/specs/login-backup-share-sync.md) §3, §6.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.4,
+> 10.5, 14.0, 14.1, 14.2 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §4 ·
+> [login-backup-share-sync.md](../../requirements/specs/ink-identity-sync-flow/login-backup-share-sync.md) §3, §6.
 > **⚠️ Đảo ngược lớn nhất trong toàn bộ bộ test case này:** Backup cho lịch `.ink` chưa share **đã ship đầy
 > đủ** 2026-09-20 (PR #283–286 iOS + Worker backup-endpoints). Suite BK1 dưới đây dùng bản **đã viết lại**,
 > KHÔNG dùng bản gốc "mất vĩnh viễn" — xem [00-README.md](00-README.md), mục "Case đã loại bỏ".
@@ -60,6 +60,6 @@
 
 **Tổng: 16 case** (BK1: 6 · BK2: 5 · BK3: 5).
 
-**Câu hỏi mở liên quan** — xem [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow-open-questions-for-dev.md):
+**Câu hỏi mở liên quan** — xem [open-questions-for-dev.md](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-open-questions-for-dev.md):
 đã đóng Q11/Q12 (2026-09-18: chưa có cảnh báo UI nào cho rủi ro mất dữ liệu `.ink` khi chưa đăng nhập thật;
 0% backup trước khi ship — nay đã ship, TC-F8-03b là trường hợp còn lại đúng nghĩa).

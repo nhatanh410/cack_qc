@@ -2,8 +2,8 @@
 
 > **Lý do có file này:** theo thông tin từ QC (2026-09-17), phần AI Assistant đã có **BE thật + LLM tích hợp
 > hoàn chỉnh**, đọc data event từ lịch của user và trả lời — tức **Flow 2 (Daily Brief & Free Slot Finder)**
-> và AC §4.1 (Khả năng đọc) của [ai-chat-tab-prd.md](../specs/ai-chat-tab-prd.md) đã chạy thật, không còn chỉ
-> nằm trên giấy như lúc [test plan](../test-plans/ai-assistant-tab.md) và
+> và AC §4.1 (Khả năng đọc) của [ai-chat-tab-prd.md](../specs/ai-assistant/ai-chat-tab-prd.md) đã chạy thật, không còn chỉ
+> nằm trên giấy như lúc [test plan](../test-plans/ai-assistant/ai-assistant-tab.md) và
 > [checklist](../exploratory/12_ai-assistant.md) được viết (2026-09-11, lúc đó PRD còn Draft, flow đánh dấu
 > 🚧 chưa build ở [screenshot-naming.md §7](../../.claude/rules/screenshot-naming.md)).
 > **Phạm vi file này:** chỉ test data cho **đọc + trả lời** (Flow 2, AC 4.1.1–4.1.3). **Không** gồm test data
@@ -21,7 +21,7 @@ việc cần làm rõ **trước khi** dùng bộ test data này để test th�
 
 | # | Vấn đề | Vì sao quan trọng |
 |---|---|---|
-| 1 | 🔴 **Entry criteria ở [test plan §8](../test-plans/ai-assistant-tab.md#8-entry-criteria)** đòi hỏi hợp đồng zero-data-retention (ZDR) với nhà cung cấp LLM đã ký (Open Question #1) — nếu chưa, **không được test bằng calendar/reminder thật của tài khoản QC thật**, phải dùng tài khoản/dữ liệu giả lập. Việc BE đã "chạy được" không đồng nghĩa hợp đồng ZDR đã ký — đây là 2 việc khác nhau, cần hỏi dev/PM riêng câu này trước khi seed data thật lên bất kỳ thiết bị nào. |
+| 1 | 🔴 **Entry criteria ở [test plan §8](../test-plans/ai-assistant/ai-assistant-tab.md#8-entry-criteria)** đòi hỏi hợp đồng zero-data-retention (ZDR) với nhà cung cấp LLM đã ký (Open Question #1) — nếu chưa, **không được test bằng calendar/reminder thật của tài khoản QC thật**, phải dùng tài khoản/dữ liệu giả lập. Việc BE đã "chạy được" không đồng nghĩa hợp đồng ZDR đã ký — đây là 2 việc khác nhau, cần hỏi dev/PM riêng câu này trước khi seed data thật lên bất kỳ thiết bị nào. |
 | 2 | 🟠 Cần xác nhận **AC 6.1 (Consent gate)** đã build cùng đợt hay chưa — nếu phần đọc chạy nhưng consent gate chưa có, đó tự nó là 1 bug P1 (đọc data trước khi hỏi ý user), không phải điều kiện tiên quyết bị thiếu. |
 | 3 | 🟡 Câu hỏi mở **#6** (PRD §9) — `docs/ai-assist-scope.md` có bị supersede hay không — vẫn chưa có câu trả lời trong repo này (không tìm thấy file đó). Không ảnh hưởng trực tiếp tới test data đọc lịch, nhưng vẫn nên hỏi lại vì có thể chứa yêu cầu chưa đưa vào PRD. |
 | 4 | 🟠 PRD không nói rõ **cửa sổ 7 ngày** (AC 4.1.1) là "168 giờ tính từ thời điểm hỏi" hay "hết ngày thứ 7 theo lịch". Hai cách tính cho kết quả khác nhau với event nằm cuối ngày thứ 7 / đầu ngày thứ 8 — bộ data ở mục 3.4 dựng đúng ranh giới này để lộ ra AI đang implement theo cách nào, **không đoán trước** cách nào đúng. |
@@ -29,14 +29,14 @@ việc cần làm rõ **trước khi** dùng bộ test data này để test th�
 
 > Khuyến nghị: trước khi chạy bộ data bên dưới, xác nhận với dev **build cụ thể** đã bật phần đọc trên
 > môi trường nào (TestFlight/staging), và trạng thái ZDR contract — ghi kết quả vào
-> [test plan mục 10](../test-plans/ai-assistant-tab.md#10-open--phase-2-chưa-code--chưa-chốt) thay vì chỉ ở đây.
+> [test plan mục 10](../test-plans/ai-assistant/ai-assistant-tab.md#10-open--phase-2-chưa-code--chưa-chốt) thay vì chỉ ở đây.
 
 ### 0.2. Vì sao chưa có test data cho Flow 1 / Flow 3 (ghi)
 
 Yêu cầu gốc chỉ nói "lấy data event từ lịch và trả lời" — đúng mô tả của Flow 2 (đọc), không nhắc tới việc tạo
 event/task hay đổi quote (Flow 1/3, cần ghi ngược lại Calendar/Reminders/wallpaper). Hai flow đó có action map
 gọi thẳng `CalendarService.createEvent`, `ReminderService.*`, `CalendarTemplateEditorViewModel.*` — rủi ro cao
-hơn hẳn (mất dữ liệu, ghi trùng — xem [test plan §6 nhóm P1](../test-plans/ai-assistant-tab.md#6-risk-based-prioritization)).
+hơn hẳn (mất dữ liệu, ghi trùng — xem [test plan §6 nhóm P1](../test-plans/ai-assistant/ai-assistant-tab.md#6-risk-based-prioritization)).
 Nếu phần ghi cũng đã build, cần một bộ test data riêng (event/task **kết quả sau khi AI ghi**, không phải input
 đọc) — báo lại để mình làm tiếp, tránh gộp chung 2 loại rủi ro khác nhau vào 1 bộ data.
 
@@ -47,7 +47,7 @@ Nếu phần ghi cũng đã build, cần một bộ test data riêng (event/task
 - Mỗi persona là **một trạng thái lịch** dựng sẵn để hỏi AI và biết trước đáp án đúng (ground truth) — đúng
   tinh thần "đối chiếu Apple Calendar, không tin UI" đã dùng xuyên suốt dự án
   ([exploratory-references §1.4](../../references/exploratory-references.md#14--đồng-bộ-2-chiều-với-apple-calendar--reminders-có-làm-mất-dữ-liệu-không)).
-- Bao phủ đúng các kỹ thuật đã chốt ở [test plan mục 5](../test-plans/ai-assistant-tab.md#5-kỹ-thuật-thiết-kế-test-case):
+- Bao phủ đúng các kỹ thuật đã chốt ở [test plan mục 5](../test-plans/ai-assistant/ai-assistant-tab.md#5-kỹ-thuật-thiết-kế-test-case):
   Equivalence Partitioning (nguồn calendar, có/không permission), Boundary Value Analysis (cửa sổ 7 ngày, free
   slot 29/30/31 phút), và AC 4.1.3 (chỉ đọc calendar đang bật hiển thị).
 - Ngày mốc: **hôm nay = Thứ 5, 2026-09-17** (giữ cố định trong toàn bộ file để câu hỏi/đáp án khớp nhau — đổi
@@ -94,7 +94,7 @@ Reminders (list "Việc cần làm"):
 - Tổng số event hôm nay: **5**.
 - Khoảng trống ≥30 phút trong ngày: 09:30–10:00 (30p), 11:00–11:30 (30p), 12:30–13:00 (30p), **14:30–17:00 (150p)**.
 - Khoảng trống lớn nhất buổi chiều (sau 12:00): **14:30–17:00**, ngay trước "Team Sync" — dựng khớp 1:1 với ví
-  dụ trong [PRD Flow 2](../specs/ai-chat-tab-prd.md#flow-2-tóm-tắt--tối-ưu-thời-gian-daily-brief--free-slot-finder):
+  dụ trong [PRD Flow 2](../specs/ai-assistant/ai-chat-tab-prd.md#flow-2-tóm-tắt--tối-ưu-thời-gian-daily-brief--free-slot-finder):
   *"Chiều nay bạn trống từ 14:30 đến 17:00 trước cuộc họp Team Sync lúc 17h."*
 
 ### 3.2. Persona B — Lịch trống hoàn toàn (Thứ 6, 2026-09-18)
@@ -145,7 +145,7 @@ BE trả lời, đừng suy diễn PASS/FAIL theo một cách hiểu tự chọn
 - 10:00–10:30 (30p) → **PHẢI** được tính là free slot (biên dưới, inclusive).
 - 11:00–11:31 (31p) → **PHẢI** được tính là free slot.
 
-Đây là bộ dựng thẳng từ BVA đã chốt ở [test plan mục 5](../test-plans/ai-assistant-tab.md#5-kỹ-thuật-thiết-kế-test-case)
+Đây là bộ dựng thẳng từ BVA đã chốt ở [test plan mục 5](../test-plans/ai-assistant/ai-assistant-tab.md#5-kỹ-thuật-thiết-kế-test-case)
 — nếu AI báo "rảnh lúc 9h" (dựa trên khoảng 29 phút) là bug 🟡 sai boundary.
 
 ### 3.6. Persona F — All-day / recurring / lệch timezone nguồn (Thứ 2 → Thứ 4, 21→23/09)
@@ -204,7 +204,7 @@ gộp thành 1 hoặc chỉ trả lời 1 cái.
 - Event EventKit: tạo trực tiếp qua app Calendar gốc của iOS (không qua Ink) để đảm bảo AI đang đọc đúng
   nguồn thật, không phải cache riêng của Ink.
 - Event Google/Outlook (Persona C): cần tài khoản test đã nối theo đúng hướng dẫn ở
-  [login-account-deep-dive.md](../test-plans/login-account-deep-dive.md) — dùng account test đã có sẵn ở đó
+  [login-account-deep-dive.md](../test-plans/login-and-calendar-sharing/login-account-deep-dive.md) — dùng account test đã có sẵn ở đó
   nếu còn hiệu lực, không tạo account mới trùng lặp.
 - Sau khi hỏi AI, luôn **mở lại Apple Calendar/Reminders gốc để đối chiếu** trước khi kết luận PASS/FAIL —
   không tin câu trả lời hiển thị trên chat, đúng nguyên tắc xuyên suốt dự án.
@@ -219,8 +219,8 @@ gộp thành 1 hoặc chỉ trả lời 1 cái.
 
 | # | Vấn đề | Ảnh hưởng |
 |---|---|---|
-| 1 | 🟠 [Test plan mục 10](../test-plans/ai-assistant-tab.md#10-open--phase-2-chưa-code--chưa-chốt) đã tự ghi nhận: PRD nói "đủ 11 ngôn ngữ" nhưng **không liệt kê tên cụ thể** của 11 ngôn ngữ đó. Cần hỏi dev/PM xem 6 ngôn ngữ được yêu cầu (en/vi/ja/th/zh-Hant/zh-Hans/ko) có **nằm trong 11** hay không, trước khi coi lỗi chrome (chip/nút/empty state) ở ngôn ngữ nào đó là bug — nếu ngôn ngữ đó nằm ngoài 11, chrome chưa dịch là **đúng thiết kế**, không phải bug. |
-| 2 | 🟠 [PRD §5.2](../specs/ai-chat-tab-prd.md#52-model--đơn-giá) chỉ cam kết có eval set NLP cho **tiếng Việt + tiếng Anh**. **JA/TH/ZH-Hant/ZH-Hans/KO đều thuộc nhóm 9 ngôn ngữ chưa có eval** (test plan gọi đây là "coverage gap thật sự", xem AST-E10 ở [checklist](../exploratory/12_ai-assistant.md#3--edge--ast-e)). → Kết quả đọc lịch/NLP cho 5 ngôn ngữ này chạy theo kiểu **exploratory, ghi nhận nguyên văn**, không đặt ngưỡng pass/fail độ chính xác ngang Việt/Anh cho tới khi có xác nhận từ dev. |
+| 1 | 🟠 [Test plan mục 10](../test-plans/ai-assistant/ai-assistant-tab.md#10-open--phase-2-chưa-code--chưa-chốt) đã tự ghi nhận: PRD nói "đủ 11 ngôn ngữ" nhưng **không liệt kê tên cụ thể** của 11 ngôn ngữ đó. Cần hỏi dev/PM xem 6 ngôn ngữ được yêu cầu (en/vi/ja/th/zh-Hant/zh-Hans/ko) có **nằm trong 11** hay không, trước khi coi lỗi chrome (chip/nút/empty state) ở ngôn ngữ nào đó là bug — nếu ngôn ngữ đó nằm ngoài 11, chrome chưa dịch là **đúng thiết kế**, không phải bug. |
+| 2 | 🟠 [PRD §5.2](../specs/ai-assistant/ai-chat-tab-prd.md#52-model--đơn-giá) chỉ cam kết có eval set NLP cho **tiếng Việt + tiếng Anh**. **JA/TH/ZH-Hant/ZH-Hans/KO đều thuộc nhóm 9 ngôn ngữ chưa có eval** (test plan gọi đây là "coverage gap thật sự", xem AST-E10 ở [checklist](../exploratory/12_ai-assistant.md#3--edge--ast-e)). → Kết quả đọc lịch/NLP cho 5 ngôn ngữ này chạy theo kiểu **exploratory, ghi nhận nguyên văn**, không đặt ngưỡng pass/fail độ chính xác ngang Việt/Anh cho tới khi có xác nhận từ dev. |
 | 3 | 🟡 Cần hỏi dev **mã locale chính xác** app dùng cho tiếng Trung — `zh-Hant`/`zh-Hans` hay `zh-TW`/`zh-CN`/`zh-HK` — để test đúng bundle `.xcstrings`, tránh trường hợp app chỉ có 1 biến thể Trung mà QC tưởng có 2. |
 | 4 | 🟡 AC 4.5.4: locale nào **không được Apple Speech hỗ trợ** phải ẩn nút mic. Danh sách cụ thể chưa có trong PRD (đã flag ở test plan mục 10) — cần verify riêng cho **Thái** (locale ít phổ biến hơn, rủi ro Speech framework không hỗ trợ cao hơn 5 ngôn ngữ còn lại). |
 

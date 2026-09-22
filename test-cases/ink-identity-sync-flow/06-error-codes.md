@@ -1,7 +1,7 @@
 # Test Cases — Mã lỗi (F10)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.5,
-> 10.6, 12.4 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §5.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.5,
+> 10.6, 12.4 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §5.
 > **Phạm vi:** 4 mã lỗi (`unauthorized`, `read_only`, `revoked`, `app_check_failed`) — mỗi mã dẫn tới 1 hành
 > động khác nhau ở client; 2 cặp mã dùng chung HTTP status (401, 403) nên client phải rẽ nhánh theo field
 > `code`, không theo status. Xem [00-README.md](00-README.md) cho quy ước ID/priority.
