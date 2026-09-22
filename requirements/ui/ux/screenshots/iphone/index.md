@@ -3,7 +3,7 @@
 Bảng tra tên file mới ↔ tên gốc từ iOS ↔ mô tả màn hình.
 Quy tắc đặt tên: [.claude/rules/screenshot-naming.md](../../../../../.claude/rules/screenshot-naming.md)
 
-Tổng: **77 screenshot** / 11 flow đã build. iPhone (1290×2796).
+Tổng: **78 screenshot** / 11 flow đã build. iPhone (1290×2796 trừ khi ghi chú khác).
 
 ## Lịch sử chụp
 
@@ -12,6 +12,7 @@ Tổng: **77 screenshot** / 11 flow đã build. iPhone (1290×2796).
 | 1 | 2026-08-14 → 19 | TestFlight 1.2.10 (27) | Batch gốc — 57 ảnh, 10 flow. Chi tiết dưới đây. |
 | 2 | 2026-09-09 | TestFlight, build chưa xác định | Batch refresh Phase 2 — `06_task` matrix (4 ảnh: `default`, `completed-empty`, `customize`, `customize-scrolled`). Khớp `screen-no 05` với ảnh iPad đã có. Còn thiếu build number — điền khi xác nhận được. |
 | 3 | 2026-09-12 | TestFlight 1.2.15 (56) | Flow mới `14_edit-wallpaper` (Decorate) — 16 ảnh, chỉ portrait (UI không xoay trên iPhone). Còn thiếu 2 state so với checklist gốc (eyedropper, limit-warning). |
+| 4 | 2026-09-22 | Ink Dev, nhánh `fix/ios27-shortcut-automation`, build/commit chưa xác nhận | 1 ảnh — `14_edit-wallpaper_01_wallpaper-editor_home-screen-off.png`, chụp ngoài quy trình batch (file gốc dạng `Screenshot ... .png`, không phải `IMG_xxxx`) để minh hoạ tính năng Home Screen mode mới đang QC ở [test-plan-ios26-27.md](../../../test-plans/shortcut/test-plan-ios26-27.md). Kích thước chưa xác nhận qua công cụ (không đọc được metadata). |
 
 > Khi chụp batch mới cho màn hình **đã có ảnh**: giữ nguyên `screen-no`, chỉ đổi `state` nếu UI đổi
 > trạng thái, hoặc thêm hậu tố `-v2` nếu cùng `state` nhưng nội dung/layout khác (rule §5.3). Ảnh cũ
@@ -163,6 +164,7 @@ Xem [phase-2-feedback.md § P6](../../../specs/phase-2-feedback.md#p6--build-com
 |------|-----|-------|
 | `14_edit-wallpaper_01_wallpaper-editor_default.png` | IMG_1026 | Màn "Balance · Mix ✓ Current" — nút "Decorate" góc dưới trái, tab Background/Calendar/Style, đã có sẵn 1 nét vẽ từ trước |
 | `14_edit-wallpaper_01_wallpaper-editor_filled.png` | IMG_1030 | Cùng màn, sau khi lưu đủ decoration (emoji, 2 ảnh, cutout, nét vẽ) — xác nhận trực tiếp mục 2.5 (save khớp editor) |
+| `14_edit-wallpaper_01_wallpaper-editor_home-screen-off.png` | *(ảnh chụp ngoài quy trình — file gốc `Screenshot 2026-09-22 at 10.23.32 AM.png`, build/thiết bị chưa xác nhận)* | Cùng màn wallpaper-editor (template "Progress + Month", tab Background), scroll xuống mục **Home Screen** (dưới thanh Intensity) — 4 nút chọn `Off/Same/Photo only/Own photo`, đang chọn `Off`; copy text *"Ink sets your Lock Screen only. If your Home Screen matches it, iOS updates both."* Không có toggle Blur khi ở Off — khớp đúng thiết kế. Liên quan tính năng Home Screen mode mới (`fix/ios27-shortcut-automation`, xem [test-plan-ios26-27.md](../../../test-plans/shortcut/test-plan-ios26-27.md)), chưa nằm trong bàn giao `qc-wallpaper-decoration.md` gốc của flow này — **⚠️ chưa có state cho 3 mode còn lại (Same/Photo only/Own photo) và trạng thái có Blur** |
 | `14_edit-wallpaper_02_decorate_tooltip.png` | IMG_1018 | Coach mark lần đầu mở Decorate — "Your toolbar: Text, emoji, photos and a pen. The top two switches preview the clock and calendar." + nút "Got it". **State mới, note không nhắc tới** |
 | `14_edit-wallpaper_02_decorate_default.png` | IMG_1019 | Canvas trống, toolbar phải hiện đủ 6 icon — mục 2.1 |
 | `14_edit-wallpaper_02_decorate_calendar-shown.png` | IMG_1020 | Toggle "Show calendar" bật — mục 2.1 |

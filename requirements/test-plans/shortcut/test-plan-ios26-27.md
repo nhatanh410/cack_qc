@@ -86,6 +86,121 @@
 
 ---
 
+## Cấu trúc thật của shortcut — từ ảnh chụp Shortcuts app (bổ sung 2026-09-22)
+
+> Nguồn: ảnh chụp màn hình editor thật của `Ink Refresh Lock Screen` (app Shortcuts), 4 ảnh nối tiếp khi cuộn
+> hết shortcut. **Độ tin cậy cao hơn** phân tích nhị phân tĩnh ở phát hiện #8 (mục 1) — đây là nhìn trực tiếp
+> vào cấu trúc thật, không phải suy đoán từ chuỗi byte. Vẫn có giới hạn: nhiều tên action bị Shortcuts cắt bớt
+> (`...`), và **không có source code Swift** của Ink để đối chiếu — phần nào là suy đoán được đánh dấu rõ.
+
+### A. Bốn action riêng của Ink — chưa từng được đặt tên trong V2 hay bất kỳ tài liệu nào trước đó
+
+Icon lịch cam 📅 = App Intent riêng của Ink (không phải action hệ thống Shortcuts):
+
+| Tên action | Vai trò suy ra |
+|---|---|
+| `Get Ink Wallpaper Mode` | Đọc chế độ Home Screen hiện tại → trả về **1 chuỗi text**, shortcut check bằng `contains` |
+| `Generate Latest Wallpaper` | Sinh ảnh cho **Lock Screen** (có lịch) |
+| `Generate Home Screen Wallpaper` | Sinh ảnh **riêng cho Home** (dùng cho Photo only/Own photo) |
+| `Confirm Wallpaper Applied` | Action **cuối cùng**, chạy sau `Switch` — chưa hề được nhắc tới ở V2 |
+
+### B. Luồng chạy đầy đủ (chắc chắn, đọc trực tiếp từ ảnh)
+
+```
+① Get Ink Wallpaper Mode          → Mode (chuỗi text)
+② Generate Latest Wallpaper       → LockWallpaper
+③ Set LockWallpaper cho Lock Screen        ← LUÔN chạy, không điều kiện (cặp "Wallpaper 9" trên máy chụp)
+
+④ If Mode contains "pair":                 [suy đoán = Photo only HOẶC Own photo]
+      Generate Home Screen Wallpaper → HomeWallpaper
+      If Mode contains "blur":
+          Set HomeWallpaper cho Home Screen   (mờ)
+      Otherwise:
+          Set HomeWallpaper cho Home Screen   (nét)
+      End If
+   Otherwise:
+      If Mode contains "same":              [suy đoán = mode Same]
+          If Mode contains "blur":
+              Set LockWallpaper cho Home Screen   (mờ)
+          Otherwise:
+              Set LockWallpaper cho Home Screen   (nét)
+          End If
+      Otherwise:                            [suy đoán = Off — không pair, không same]
+          (không action Set nào chạy cho Home)
+      End If
+   End If
+
+⑤ Switch to Wallpaper             ← LUÔN chạy, kéo màn khoá về đúng cặp Ink
+⑥ Confirm Wallpaper Applied       ← LUÔN chạy cuối
+```
+
+**Đối chiếu số lượng khớp chính xác với V2:** nhánh trên cho đúng **4 action Set cho Home** (2 dưới "pair" + 2
+dưới "same") **+ 1 Set cho Lock = 5**, đúng số V2 công bố ở mục 1 ("5 action, 1 Lock + 4 Home") — không phải
+trùng hợp, số đếm tự khớp là bằng chứng cấu trúc suy luận ở trên đúng.
+
+### C. Mười bảy dòng ma trận V2 đi qua đúng những đường nào
+
+| Mode UI | Blur | Đường đi (④) | Action Home thực thi | Kết quả Home (theo V2) |
+|---|---|---|---|---|
+| Off | — | not-pair → not-same | *(không có)* | Không bị Ink set |
+| Same | Tắt | not-pair → same → not-blur | Set = LockWallpaper | Cùng ảnh lock, nét |
+| Same | Bật | not-pair → same → blur | Set = LockWallpaper | Cùng ảnh lock, mờ |
+| Photo only | Tắt | pair → not-blur | Generate Home Screen Wallpaper → Set | Ảnh nền riêng, nét |
+| Photo only | Bật | pair → blur | Generate Home Screen Wallpaper → Set | Ảnh nền riêng, mờ |
+| Own photo | Tắt | pair → not-blur | *(cùng 2 action với Photo only!)* | Ảnh đã chọn, nét |
+| Own photo | Bật | pair → blur | *(cùng 2 action với Photo only!)* | Ảnh đã chọn, mờ |
+
+### D. Phát hiện quan trọng nhất — Photo only và Own photo dùng chung 1 code path
+
+Khác biệt giữa Photo only (ảnh nền template) và Own photo (ảnh user tự chọn) **không nằm ở tầng If/Otherwise
+của shortcut** — cả hai đi qua **đúng 2 action Set** giống hệt nhau (nhánh `pair` × blur). Toàn bộ việc chọn
+đúng ảnh nằm **bên trong** action `Generate Home Screen Wallpaper` (hộp đen phía Ink, tự biết mode con là gì).
+
+**Hệ quả cho triage:** nếu 1 trong 2 mode (Photo only hoặc Own photo) hiển thị sai ảnh mà mode kia đúng, root
+cause gần như chắc chắn nằm trong logic **chọn ảnh bên trong `Generate Home Screen Wallpaper`** (chọn nhầm
+nguồn ảnh theo mode con), **không phải** ở cấu trúc If/Otherwise của shortcut (đã xác nhận 2 mode share chung).
+Ngược lại, nếu **cả 2 mode cùng sai theo cùng 1 kiểu** (vd cả 2 đều không blur được dù đã bật) → nghi vấn nằm ở
+action `Set` hoặc `LegibilityBlur` dùng chung, không phải logic chọn ảnh.
+
+### E. Câu hỏi mở mới — giá trị chuỗi thật của `Get Ink Wallpaper Mode`
+
+"pair", "blur", "same" là **chuỗi hardcode do người viết shortcut gõ tay** vào vế phải của `contains` — nhìn
+thấy trực tiếp trên màn hình. Nhưng **vế trái** (giá trị Mode thật do `Get Ink Wallpaper Mode` trả về cho từng
+1 trong 7 tổ hợp) do **code Swift bên trong app Ink** sinh ra — không có source code nên không đọc được, chỉ
+suy ngược qua cách rẽ nhánh. Nếu format chuỗi sai/lẫn từ khoá giữa 2 mode (vd chuỗi vô tình chứa cả "same" lẫn
+"pair"), nhiều nhánh có thể rẽ sai cùng lúc mà không action nào báo lỗi. → thêm **gap #9**, mục 10.
+
+**Cách chốt chính xác 100% (2 hướng):**
+1. Hỏi dev — họ có source code, biết ngay chuỗi thật.
+2. Tự verify trên máy: thêm tạm 1 action `Show Result`/`Show Alert` ngay sau `Get Ink Wallpaper Mode`, chạy thử
+   lần lượt cả 7 tổ hợp trong app Ink, ghi lại chuỗi thật mỗi lần → xoá action tạm trước khi dùng lại shortcut.
+
+### F. Phân tích logic if/else thuần tuý (bổ sung 2026-09-22) — tách khỏi rủi ro runtime, chỉ xét cấu trúc
+
+1. **Chỉ 3 nhánh thật, không phải 4.** If/else chỉ phân biệt `pair` / `same` / fallback — **không** tự phân biệt
+   Photo only vs Own photo (cả 2 đi qua đúng nhánh `pair`, xem mục D). Nếu 1 trong 2 mode này hiển thị sai, cấu
+   trúc rẽ nhánh **không có khả năng bắt lỗi đó** — chỉ phát hiện được bằng quan sát mắt.
+2. **Thứ tự kiểm tra tạo ưu tiên ngầm, rủi ro nhiễm chéo bất đối xứng:** `pair` được check **trước** `same` →
+   nếu chuỗi mode của **Same** vô tình chứa cả substring `"pair"`, Same sẽ **âm thầm** rơi vào nhánh Photo
+   only/Own photo mà không action nào báo lỗi. Chiều ngược lại (chuỗi `pair` chứa `"same"`) **vô hại** vì `pair`
+   được đọc trước. Rủi ro chỉ tồn tại **1 chiều**.
+3. **Nhánh fallback (Off) là "ngầm định", không có điều kiện `contains "off"` tường minh.** Bất kỳ chuỗi nào
+   **không chứa** `"pair"` và **không chứa** `"same"` đều rơi vào đây — gồm cả: đúng mode Off thật, chuỗi rỗng
+   (`Get Ink Wallpaper Mode` lỗi/decode fail), hoặc chuỗi lạ hoàn toàn hỏng dữ liệu. **Cả 3 hiển thị giống hệt
+   nhau** (Home không đổi) — không có tín hiệu nào phân biệt được "đúng là Off" với "lỗi đọc mode nhưng tình cờ
+   trông giống Off".
+4. **Câu hỏi chưa trả lời được:** nếu `Get Ink Wallpaper Mode` **throw lỗi** thay vì trả rỗng khi có sự cố, có
+   thể toàn bộ shortcut dừng ngay từ bước ① — khi đó **Lock Screen cũng không được set**, nặng hơn nhiều so với
+   giả định "tệ nhất chỉ Home không đổi" ở điểm 3.
+
+**3 câu hỏi bổ sung vào gap #9 (mục 10), sắc hơn câu hỏi gốc:**
+- Chuỗi mode của **Same** có bao giờ chứa substring `"pair"` không?
+- `Get Ink Wallpaper Mode` khi lỗi thì **throw** hay **trả chuỗi rỗng**?
+- Có cách nào phân biệt "Off thật" với "mode lỗi/rỗng" từ UI hoặc log không, hay 2 trường hợp **không thể**
+  phân biệt được?
+
+---
+
 ## 1. Phát hiện mới khi đối chiếu với tài liệu đã có
 
 1. **Tên shortcut đổi hẳn — trả lời trực tiếp 1 câu hỏi mở cũ.** Shortcut cũ tên `Generate Latest Wallpaper`
@@ -241,6 +356,11 @@
   | DT1-06 | Own photo | Tắt | Wallpaper có lịch | Ảnh đã chọn |
   | DT1-07 | Own photo | Bật | Wallpaper có lịch | Ảnh đã chọn, mờ |
 
+  → 🔧 **Ghi chú triage (mục "Cấu trúc thật của shortcut" §D, đầu tài liệu):** DT1-04/05 (Photo only) và
+  DT1-06/07 (Own photo) chạy qua **đúng cùng 2 action Set** trong shortcut — khác biệt nội dung ảnh nằm hoàn
+  toàn bên trong action `Generate Home Screen Wallpaper`, không phải ở logic rẽ nhánh. Nếu chỉ 1 trong 2 cặp
+  sai mà cặp kia đúng → root cause nằm trong logic chọn ảnh của action đó, không phải cấu trúc shortcut.
+
 - **Decision Table 2 — Cài shortcut khi đã có shortcut trùng tên (mục 3.2)**
 
   | ID | iOS hỏi gì? | Hành động đúng | Kỳ vọng |
@@ -314,6 +434,15 @@
 - **TC-SH-A6** — Xoá shortcut đang chạy → app nhận ra, đưa vào luồng cài đặt, không kẹt ở màn Shortcuts (mục 4).
 - **TC-SH-A7** — 🔧 **Mới, từ V2 (mục 3.1):** ngay sau khi cài, action Switch Between Wallpapers phải hiện đúng
   biến `Wallpaper` (không trống, không bật popup bắt chọn) — V2 tự ghi "báo ngay, lỗi chặn phát hành" nếu sai.
+- **TC-SH-A8** — 🆕 **Mới, QC tự phát hiện (2026-09-22), không có trong V2:** mode **Off**, user tự sửa Home
+  Screen qua Settings (không qua Ink) → chạy lại shortcut → Home **phải giữ nguyên** ảnh user vừa chọn, không bị
+  ghi đè. Vi phạm case này đồng nghĩa lời hứa cốt lõi của mode Off ("Ink không đụng Home") sai trên thực tế
+  (TC-SH-PAIR-07).
+- **TC-SH-A9** — 🆕 **Mới, QC tự phát hiện (2026-09-22):** mode khác Off, user tự sửa Home qua Settings vào buổi
+  tối → automation Sunrise (iOS 27) chạy qua đêm → Home bị ghi đè âm thầm, không cảnh báo (TC-SH-PAIR-09). Bản
+  thân hành vi ghi đè **đúng thiết kế** theo mode đã chọn — nhưng xếp P1 vì đây là rủi ro UX **xảy ra hoàn toàn
+  âm thầm, không qua tương tác nào của user**, dễ thành nguồn phàn nàn "wallpaper tự đổi qua đêm" nếu không có
+  cảnh báo nào — cần hỏi dev/PO trước khi quyết định coi đây là bug hay chấp nhận được.
 
 **P2:**
 - 7 dòng Decision Table 1 (Home Screen × Blur) — hiển thị đúng nội dung/blur, không tối/không méo ảnh.
@@ -430,6 +559,18 @@
    `Ink Refresh Lock Screen` để chạy đúng shortcut không** (DT4-03, DT4-04, mục 5)? Ghi chú dev (đầu tài liệu)
    chỉ làm rõ 2 trong 4 luồng kích hoạt (chạy trực tiếp, trigger trong app) — 2 luồng còn lại (Spotlight,
    automation) chưa được xác nhận, dù đều là case P1/P2 trong mục 4 và mục 9 nguồn.
+9. **🔧 Mới — giá trị chuỗi thật của `Get Ink Wallpaper Mode` cho từng 1 trong 7 tổ hợp mode×blur** (mục "Cấu
+   trúc thật của shortcut" §E/§F, đầu tài liệu) — chỉ đọc được **tên khoá so sánh** (`"pair"`, `"same"`, `"blur"`)
+   từ ảnh chụp shortcut, không đọc được **giá trị thật** vì đó là output của code Swift bên trong app Ink,
+   không có source code để đối chiếu. Nếu format chuỗi lẫn từ khoá giữa 2 mode, nhiều nhánh có thể rẽ sai cùng
+   lúc mà không action nào báo lỗi — cần hỏi dev hoặc tự verify bằng `Show Result`/`Show Alert` tạm trong
+   Shortcuts (xem cách làm ở §E). 🔧 **Bổ sung 2026-09-22, sau khi phân tích logic if/else thuần tuý (§F):**
+   - Chuỗi mode của **Same** có bao giờ chứa substring `"pair"` không? (rủi ro nhiễm chéo chỉ tồn tại 1 chiều —
+     `pair` được check trước `same` trong shortcut, nên Same "dính" `pair` sẽ âm thầm sai, chiều ngược lại vô hại)
+   - `Get Ink Wallpaper Mode` khi lỗi thì **throw** hay **trả chuỗi rỗng**? Nếu throw, có thể cả Lock Screen
+     cũng không được set (nặng hơn hẳn giả định "chỉ Home không đổi").
+   - Có cách nào phân biệt "Off thật" với "mode lỗi/rỗng" từ UI hoặc log Ink không, hay 2 trường hợp **không
+     thể** phân biệt được từ phía QC?
 
 ## 11. Coverage gap — case chưa được note liệt kê
 
@@ -442,3 +583,4 @@
 | Wallpaper hiện tại đang là Photo Shuffle trước khi cài/chạy shortcut mới (tương đương SCT-E24 cũ) | Không có trong 8 mục của note |
 | Own photo bị dọn bởi cơ chế "dọn file ảnh không dùng khi khởi động" nếu không mở app lâu hơn "một ngày" (note chỉ test 1 ngày) | Ranh giới thật của cơ chế dọn file (vd 7 ngày, 30 ngày) không được note xác nhận |
 | Cả 2 shortcut Dev và Prod cùng cài trên máy nhưng **không** đổi tên đúng quy trình mục 3.2 (thao tác sai của chính QC) | Note mô tả quy trình đúng, không có case "quy trình sai" để verify Ink phản ứng thế nào khi có 2 shortcut cùng tên (chỉ nói "kết quả không đoán trước được") |
+| 🆕 **User tự sửa Home Screen qua Settings/Customize (không qua Ink), trong CHÍNH cặp của Ink, rồi chạy lại shortcut** (thấy trước bởi QC, không phải note) — xem TC-SH-PAIR-07/08/09 | V2 hoàn toàn không nhắc tới đường này — chỉ nói tới việc user chuyển sang **cặp khác** (mục 7), chưa từng xét trường hợp sửa nội dung ngay trong cặp Ink đang quản lý. Rủi ro cao nhất ở mode Off (lời hứa "không đụng Home" có thể bị vi phạm) và ở automation iOS 27 (ghi đè âm thầm qua đêm, không cảnh báo) |

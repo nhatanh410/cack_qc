@@ -19,6 +19,9 @@
   không PASS/FAIL.
 - **⚠️ Phụ thuộc gap mở** — case có thể đổi kết quả mong đợi sau khi dev trả lời gap tương ứng (mục 10 test
   plan). Chạy và ghi nhận thực tế, không tự suy đoán câu trả lời.
+- **Ảnh bằng chứng khi chạy case:** lưu vào [`screenshots/`](screenshots/) (đã có sẵn thư mục con theo từng
+  nhóm: INS/OLD/HS/OWN/PAIR/WARN/AUTO/XVER/TRIG) — xem quy ước đặt tên + bảng log kết quả ở
+  [screenshots/README.md](screenshots/README.md).
 - Mọi case mặc định chạy trên **Ink Dev** dựng từ nhánh `fix/ios27-shortcut-automation`, file `Dev` trong
   [test-data/ink-shortcut-final/](../../test-data/ink-shortcut-final/).
 
@@ -60,6 +63,42 @@
 ---
 
 ## 3 · P2 — Bốn chế độ Home Screen × Blur · `TC-SH-HS` (mục 5 nguồn, Decision Table 1)
+
+### Trình tự chạy 1 lượt hết cả 7 dòng (không cần vào/ra editor lại từ đầu mỗi lần)
+
+**Chuẩn bị 1 lần:** đã xong nhóm INS (shortcut đúng tên, đã Always Allow — INS-03) · chọn **1 template có lịch**
+dùng xuyên suốt cả 7 dòng (không đổi template giữa chừng, để không lẫn biến "đổi template") · Own photo đã
+**chọn sẵn 1 ảnh từ trước** (như OWN-01) để không rơi vào case "chưa chọn ảnh" (đó là case OWN-06 riêng) · đếm
+**số cặp wallpaper hiện tại** trước khi bắt đầu, ghi lại làm baseline N (dùng chung luôn cho PAIR-03).
+
+1. Mở template → **Editor → tab Background → mục Home Screen**.
+2. **DT1-01 (Off):** chọn Off → **Set as current** (lần đầu, chưa có gì để Update) → khoá máy, chụp Lock → mở
+   khoá, chụp Home → đếm lại số cặp (kỳ vọng vẫn N).
+3. Quay lại editor (không thoát app, chỉ mở lại) → chọn **Same, Blur tắt** → **Update** → khoá/mở khoá, chụp cả
+   2 màn → **DT1-02**.
+4. **Chỉ bấm toggle Blur** (không đổi mode) → **Update** → chụp cả 2 màn → **DT1-03**.
+5. Chọn **Photo only, Blur tắt** → **Update** → chụp cả 2 màn → **DT1-04** (nhân tiện kéo thanh **Darken** của
+   lock lên cao nhất trước khi Set ở bước này → gộp luôn HS-09 vào đây, không cần chạy riêng).
+6. Bật Blur → **Update** → chụp cả 2 màn → **DT1-05**.
+7. Chọn **Own photo** (ảnh đã chọn sẵn từ bước chuẩn bị), Blur tắt → **Update** → chụp cả 2 màn → **DT1-06**.
+8. Bật Blur → **Update** → chụp cả 2 màn → **DT1-07** → đếm cặp lần cuối (kỳ vọng vẫn = N sau đủ 4 mode) —
+   **đúng lúc này cũng chốt luôn kết quả PAIR-03** (test plan mục 6, TC-SH-A2), không cần chạy lại chuỗi riêng.
+
+**Gộp thêm 3 case phụ ngay trong lúc chạy 8 bước trên, không cần lượt riêng:**
+- **HS-08** (Blur chỉ hiện khi khác Off): quan sát ở bước 2 — toggle Blur phải **không** hiện khi đang Off; từ
+  bước 3 trở đi phải **hiện**.
+- **HS-09** (Darken không ảnh hưởng Home): đã gộp vào bước 5 ở trên.
+- **HS-11** (đếm số lần hỏi quyền): không cần chạy thêm — chỉ cần **để ý đếm** mỗi lần bấm Set/Update ở cả 8
+  bước, ghi vào bảng thăm dò mục 11 của V2.
+
+**2 case KHÔNG gộp được, chạy riêng sau khi xong chuỗi 8 bước:**
+- **HS-10** (multi-day template) — cần đổi sang 1 template khác có nhiều ảnh nền đổi theo ngày, không dùng
+  chung template ở trên.
+- **HS-12** (Cancel giữ nguyên state) — làm **sau cùng**: mở lại editor, đổi thử 1 mode khác, bấm ✕ thoát, mở
+  lại — phải thấy mode quay về đúng Own photo + Blur bật (state cuối cùng đã Set ở bước 8).
+
+**Mẹo chụp Home Screen:** icon app che 1 phần ảnh nền — gạt sang 1 trang Home Screen **trống icon** (hoặc
+widget page) để nhìn rõ ảnh, thay vì chụp trang chính đầy icon.
 
 | ID | Chế độ | Blur | Bước thực hiện | Kết quả mong đợi | Ưu tiên |
 |---|---|---|---|---|:---:|
@@ -110,6 +149,19 @@
 | PAIR-04 | 🔧 Chuyển màn khoá sang 1 cặp **khác** cặp của Ink → bấm **Update** | Màn khoá **tự quay về cặp của Ink** (không cần chuyển tay lại) — lịch là bản mới nhất. **Đã đảo ngược so với V1** | P2 |
 | PAIR-05 | Xoá **chính** cặp của Ink (giữ tay màn khoá → vuốt lên → thùng rác) → bấm **Update** | iOS tạo cặp mới **và chuyển sang cặp đó luôn**, **không** báo lỗi "Unable to switch". Chạy thêm **2 lần** nữa → số cặp **không tăng tiếp** | P2 |
 | PAIR-06 | *(spot-check, đã xác nhận trên máy — không cần test lại)* Xoá 1 cặp **khác** cặp Ink → chạy shortcut | Shortcut vẫn ghi đúng cặp của Ink (số hiển thị tự đổi, vd 6→5) | P3 |
+
+> 🆕 **PAIR-07 đến PAIR-09 (bổ sung 2026-09-22) — chưa có trong V2 hay bất kỳ tài liệu nào đã dùng.** Khác
+> PAIR-04 (chuyển sang **cặp khác**, tức đổi cả Lock+Home sang 1 wallpaper library entry khác), 3 case này test
+> việc user **tự sửa nội dung Home Screen ngay trong CHÍNH cặp của Ink** — qua Settings → Wallpaper hoặc
+> giữ tay Home Screen → Customize (không qua app Ink) — rồi chạy lại shortcut. Đây là đường **hoàn toàn khác**
+> với việc đổi cặp: không có `Set` nào của Ink chạm tới nếu mode = Off (theo cây logic đã giải mã ở mục "Cấu
+> trúc thật của shortcut" trong test plan), nhưng **sẽ bị ghi đè** nếu mode khác Off.
+
+| ID | Bước thực hiện | Kết quả mong đợi | Ưu tiên |
+|---|---|---|:---:|
+| PAIR-07 | Mode **Off** đã Set trước đó → vào **Settings → Wallpaper** (hoặc giữ tay Home Screen → Customize), đổi ảnh Home Screen sang ảnh **bất kỳ không qua Ink** → quay lại Ink, bấm **Update** (mode vẫn Off) | Home Screen **giữ nguyên ảnh user vừa tự chọn**, **không** bị Ink ghi đè — đúng lời hứa cốt lõi của mode Off (không có action Set nào chạy cho Home khi Off) | **P1** |
+| PAIR-08 | Mode **Same/Photo only/Own photo** bất kỳ đã Set trước đó → tự đổi ảnh Home Screen qua Settings (không qua Ink) → quay lại Ink, bấm **Update** (không đổi mode) | Home Screen bị **ghi đè trở lại đúng nội dung theo mode đang chọn** (không phải ảnh user vừa tự chọn) — đúng thiết kế vì mode này Ink chủ động quản lý Home. Không lỗi, không dialog lạ, **Lock Screen không bị ảnh hưởng** | P2 |
+| PAIR-09 | 🔴 Mode **Same/Photo only/Own photo**, iOS 27, automation Sunrise đã bật đúng (`Allow Running When Locked`) → buổi tối tự đổi Home Screen qua Settings → khoá máy qua đêm, **không mở app Ink** | Sáng hôm sau automation chạy → Home bị ghi đè **âm thầm** trở lại nội dung Ink, **không có bất kỳ cảnh báo nào** báo user biết Home vừa bị đổi lại. **Không tự log là bug** (đúng thiết kế theo mode đã chọn) — nhưng đây là nguồn phàn nàn thật tiềm ẩn ("wallpaper tự đổi qua đêm"), nên hỏi dev/PO có cần thông báo cho user trước khi automation ghi đè hay không | **P1** *(rủi ro UX cao, xảy ra âm thầm không qua tương tác nào của user)* |
 
 ---
 
@@ -184,3 +236,5 @@
 | TC-SH-A5 | TC-SH-AUTO-04, TC-SH-AUTO-04b |
 | TC-SH-A6 | TC-SH-OLD-04 |
 | TC-SH-A7 🔧 (mới, từ V2) | TC-SH-INS-10 |
+| TC-SH-A8 🆕 (QC tự phát hiện) | TC-SH-PAIR-07 |
+| TC-SH-A9 🆕 (QC tự phát hiện) | TC-SH-PAIR-09 |
