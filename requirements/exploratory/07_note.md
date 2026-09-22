@@ -2,12 +2,12 @@
 
 > **Nguồn:** [wireframe](../ui/ux/wideframes/07_note.md) · 4 screenshot (S01 list + S02 create, editor **trắng trơn**)
 > — ⚠️ wireframe **không có** màn chọn template ảnh, chế độ sắp xếp khối chữ, font picker, hay preview panel
-> mới. Mọi mục liên quan mục 3–5 của [QC-uiux-9sep.md](../specs/QC-uiux-9sep.md) dưới đây dùng **trực tiếp mô
+> mới. Mọi mục liên quan mục 3–5 của [QC-uiux-9sep.md](../specs/uiux-9sep/QC-uiux-9sep.md) dưới đây dùng **trực tiếp mô
 > tả text của change note làm bằng chứng thay thế** — chưa có ảnh nào xác nhận hình dạng UI thật. Xem cảnh
 > báo đầy đủ ở §0.
 > **Khung đánh giá:** [exploratory-references](../../references/exploratory-references.md)
 > **Bug đã biết cùng khu vực:** [BUG-001](../../bugs/bug-log.md#bug-001--nút--đóng-màn-edit-nhưng-note-không-được-lưu) · [BUG-002](../../bugs/bug-log.md#bug-002--lockscreen-dạng-note-hiển-thị-tên-untitled-trong-your-collection)
-> **Risk/priority:** đối chiếu [test plan 1.2.15](../test-plans/1.2.15-uiux-9sep.md) mục 6 — case đánh P1 gắn 🔴 ở đây.
+> **Risk/priority:** đối chiếu [test plan 1.2.15](../test-plans/uiux-9sep/1.2.15-uiux-9sep.md) mục 6 — case đánh P1 gắn 🔴 ở đây.
 > **Build:** TestFlight 1.2.15, PR #179 (build number chưa xác định) · **Thiết bị:** ____________ · **Người test:** ____________
 
 ---
@@ -57,7 +57,7 @@ trị cốt lõi "biến dữ liệu cá nhân thành lock screen" sang một lo
 | **NOT-H11** | Thu nhỏ khối tiêu đề *(note 3.5, lỗi cũ vừa sửa)* | Chữ co lại theo khung, không tràn ra ngoài | — | ☐ |
 | **NOT-H12** | Thu nhỏ khối nội dung *(note 3.6)* | Hành xử giống khối tiêu đề | — | ☐ |
 | **NOT-H13** | Sắp xếp xong, thoát, mở lại note *(note 3.7)* | Khối nằm đúng chỗ đã đặt | — | ☐ |
-| **NOT-H14** | Xem note đã sắp xếp ở **card danh sách**, **hình nền khoá**, **Live Activity** *(note 3.7, P1)* | Khối nằm đúng chỗ ở **cả 3 nơi** — xem decision table ở [test plan §5](../test-plans/1.2.15-uiux-9sep.md#5-kỹ-thuật-thiết-kế-test-case) | — | ☐ |
+| **NOT-H14** | Xem note đã sắp xếp ở **card danh sách**, **hình nền khoá**, **Live Activity** *(note 3.7, P1)* | Khối nằm đúng chỗ ở **cả 3 nơi** — xem decision table ở [test plan §5](../test-plans/uiux-9sep/1.2.15-uiux-9sep.md#5-kỹ-thuật-thiết-kế-test-case) | — | ☐ |
 | **NOT-H15** | Mở danh sách font *(note 4.3)* | Mỗi tên font hiển thị **bằng chính font đó** | — | ☐ |
 | **NOT-H16** | So font ở editor note và editor hình nền *(note 4.4)* | Cùng 1 font trông giống nhau ở cả 2 nơi | — | ☐ |
 | **NOT-H17** | Mở preview hình nền từ 1 note *(note 5.1)* | Header giống các màn preview khác, không tự vẽ riêng | — | ☐ |
@@ -72,7 +72,7 @@ trị cốt lõi "biến dữ liệu cá nhân thành lock screen" sang một lo
 | **NOT-N01** | *(Kéo từ BUG-001)* Nhập Title + checklist item vào note dạng template ảnh, bấm nút ✓ | Note được lưu — quay về với note hiện trong list/collection, hoặc có confirm trước khi đóng | Màn đóng ngay, không lưu gì, mất trắng nội dung — **BUG-001 đang Open**, bắt buộc test lại vì PR #179 đổi nhiều ở đúng khu vực này | 🔴 | ☐ |
 | **NOT-N02** | *(Kéo từ BUG-002)* Lưu note dạng template vào collection | Tên hiển thị có ý nghĩa (do user đặt hoặc fallback từ nội dung) | Hiện `(Untitled)` — **BUG-002 đang Open** | 🟠 | ☐ |
 | **NOT-N03** | Xoay nghiêng khối tiêu đề, kéo về sát góc ảnh *(note 3.4, P1)* | Góc khối **không thò ra ngoài ảnh** (tính theo khung bao sau khi xoay) | Khối tràn biên, xuất hiện cắt xấu trên wallpaper thật | 🔴 | ☐ |
-| **NOT-N04** | Mở lại note **tạo từ trước bản 1.2.15** (trước fix cỡ chữ +1pt) *(note 3.8, P1)* | Chữ to hơn 1pt so với bản cũ — đúng — nhưng **không bị cắt/tràn khung** ở cả 3 nơi (card/hình nền/Live Activity) | Note cũ bị cắt chữ hàng loạt — cần chuẩn bị note cũ **trước khi update** app, xem [test plan §7](../test-plans/1.2.15-uiux-9sep.md#7-test-environment-matrix) | 🔴 | ☐ |
+| **NOT-N04** | Mở lại note **tạo từ trước bản 1.2.15** (trước fix cỡ chữ +1pt) *(note 3.8, P1)* | Chữ to hơn 1pt so với bản cũ — đúng — nhưng **không bị cắt/tràn khung** ở cả 3 nơi (card/hình nền/Live Activity) | Note cũ bị cắt chữ hàng loạt — cần chuẩn bị note cũ **trước khi update** app, xem [test plan §7](../test-plans/uiux-9sep/1.2.15-uiux-9sep.md#7-test-environment-matrix) | 🔴 | ☐ |
 | **NOT-N05** | Trong màn chọn template đã hợp nhất *(note 4.1)*, tìm lại thao tác "chọn nhanh" kiểu cũ | Không còn tồn tại, không có nút chết/đường cụt sót lại từ màn cũ | Nút cũ vẫn còn nhưng dẫn tới màn hỏng | 🟡 | ☐ |
 | **NOT-N06** | Ở màn preview mới *(note 5.2)*, thử kéo panel lên/xuống như thói quen cũ (sheet kéo được) | Không phản ứng — giờ là panel cố định, không phải cử chỉ thừa gây nhầm | Panel phản ứng nửa vời, trông như bug | 🟡 | ☐ |
 
@@ -118,7 +118,7 @@ trị cốt lõi "biến dữ liệu cá nhân thành lock screen" sang một lo
 |---|---|
 | **NOT-Q01** | 🔴 **Chặn toàn bộ checklist này:** tính năng "kéo/xoay khối chữ trên template ảnh" (mục 3) vào từ đâu — trực tiếp trong tab Notes (Flow 07), hay vẫn qua Discover → Lockscreen → chọn category Note (như BUG-001/002 mô tả)? |
 | **NOT-Q02** | BUG-001 và BUG-002 đã được sửa trong PR #179 chưa? Change note không nhắc tới 2 bug này dù cùng khu vực UI. |
-| **NOT-Q03** | Giới hạn scale min/max cho khối chữ là bao nhiêu? (đã hỏi ở [test plan §10.2](../test-plans/1.2.15-uiux-9sep.md#10-gap-cần-làm-rõ-trước-khi-execute)) |
+| **NOT-Q03** | Giới hạn scale min/max cho khối chữ là bao nhiêu? (đã hỏi ở [test plan §10.2](../test-plans/uiux-9sep/1.2.15-uiux-9sep.md#10-gap-cần-làm-rõ-trước-khi-execute)) |
 | **NOT-Q04** | Rotation có snap về góc cố định (0/90/180/270°) không, hay xoay tự do hoàn toàn? |
 | **NOT-Q05** | Khi khối chạm biên ảnh — snap lại vị trí hợp lệ, chặn cứng, hay cho phép rồi tự sửa khi buông tay? |
 | **NOT-Q06** | Notes có Home Screen widget riêng không? Vì sao note 3.7 chỉ liệt kê 3 bề mặt (card/lock screen/Live Activity) mà không có widget? |

@@ -1,8 +1,8 @@
 # Test Cases — Mô hình dữ liệu (F11)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.6,
-> 10.7, 14.0 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §6 ·
-> [login-backup-share-sync.md](../../requirements/specs/login-backup-share-sync.md) §1, §3.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.6,
+> 10.7, 14.0 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §6 ·
+> [login-backup-share-sync.md](../../requirements/specs/ink-identity-sync-flow/login-backup-share-sync.md) §1, §3.
 > **Phạm vi:** 4 bảng dữ liệu (`calendars`, `calendar_events`, `shares`, `share_members`) và rủi ro rò dữ liệu
 > riêng tư khi backup dùng chung bảng với dữ liệu đã share công khai. **TC-F11-03 là case khẩn nhất trong file
 > này** — rủi ro không còn là giả thuyết vì Backup sync đã ship (xem

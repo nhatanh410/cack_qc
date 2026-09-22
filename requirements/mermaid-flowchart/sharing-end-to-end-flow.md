@@ -2,7 +2,7 @@
 
 > Ghép Owner + Receiver + login vào 1 bức tranh để thấy chỗ nào 2 side thật sự giao nhau. Chi tiết từng nhánh
 > nằm ở 4 file kia trong thư mục này; xem
-> [../test-plans/calendar-sharing-deep-dive.md](../test-plans/calendar-sharing-deep-dive.md) mục "Suite liên-side"
+> [../test-plans/calendar-sharing-deep-dive.md](../test-plans/login-and-calendar-sharing/calendar-sharing-deep-dive.md) mục "Suite liên-side"
 > cho danh sách case buộc phải chạy đồng thời cả 2 role.
 
 ```mermaid

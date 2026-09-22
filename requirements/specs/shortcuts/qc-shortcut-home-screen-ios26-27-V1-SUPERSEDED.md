@@ -4,7 +4,7 @@
 > thay bằng file mới đúng (kích thước/checksum khác hẳn) — bản cũ hiện nằm ở
 > `test-data/ink-shortcut-final-v1-superseded/`, chỉ giữ để đối chiếu lịch sử, **không cài lên máy test**.
 > Giữ file này lại chỉ để biết **đã sai chỗ nào** — xem đối chiếu đầy đủ ở
-> [test-plan-ios26-27.md § V2 thay thế V1](../../test-plans/shortcut/test-plan-ios26-27.md#v2-thay-thế-v1--các-sai-sót-đã-sửa-bổ-sung-2026-09-21).
+> [test-plan-ios26-27.md § V2 thay thế V1](../../test-plans/shortcuts/test-plan-ios26-27.md#v2-thay-thế-v1--các-sai-sót-đã-sửa-bổ-sung-2026-09-21).
 >
 > **Các sai sót đã biết (V1 → V2):**
 > - Số action "Set Wallpaper": ghi nhầm **6** (thật ra **5** — 1 cho Lock, 4 cho Home) và **bỏ sót hẳn** action

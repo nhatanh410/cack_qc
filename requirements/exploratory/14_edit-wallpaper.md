@@ -3,7 +3,7 @@
 > **Nguồn:** [wireframe](../ui/ux/wideframes/14_edit-wallpaper.md) · 16 screenshot ·
 > [index screenshot iPhone](../ui/ux/screenshots/iphone/index.md#14_edit-wallpaper--editor-soạntrang-trí-wallpaper-decorate) ·
 > [index screenshot iPad](../ui/ux/screenshots/ipad/index.md) (15 ảnh, cả 2 chiều — bổ sung, không phải nguồn chính)
-> **Change note:** [qc-wallpaper-decoration.md](../specs/qc-wallpaper-decoration.md) · **Test plan:** [1.2.15-decoration-inkai.md](../test-plans/1.2.15-decoration-inkai.md)
+> **Change note:** [qc-wallpaper-decoration.md](../specs/wallpaper-decoration/qc-wallpaper-decoration.md) · **Test plan:** [1.2.15-decoration-inkai.md](../test-plans/decoration-inkai/1.2.15-decoration-inkai.md)
 > **Khung đánh giá:** [exploratory-references](../../references/exploratory-references.md) ·
 > [permissions-matrix](../../references/permissions-matrix.md)
 > **Build:** TestFlight 1.2.15 (56) · **Thiết bị:** ____________ · **iOS:** ____________ · **Người test:** ____________

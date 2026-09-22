@@ -4,12 +4,12 @@
 > `default`, `completed-empty`, `customize`, `customize-scrolled` — mới bổ sung 2026-09-09) + 2 screenshot iPad
 > — ⚠️ wireframe **chưa cover Matrix mode (S05)**, dùng trực tiếp
 > [screenshots/iphone/06_task/index](../ui/ux/screenshots/iphone/index.md#06_task--tab-tasks) +
-> [QC-matrix-guide-l10n.md](../specs/QC-matrix-guide-l10n.md) mục 1–2 làm nguồn thay thế — xem cảnh báo ở §0.
+> [QC-matrix-guide-l10n.md](../specs/matrix-guide-l10n/QC-matrix-guide-l10n.md) mục 1–2 làm nguồn thay thế — xem cảnh báo ở §0.
 > 4 state đã có ảnh iPhone thật; các state còn lại (đang kéo task giữa ô, đã reset, banner→preview, ô đã
 > có tên/màu/icon custom) **vẫn chỉ có mô tả text từ change note, chưa có ảnh** — không suy diễn hình dạng.
 > **Khung đánh giá:** [exploratory-references](../../references/exploratory-references.md)
 > **Quyền liên quan:** [permissions-matrix §1.2 Reminders](../../references/permissions-matrix.md#-12--reminders)
-> **Risk/priority:** đối chiếu [test plan 1.2.14](../test-plans/1.2.14-matrix-guide-l10n.md) mục 6 — case đánh
+> **Risk/priority:** đối chiếu [test plan 1.2.14](../test-plans/matrix-guide-l10n/1.2.14-matrix-guide-l10n.md) mục 6 — case đánh
 > P1 trong test plan được gắn 🔴 ở đây.
 > **Build:** TestFlight 1.2.14 (build number chưa xác định) · **Thiết bị:** ____________ · **Người test:** ____________
 
@@ -21,7 +21,7 @@
 Eisenhower tự tuỳ biến** để đưa lên lock screen — không chỉ xem list phẳng.
 
 **Q8 — Mục tiêu business:** Matrix mode là bề mặt wallpaper **mới** để đẩy user quay lại app thường xuyên hơn
-(thêm 1 loại lock screen ngoài calendar) — xem [test plan §6](../test-plans/1.2.14-matrix-guide-l10n.md#6-risk-based-prioritization).
+(thêm 1 loại lock screen ngoài calendar) — xem [test plan §6](../test-plans/matrix-guide-l10n/1.2.14-matrix-guide-l10n.md#6-risk-based-prioritization).
 
 **Rủi ro xuyên suốt chạm vào flow này:**
 - [exploratory-references §1.4](../../references/exploratory-references.md#14--đồng-bộ-2-chiều-với-apple-calendar--reminders-có-làm-mất-dữ-liệu-không) — task nguồn Reminder/Ink, xoá/sửa 2 chiều
@@ -138,7 +138,7 @@ Cần cập nhật wireframe chính thức (thêm S05) sau đợt QC này; skill
 
 | ID | Câu hỏi |
 |---|---|
-| **TSK-Q01** | Giới hạn ký tự tên/subtitle ô là bao nhiêu? Cần trước khi viết Boundary Value case (xem [test plan §10.3](../test-plans/1.2.14-matrix-guide-l10n.md#10-gap-cần-làm-rõ-trước-khi-execute)). |
+| **TSK-Q01** | Giới hạn ký tự tên/subtitle ô là bao nhiêu? Cần trước khi viết Boundary Value case (xem [test plan §10.3](../test-plans/matrix-guide-l10n/1.2.14-matrix-guide-l10n.md#10-gap-cần-làm-rõ-trước-khi-execute)). |
 | ~~**TSK-Q02**~~ | ✅ **Đã trả lời:** nút *"Delete reminder"* là chủ ý, không phải lỗi copy — nút xoá đúng bản ghi Reminder gốc của task đó. Xem [wireframe cập nhật](../ui/ux/wideframes/06_task.md). Cần chuyển thành case xác nhận hành vi thay vì câu hỏi mở — xem TSK-N13 mới. |
 | **TSK-Q03** | Subtitle của ô có theo cùng luật custom/localize như tên (note 1.13/1.14) không, hay luôn dịch theo ngôn ngữ máy? |
 | **TSK-Q04** | Trùng tên giữa các ô có bị chặn/validate không? |

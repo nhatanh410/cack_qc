@@ -136,19 +136,19 @@ Screenshot user cung cấp trong session 2026-08-14 — Discover home, `Your col
 
 ### Steps to reproduce
 
-1. Publish payload [`10-discount-boundary/04-discount-1-invalid.json`](../requirements/test-plans/paywall-remote-config-payloads/10-discount-boundary/04-discount-1-invalid.json) (gói **Lifetime** có `discount: 1`) vào Firebase Remote Config parameter `pro_paywall_config_v1` → **Publish changes**.
+1. Publish payload [`10-discount-boundary/04-discount-1-invalid.json`](../requirements/test-plans/paywall-remote-config/paywall-remote-config-payloads/10-discount-boundary/04-discount-1-invalid.json) (gói **Lifetime** có `discount: 1`) vào Firebase Remote Config parameter `pro_paywall_config_v1` → **Publish changes**.
 2. Kill app hoàn toàn → mở lại (trên `dev`, `minimumFetchInterval = 0` nên lấy giá trị mới ngay).
 3. Mở paywall, quan sát hàng gói **Lifetime**.
 
 ### Expected
 
-`discount` phải **nhỏ hơn 1** để hợp lệ — theo spec [`paywall-config.md`](../requirements/specs/paywall-config.md) (mục `plans`): *"`discount` (0…1) drives the "-60%" pill and the struck-through price"*, và theo công thức giá gạch ngang `price / (1 - discount)` (chia cho 0 tại `discount = 1`, không tính được). `discount: 1` do đó là **giá trị invalid**, nằm ngoài khoảng `(0,1)` mở — decoder phải bỏ qua toàn bộ field `discount`: **không hiện pill, không hiện giá gạch ngang**, giống hệt cách xử lý `discount = 0` hoặc âm (đã verify đúng ở TC-PLAN-09/13).
+`discount` phải **nhỏ hơn 1** để hợp lệ — theo spec [`paywall-config.md`](../requirements/specs/paywall-remote-config/paywall-config.md) (mục `plans`): *"`discount` (0…1) drives the "-60%" pill and the struck-through price"*, và theo công thức giá gạch ngang `price / (1 - discount)` (chia cho 0 tại `discount = 1`, không tính được). `discount: 1` do đó là **giá trị invalid**, nằm ngoài khoảng `(0,1)` mở — decoder phải bỏ qua toàn bộ field `discount`: **không hiện pill, không hiện giá gạch ngang**, giống hệt cách xử lý `discount = 0` hoặc âm (đã verify đúng ở TC-PLAN-09/13).
 
 ### Actual
 
 Pill **"SAVE 100%" vẫn hiện** dù `discount = 1` là giá trị invalid — chỉ riêng giá gạch ngang không hiện (do chia cho 0 → `Infinity`/`NaN`, bị ẩn ở bước render). Decoder đang thiếu nhánh validate `discount < 1` cho pill, chỉ áp dụng nó cho phần tính giá gạch ngang.
 
-Evidence: [`screenshots/10-discount-boundary/04-discount-1-invalid.png`](../requirements/test-plans/paywall-remote-config-payloads/screenshots/10-discount-boundary/04-discount-1-invalid.png).
+Evidence: [`screenshots/10-discount-boundary/04-discount-1-invalid.png`](../requirements/test-plans/paywall-remote-config/paywall-remote-config-payloads/screenshots/10-discount-boundary/04-discount-1-invalid.png).
 
 ### Rủi ro / vì sao đáng quan tâm
 
@@ -166,8 +166,8 @@ Sửa decoder: validate `discount ∈ (0,1)` **một lần**, dùng chung cho c�
 
 ### Notes
 
-- Liên quan trực tiếp tới câu hỏi #5 (mục "`discount = 1` vẫn hiện pill...") đã gửi trong [`paywall-remote-config-questions-for-dev.md`](../requirements/test-plans/paywall-remote-config-questions-for-dev.md) — bug report này là bản mở rộng kèm khuyến nghị cụ thể, không thay thế câu hỏi đó.
-- TC-PLAN-12 trong [`test-cases/paywall-remote-config.md`](../test-cases/paywall-remote-config.md) đã cập nhật lại expected result theo Actual quan sát được — không đánh dấu Fail, chỉ ghi nhận deviation.
+- Liên quan trực tiếp tới câu hỏi #5 (mục "`discount = 1` vẫn hiện pill...") đã gửi trong [`paywall-remote-config-questions-for-dev.md`](../requirements/test-plans/paywall-remote-config/paywall-remote-config-questions-for-dev.md) — bug report này là bản mở rộng kèm khuyến nghị cụ thể, không thay thế câu hỏi đó.
+- TC-PLAN-12 trong [`test-cases/paywall-remote-config.md`](../test-cases/paywall-remote-config/paywall-remote-config.md) đã cập nhật lại expected result theo Actual quan sát được — không đánh dấu Fail, chỉ ghi nhận deviation.
 
 ---
 

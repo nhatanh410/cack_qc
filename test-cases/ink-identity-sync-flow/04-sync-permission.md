@@ -1,8 +1,8 @@
 # Test Cases — Đồng bộ & Ma trận quyền (F5/F6)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.3,
-> 10.3, 12.3, 12.4, 14.4, 14.5 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §3 ·
-> [login-backup-share-sync.md](../../requirements/specs/login-backup-share-sync.md) §5.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.3,
+> 10.3, 12.3, 12.4, 14.4, 14.5 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §3 ·
+> [login-backup-share-sync.md](../../requirements/specs/ink-identity-sync-flow/login-backup-share-sync.md) §5.
 > **Phạm vi:** cơ chế push/pull, last-write-wins, ma trận quyền hiệu lực (`member.role ?? link_role`), giới
 > hạn kỹ thuật cụ thể (BVA), và bảng terminal-vs-transient failure chính thức. Xem
 > [00-README.md](00-README.md) cho quy ước ID/priority.

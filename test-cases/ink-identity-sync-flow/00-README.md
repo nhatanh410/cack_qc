@@ -6,15 +6,15 @@ Bộ test case ISTQB Foundation Level, tách theo flow từ 1 test plan chung đ
 
 ## Test basis
 
-1. [`ink-identity-sync-flow.html`](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) — kiến trúc backend gốc (§0–§7).
-2. [`qc-sharing-account-pro.md`](../../requirements/test-plans/qc-sharing-account-pro.md) — bàn giao QC cho UI/UX thật đã lên `main` (PR #260 `380bc6b2` + PR #274 `ef996605`).
-3. [`login-backup-share-sync.md`](../../requirements/specs/login-backup-share-sync.md) — tài liệu tham chiếu hệ thống, verified against `main` 2026-09-20. **Nguồn thẩm quyền cao nhất khi có xung đột.**
+1. [`ink-identity-sync-flow.html`](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) — kiến trúc backend gốc (§0–§7).
+2. [`qc-sharing-account-pro.md`](../../requirements/test-plans/ink-identity-sync-flow/qc-sharing-account-pro.md) — bàn giao QC cho UI/UX thật đã lên `main` (PR #260 `380bc6b2` + PR #274 `ef996605`).
+3. [`login-backup-share-sync.md`](../../requirements/specs/ink-identity-sync-flow/login-backup-share-sync.md) — tài liệu tham chiếu hệ thống, verified against `main` 2026-09-20. **Nguồn thẩm quyền cao nhất khi có xung đột.**
 
 Test plan đầy đủ (phân tích cơ chế, decision table, risk-based priority, câu hỏi mở, lịch sử các lần cập
-nhật): [`ink-identity-sync-flow-test-plan.md`](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md).
+nhật): [`ink-identity-sync-flow-test-plan.md`](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md).
 
-Câu hỏi còn mở gửi dev: [`ink-identity-sync-flow-open-questions-for-dev.md`](../../requirements/test-plans/ink-identity-sync-flow-open-questions-for-dev.md)
-· câu trả lời đã nhận: [`ink-identity-sync-flow-answers-from-dev.md`](../../requirements/test-plans/ink-identity-sync-flow-answers-from-dev.md).
+Câu hỏi còn mở gửi dev: [`ink-identity-sync-flow-open-questions-for-dev.md`](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-open-questions-for-dev.md)
+· câu trả lời đã nhận: [`ink-identity-sync-flow-answers-from-dev.md`](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-answers-from-dev.md).
 
 ## Danh sách file
 

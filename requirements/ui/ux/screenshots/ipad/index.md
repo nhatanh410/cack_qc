@@ -110,11 +110,11 @@ là app thiếu chức năng, chỉ chưa chụp trên device này._
 ## 11_share · 12_ai-assistant · 13_community — 🚧 Phase 2, chưa build
 
 _Chưa có screenshot — 3 flow này chưa tồn tại trong app, chờ Phase 2. Xem flow map [§7 rule đặt tên](../../../../../.claude/rules/screenshot-naming.md#7-flow-map--ink-calendar-ios)
-và [`requirements/specs/phase-2-feedback.md`](../../../specs/phase-2-feedback.md). Cấp số flow **dùng chung** với iPhone — khi feature ra mắt, chụp song song cả 2 device nếu có thể._
+và [`requirements/specs/phase-2-feedback/phase-2-feedback.md`](../../../../specs/phase-2-feedback/phase-2-feedback.md). Cấp số flow **dùng chung** với iPhone — khi feature ra mắt, chụp song song cả 2 device nếu có thể._
 
 ## 14_edit-wallpaper — editor soạn/trang trí wallpaper (Decorate)
 
-> Nguồn: [qc-wallpaper-decoration.md](../../../specs/qc-wallpaper-decoration.md), build 1.2.15 (56). **2 screen-no riêng biệt** — `01_wallpaper-editor` là màn hình chỉnh wallpaper đã có từ trước (chứa nút "Trang trí" mới), `02_decorate` là canvas trang trí thực sự (mới hoàn toàn), vào từ nút Trang trí ở màn 01. Đã chụp **cả 2 chiều** — khớp yêu cầu bắt buộc của R8 (bug xoay ngang làm lệch sticker, đã sửa).
+> Nguồn: [qc-wallpaper-decoration.md](../../../../specs/wallpaper-decoration/qc-wallpaper-decoration.md), build 1.2.15 (56). **2 screen-no riêng biệt** — `01_wallpaper-editor` là màn hình chỉnh wallpaper đã có từ trước (chứa nút "Trang trí" mới), `02_decorate` là canvas trang trí thực sự (mới hoàn toàn), vào từ nút Trang trí ở màn 01. Đã chụp **cả 2 chiều** — khớp yêu cầu bắt buộc của R8 (bug xoay ngang làm lệch sticker, đã sửa).
 
 | File | Gốc | Mô tả |
 |------|-----|-------|

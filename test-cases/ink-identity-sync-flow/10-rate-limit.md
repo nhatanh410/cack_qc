@@ -1,7 +1,7 @@
 # Test Cases — Rate limit (cross-cutting)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục
-> 12.6 · trả lời Q17 trong [answers-from-dev.md](../../requirements/test-plans/ink-identity-sync-flow-answers-from-dev.md).
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục
+> 12.6 · trả lời Q17 trong [answers-from-dev.md](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-answers-from-dev.md).
 > **Phạm vi:** ngưỡng rate limit cụ thể theo từng endpoint — cross-cutting, không thuộc riêng 1 flow F nào nên
 > tách file riêng (ID `TC-RATE-xx`, không dùng `TC-F12-xx` để tránh trùng với flow F12 "Xoá tài khoản").
 > **Ngày lập:** 2026-09-20 · **Người lập:** QC

@@ -1,8 +1,8 @@
 # Test Cases — Join & Nhận link chia sẻ (F4)
 
-> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow-test-plan.md) mục 1.2,
-> 10.2, 13.1, 13.5 · [ink-identity-sync-flow.html](../../requirements/specs/Ink%20Login%20and%20sharing%20calendar%20docs/ink-share-last-update/ink-identity-sync-flow.html) §2 ·
-> [qc-sharing-account-pro.md](../../requirements/test-plans/qc-sharing-account-pro.md) §2, §6.
+> **Test basis:** [test plan tổng](../../requirements/test-plans/ink-identity-sync-flow/ink-identity-sync-flow-test-plan.md) mục 1.2,
+> 10.2, 13.1, 13.5 · [ink-identity-sync-flow.html](../../requirements/specs/ink-identity-sync-flow/ink-share-last-update/ink-identity-sync-flow.html) §2 ·
+> [qc-sharing-account-pro.md](../../requirements/test-plans/ink-identity-sync-flow/qc-sharing-account-pro.md) §2, §6.
 > **Phạm vi:** phía người nhận (máy B) — từ backend Join tới toàn bộ UI thật (dán link, màn preview). Suite
 > JN1 chứa **rủi ro cao nhất trong toàn bộ bộ test case này** — xem [00-README.md](00-README.md).
 > **Ngày lập:** 2026-09-20 · **Người lập:** QC

@@ -1,6 +1,6 @@
 # Test Data — AI Assistant: Tạo Event/Reminder & Tìm theo khung giờ trong ngày
 
-> **Test basis:** [ai-chat-tab-prd.md](../specs/ai-chat-tab-prd.md) — Flow 1 (§2, tạo event/reminder) và Flow 2
+> **Test basis:** [ai-chat-tab-prd.md](../specs/ai-assistant/ai-chat-tab-prd.md) — Flow 1 (§2, tạo event/reminder) và Flow 2
 > (§2, đọc lịch) · Action Map §2.0 · AC §4.1 (đọc) · AC §4.2, §4.3 (ghi + xử lý câu mơ hồ).
 > **Liên quan:** [ai-assistant-read-flow-testdata.md](./ai-assistant-read-flow-testdata.md) — dùng chung
 > Persona A (lịch dày đặc, 2026-09-17) làm nền cho phần "tìm theo khung giờ" ở mục 3–4 dưới đây.
@@ -35,7 +35,7 @@
 
 ## 1. Tạo Event — `NLP-CE`
 
-Đối chiếu Action Map: card này gọi `CalendarService.createEvent(_:)` ([PRD §2.0](../specs/ai-chat-tab-prd.md#20-nguyên-tắc-bắt-buộc-mọi-action--wrapper-của-một-action-đã-có-trong-app)).
+Đối chiếu Action Map: card này gọi `CalendarService.createEvent(_:)` ([PRD §2.0](../specs/ai-assistant/ai-chat-tab-prd.md#20-nguyên-tắc-bắt-buộc-mọi-action--wrapper-của-một-action-đã-có-trong-app)).
 Field kỳ vọng trên Interactive Event Card: **Title / Date / Time (start–end) / Location / Notes**.
 
 | ID | Câu input | Title kỳ vọng | Date | Time | Location | Notes | Rủi ro / điều cần quan sát | Mức |
@@ -55,7 +55,7 @@ Field kỳ vọng trên Interactive Event Card: **Title / Date / Time (start–e
 
 ## 2. Tạo Reminder / Task — `NLP-CR`
 
-Đối chiếu Action Map: gọi `ReminderService.createReminder(_:)` ([PRD §2.0](../specs/ai-chat-tab-prd.md#20-nguyên-tắc-bắt-buộc-mọi-action--wrapper-của-một-action-đã-có-trong-app)).
+Đối chiếu Action Map: gọi `ReminderService.createReminder(_:)` ([PRD §2.0](../specs/ai-assistant/ai-chat-tab-prd.md#20-nguyên-tắc-bắt-buộc-mọi-action--wrapper-của-một-action-đã-có-trong-app)).
 
 | ID | Câu input | Task kỳ vọng | Due date/time kỳ vọng | Rủi ro / điều cần quan sát | Mức |
 |---|---|---|---|---|---|
