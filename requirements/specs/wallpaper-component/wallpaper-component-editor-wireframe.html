@@ -35,6 +35,11 @@
 </div>
 
 <div class="note">
+  <b>Batch QC đầu tiên đã chụp — nhánh <span class="k">feat/component-editor</span>, 2026-09-24</b>
+  11 ảnh thực tế trên thiết bị, đối chiếu với đề xuất dưới đây tại mục <a href="#qc-actual">QC — đối chiếu bản build thực tế</a> cuối trang. Khác biệt lớn nhất: entry point qua icon <b>layers</b> riêng (không phải chạm trực tiếp vào thành phần trên canvas), mở ra <b>một màn edit riêng</b>; Inspector không dùng tab mà cuộn một sheet dài, thứ tự quan sát được là <b>Position → Content → Text</b> — ngược với rule <b>L4</b> (Content → Text → Background → Position).
+</div>
+
+<div class="note">
   <b>Wireframe này cố tình không có style sản phẩm</b>
   Màu, bo góc, shadow, font đã có <span class="k">.claude/rules/swift/design-system.md</span> + <span class="k">docs/DESIGN.md</span> lo. Ở đây chỉ quan tâm: <b>đủ thành phần, đúng copy, đúng thứ tự, đúng trạng thái</b> — và <b>không làm user ngợp</b>.
 </div>
@@ -151,6 +156,11 @@ graph LR
   Hiện <span class="k">onTapGesture</span> trên canvas toggle ẩn/hiện panel (<span class="k">TemplateEditorScreen.swift:277</span>). Chạm giờ là <b>chọn</b>, nên hành vi ẩn panel <b>phải</b> chuyển ra nút <span class="k">👁</span> riêng. Không dùng double-tap (không ai đi tìm), không dùng long-press.
 </div>
 
+<div class="edge">
+  <b>QC 2026-09-24 — thực tế khác đề xuất ở bước vào</b>
+  Bản build hiện tại <b>không</b> cho chọn thành phần ngay trên màn wallpaper-editor. User phải tap icon <b>layers</b> mới (cạnh icon crop) để vào <b>một màn edit riêng</b> — top bar đổi hẳn sang ✕ / ↶ / ↷ / ✓, không còn tên template. Từ đó mới chọn được thành phần (viền <b>xanh lá</b>, không phải đen như wireframe) và nổi toolbar mini 2 icon (sliders + xoá) thay vì mở Inspector ngay lập tức. Xem gallery ở mục <a href="#qc-actual">QC — đối chiếu bản build thực tế</a>.
+</div>
+
 <!-- ============================================================ -->
 <h2>WPC-2 — Bốn nhóm của Inspector</h2>
 <p>Tối đa 4 nhóm, mỗi nhóm ≤ 6 control nhìn thấy ngay, phần còn lại nằm sau <b>More options</b>. <b>Nhóm rỗng không hiện</b> — part không có khung nền thì không có tab “Background”.</p>
@@ -213,6 +223,11 @@ graph LR
     </div>
   </div>
 
+</div>
+
+<div class="edge">
+  <b>QC 2026-09-24 — Inspector thực tế không dùng tab</b>
+  Bản build hiện tại không có thanh <span class="k">seg</span> Content/Text/Background/Position để bấm chuyển — toàn bộ là <b>một sheet cuộn dọc</b>. Với band Timetable, thứ tự quan sát được là <b>Position → Content → Text</b>, ngược lại rule <b>L4</b> bên dưới (Content → Text → Background → Position). Xem 5 ảnh cuộn <span class="k">inspector</span> → <span class="k">inspector-scrolled-v4</span> ở mục <a href="#qc-actual">QC — đối chiếu bản build thực tế</a>. Cần hỏi dev đây là tạm thời hay đã đổi thiết kế so với PRD §6.3.
 </div>
 
 <h3>“Placement: Automatic / Fixed” — điểm khó nhất</h3>
@@ -312,6 +327,11 @@ graph LR
 
 </div>
 
+<div class="edge">
+  <b>QC 2026-09-24 — nhóm "Add component" thực tế nhiều hơn đề xuất</b>
+  Thực tế có <b>6 nhóm</b> (CALENDAR, EVENTS, TASKS, PROGRESS, TEXT, LAYOUT), trong đó nhóm <b>TASKS</b> (Reminders, Priority matrix) và <b>LAYOUT</b> (Row, Column) <b>không có trong đề xuất gốc</b>. Layout Row/Column đặc biệt đáng chú ý vì PRD §1.3 nêu nguyên tắc bất biến NT-1 "không biến canvas thành mặt phẳng 2D tự do" — cần xác nhận Row/Column có đi ngược tinh thần đó không. Cũng không thấy badge <b>PRO</b> trên item nào trong 2 ảnh chụp được (kể cả mục tương đương Contribution grid, nay đổi tên "Activity grid") — có thể chưa gate Pro, hoặc account demo đã Pro sẵn. Xem ảnh <span class="k">add-component</span> / <span class="k">add-component-scrolled</span> ở mục <a href="#qc-actual">QC — đối chiếu bản build thực tế</a>.
+</div>
+
 <!-- ============================================================ -->
 <h2>WPC-5 — Kéo thả trực tiếp</h2>
 <p>Trên canvas chỉ có <b>hai</b> cử chỉ: <b>kéo = di chuyển</b>, <b>pinch = đổi cỡ</b>. Bề rộng và tinh chỉnh lệch ngang nằm trong Inspector. Thêm cử chỉ thứ ba là bắt đầu ngợp.</p>
@@ -369,6 +389,83 @@ graph LR
     </div>
   </div>
 
+</div>
+
+<!-- ============================================================ -->
+<h2 id="qc-actual">QC — đối chiếu bản build thực tế (nhánh <span class="k">feat/component-editor</span>, 2026-09-24)</h2>
+<p>11 ảnh chụp trực tiếp trên thiết bị, chưa qua quy trình batch chính thức (build/commit chưa xác nhận) — mô tả đầy đủ từng ảnh + tên file gốc tại <a href="../../ui/ux/screenshots/iphone/index.md">iphone/index.md</a> (mục <span class="k">03_component-editor</span>). PRD đang ở status <b>Draft</b> (§11 Open Questions chưa chốt) nên phần này chỉ ghi lại UI hiện có trên nhánh, <b>không xác nhận đây là thiết kế cuối</b>.</p>
+
+<div class="screens">
+
+  <div class="wf">
+    <div class="cap"><span>Entry point · icon layers</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_01_wallpaper-editor_component-editor-entry.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Mũi tên đỏ (chèn tay, không phải UI thật) trỏ vào icon layers mới cạnh icon crop — đề xuất ban đầu không có nút riêng cho việc này.</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Vào chế độ edit · chưa chọn gì</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_default.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Top bar đổi hẳn: ✕ / ↶ / ↷ / ✓ — không còn tên template như WPC-1a đề xuất.</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Sheet "Add component"</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_add-component.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Nhóm CALENDAR + EVENTS — so WPC-4a, tên nhóm và một số item đã đổi (vd. "Week timetable" → "Timetable").</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Sheet "Add component" — cuộn</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_add-component-scrolled.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">TASKS + LAYOUT (Row/Column) — 2 nhóm không có trong đề xuất gốc.</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Đã chọn band Timetable</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_selected.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Viền xanh lá + toolbar mini 2 icon (sliders, xoá) nổi phía trên — khác viền đen + chip tên của WPC-1b.</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Inspector — đầu sheet</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_inspector.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Mở ngay vào <b>Position</b>, không phải Content như rule L4 đề xuất; không có thanh tab.</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Inspector — cuối sheet</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_inspector-scrolled-v4.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Cuộn hết xuống Text, còn "More options" gập — chưa rõ nội dung control còn lại.</div>
+    </div>
+  </div>
+
+  <div class="wf">
+    <div class="cap"><span>Đang resize</span><span class="tag">thực tế</span></div>
+    <div class="body">
+      <img src="../../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_resizing.png" style="width:100%;border:1px solid #ccc">
+      <div class="muted">Nhãn số + vạch dẫn đứt nét khi kéo — khớp tinh thần WPC-5a, chưa xác nhận cử chỉ là kéo handle hay pinch.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="warn">
+  <b>Còn thiếu để so sánh đầy đủ</b>
+  Chưa có ảnh cho: state <span class="k">error</span>/<span class="k">disabled</span>, Pro gate khi chọn item khoá Pro, menu ⋯ (Duplicate/Move/Remove — WPC-4c), toast "Added ..." + UNDO (WPC-4b), coach tour lần đầu + empty state (WPC-5c), và toàn bộ các part khác ngoài Timetable (chỉ 1/16 loại đã có ảnh). Không suy diễn các phần chưa chụp là đúng hay sai so với đề xuất.
 </div>
 
 <!-- ============================================================ -->
