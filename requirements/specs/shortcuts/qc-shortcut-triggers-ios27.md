@@ -1,34 +1,38 @@
 # QC — Automation có sẵn trong shortcut V2 (iOS 27)
 
-Nhánh **`fix/ios27-shortcut-automation`** · bản **Ink Dev** dựng từ nhánh này · máy **iOS 27**.
+**Đã vào `main`** (PR #302) · bản **Ink Dev** dựng từ `main` · máy **iOS 27**.
 iOS 26 không có loại automation này: ở đó người dùng tự tạo automation trong tab Automation.
 
-> Mục tiêu: xác nhận 4 automation đi kèm shortcut **bật được, tự chạy đúng lúc, không hỏi
+> Mục tiêu: xác nhận 5 automation đi kèm shortcut **bật được, tự chạy đúng lúc, không hỏi
 > xác nhận, và cập nhật đúng màn**. Mục 8 là bảng ghi kết quả. "Không chạy" cũng là một kết
 > quả cần ghi lại.
 
 ## 1. Shortcut mang theo những automation nào
 
-Shortcut iOS 27 V2 (**`Ink Refresh Lock Screen V2`**) mang sẵn **4 automation**. Tất cả
-**tắt** khi mới cài, và không có link nào bật hộ được:
+Shortcut V2 (**`Ink Refresh Lock Screen V2`**) mang sẵn **5 automation**. Tất cả **tắt** khi mới
+cài, và không có link nào bật hộ được. Tab Automation xếp theo thứ tự của iOS; Guide xếp theo
+thứ tự nên bật:
 
 | Automation trong tab Automation | Khi nào chạy | App có hướng dẫn bật? |
 |---|---|---|
-| **At sunrise, daily** | Bình minh mỗi ngày, theo vị trí của máy | ✅ Bước automation trong luồng setup |
+| **At sunrise, daily** | Bình minh mỗi ngày, theo vị trí của máy | ✅ Bước automation trong luồng setup, và Guide |
+| **When I get a notification from Ink** | Ink gửi thông báo làm mới (Title có `·`, Message có `Ink`) | Guide — test riêng ở [`qc-notification-automation-ios27.md`](qc-notification-automation-ios27.md) |
 | **When Ink is closed** | Rời app Ink | Chỉ trong Guide |
 | **When Calendar is closed** | Rời app Lịch của Apple | Chỉ trong Guide |
 | **When Google Calendar is closed** | Rời app Google Calendar | Chỉ trong Guide |
 
-File Dev gắn automation "Ink is closed" với **Ink Dev**, file Prod gắn với **Ink** bản store.
+Link Dev gắn automation "Ink is closed" và "notification from Ink" với **Ink Dev**, link Prod
+gắn với **Ink** bản store.
 
-## 2. File và máy
+## 2. Link và máy
 
-```
-~/Downloads/Ink Shortcut Final V2/iOS 27/Dev/Ink Refresh Lock Screen V2.shortcut    ← dùng file này
-~/Downloads/Ink Shortcut Final V2/iOS 27/Prod/Ink Refresh Lock Screen V2.shortcut
-```
+| Bản app | Link |
+|---|---|
+| **Ink Dev** | `https://www.icloud.com/shortcuts/007226dffb9240439830f196201a5ed6` ← dùng link này |
+| **Ink** (Prod) | `https://www.icloud.com/shortcuts/dd5b40be467c4ed2aecd38316471b2d7` |
 
-- Máy cài **Ink Dev** thì dùng file `Dev/`. Nếu các action của Ink hiện **màu đỏ** là do cài
+- Nút **Add shortcut** trong luồng setup của app mở đúng link của bản đang chạy.
+- Máy cài **Ink Dev** thì dùng link Dev. Nếu các action của Ink hiện **màu đỏ** là do cài
   nhầm bản, không phải bug.
 - **Không dùng link `43e6966e…`.** Đó là bản ai đó đã sửa trên máy: chỉ còn **1**
   automation, ở giờ cố định 00:05 (xem mục 7).
@@ -41,11 +45,12 @@ File Dev gắn automation "Ink is closed" với **Ink Dev**, file Prod gắn v�
    > Vì sao phải xoá: cài đè bằng **Replace** (cùng tên) để lại automation của bản cũ thành
    > dòng riêng, và chúng vẫn chạy **bản cũ**. Test trên máy còn bản cũ thì có thể một lúc
    > chạy hai shortcut, và kết quả sẽ lẫn.
-2. AirDrop file sang máy → **Add Shortcut**.
+2. Mở link (hoặc Add shortcut trong app) → **Add Shortcut**.
 3. Mở shortcut → ⓘ / Settings → bật **Allow Running When Locked** nếu có.
 4. Mở Ink → chạy setup shortcut (Settings → shortcut, hoặc nút Set) cho tới bước
    **Open Automations**.
-5. Trong tab **Automation**, bật **cả 4 dòng**. Với mỗi dòng, mở ra kiểm tra:
+5. Trong tab **Automation**, bật **4 dòng** sunrise và đóng app. Dòng **notification from Ink**
+   để tắt trong doc này (test riêng), để kết quả không lẫn. Với mỗi dòng, mở ra kiểm tra:
    - **Run Immediately** (chạy ngay) hay **Run After Confirmation** (hỏi trước)?
      Ghi lại mặc định rồi chọn **Run Immediately**.
    - **Notify When Run**: nên bật trong lúc test, để biết automation có chạy không.
@@ -66,7 +71,7 @@ thì automation đã chạy. Chỉ đổi ảnh nền thì chưa chắc, vì nhi
 
 **Không muốn chờ tới sáng:** tạm đổi automation Sunrise sang **Time of Day, 2–3 phút tới** →
 khoá máy → chờ → kiểm tra như trên.
-> ⚠️ Test xong **xoá shortcut và cài lại từ file**, đừng chỉ đổi giờ ngược lại. Và
+> ⚠️ Test xong **xoá shortcut và cài lại từ link**, đừng chỉ đổi giờ ngược lại. Và
 > **không share** bản đã sửa: link share sẽ mang giờ đã sửa đi theo. Link `43e6966e…`
 > chính là trường hợp này.
 
@@ -107,10 +112,10 @@ khoá máy → chờ → kiểm tra như trên.
 
 ## 6. Trường hợp biên
 
-- [ ] **Cài lại cùng file** (Replace): tab Automation có bị **trùng dòng** không? Dòng cũ còn
+- [ ] **Cài lại cùng link** (Replace): tab Automation có bị **trùng dòng** không? Dòng cũ còn
       bật không?
-- [ ] **Xoá shortcut**: cả 4 dòng automation có biến mất theo không?
-- [ ] **Máy Apple Account khác**: cài file → 4 automation có về máy không, bật hay tắt?
+- [ ] **Xoá shortcut**: cả 5 dòng automation có biến mất theo không?
+- [ ] **Máy Apple Account khác**: cài link → 5 automation có về máy không, bật hay tắt?
 - [ ] **Chế độ nguồn điện thấp** / máy nóng: automation Sunrise có bị bỏ qua không?
 - [ ] **Bình minh và mở Lịch cùng lúc**: hai lần chạy chồng nhau có lỗi gì không?
 
@@ -118,8 +123,8 @@ khoá máy → chờ → kiểm tra như trên.
 
 - Automation luôn cài ở trạng thái **tắt**; không có URL nào bật hộ. App chỉ mở được tab
   Automation (`shortcuts://automations`).
-- Trên simulator, công tắc trong danh sách không bấm được. **Cần xác nhận trên máy thật**
-  (mục 8).
+- Trên simulator, **chạm** vào công tắc sẽ mở shortcut; **kéo ngang** công tắc mới bật được.
+  Trên máy thật cần xác nhận lại (mục 8).
 - Link `43e6966e…` (tạo 23/9 10:47): hành động giống bản V2 nhưng chỉ còn 1 automation giờ
   cố định 00:05, và tên không có "V2". Không dùng để phát hành.
 
@@ -127,7 +132,7 @@ khoá máy → chờ → kiểm tra như trên.
 
 | Câu hỏi | Kết quả | Ghi chú |
 |---|---|---|
-| Sau khi cài, 4 automation bật hay tắt? | | |
+| Sau khi cài, 5 automation bật hay tắt? | | |
 | Bật được từ danh sách tab Automation (không cần vào Edit)? | | |
 | Mặc định Run Immediately hay Run After Confirmation? | | |
 | Sunrise có xin quyền vị trí? | | |
@@ -137,6 +142,6 @@ khoá máy → chờ → kiểm tra như trên.
 | Google Calendar closed chạy? Máy không cài GCal thì sao? | | |
 | Ink closed: rời app ngay sau Update có chạy 2 lần? | | |
 | Có lần nào **Lock / Home bị đổi chỗ**? (mode, blur, khoá/mở) | | |
-| Replace cùng file: automation trùng dòng? | | |
+| Replace cùng link: automation trùng dòng? | | |
 | Xoá shortcut: automation biến mất theo? | | |
 | Account khác: automation có về máy? | | |

@@ -1,5 +1,12 @@
 # Test Analysis — Shortcut wallpaper: Home Screen (iOS 26) và Automation (iOS 27) — bản V2-updated
 
+> ⚠️ **SUPERSEDED — không dùng tài liệu này làm test basis.** Phân tích từ test basis nhánh
+> `fix/ios27-shortcut-automation` (chưa vào `main`). PR #302 đã merge vào `main` 2026-09-24, đóng
+> hầu hết câu hỏi từng mở ở đây bằng cách viết thẳng câu trả lời vào spec mới (action count,
+> skip-unchanged cho Same mode...), đồng thời đổi nhiều chi tiết khác (tên chip, cách cài). Giữ
+> file này lại chỉ để đối chiếu lịch sử — bảng đối chiếu §1.1 và phân tích 9 token ở §1.2 vẫn
+> còn giá trị tham khảo khi phân tích spec mới.
+
 > ⚠️ **DRAFT — chờ xác nhận.** **Q1, Q2, Q3, Q5, Q6 đã đóng hoàn toàn.** Q1 qua cross-check tay của user trên máy
 > thật: đúng 7 Set/2 Switch. Q5: tài liệu triggers ([qc-shortcut-triggers-ios27.md](../../specs/shortcuts/qc-shortcut-triggers-ios27.md),
 > gộp vào nhóm G, nay có 5 nhóm con G.1–G.5, +23 test condition mới bao gồm G.6 trigger-qua-notification) vẫn

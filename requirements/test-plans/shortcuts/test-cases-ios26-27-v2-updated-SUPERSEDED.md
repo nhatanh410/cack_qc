@@ -1,5 +1,10 @@
 # Test Case Specification — Shortcut wallpaper: Home Screen (iOS 26), Automation & Trigger (iOS 27) — bản V2-updated
 
+> ⚠️ **SUPERSEDED — không dùng tài liệu này để chạy test.** Thiết kế từ test-plan/test basis
+> nhánh `fix/ios27-shortcut-automation` (chưa vào `main`), nay đã lỗi thời sau khi PR #302 merge
+> vào `main` 2026-09-24. Chưa có case nào trong file này từng chạy trên máy (0 kết quả PASS/FAIL
+> ghi nhận), nên không mất công việc thực thi nào khi bỏ. Giữ lại chỉ để đối chiếu lịch sử.
+
 > Thiết kế case theo [test-plan-ios26-27-v2-updated.md](test-plan-ios26-27-v2-updated.md) (ISTQB Foundation) —
 > bám đúng kỹ thuật đã chọn ở mục 5 test plan (State Transition 9 nhánh token, Decision Table 1–5, State
 > Transition "closed", BVA, Exploratory, Error guessing).
