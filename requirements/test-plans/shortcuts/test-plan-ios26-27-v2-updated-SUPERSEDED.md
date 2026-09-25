@@ -1,5 +1,13 @@
 # Test Plan — Shortcut wallpaper mới: Home Screen (iOS 26), Automation & Trigger (iOS 27) — bản V2-updated
 
+> ⚠️ **SUPERSEDED — không dùng tài liệu này để chạy test.** Lập từ test basis nhánh
+> `fix/ios27-shortcut-automation` (chưa vào `main`). PR #302 đã merge vào `main` 2026-09-24 với
+> thay đổi đủ lớn (action count, tên chip, 2 luồng mới) nên test basis gốc không còn đúng. Xem
+> test-plan mới lập từ
+> [qc-shortcut-home-screen-ios26-27-V2.md](../../specs/shortcuts/qc-shortcut-home-screen-ios26-27-V2.md)
+> hiện hành. Giữ file này lại chỉ để đối chiếu lịch sử — kỹ thuật thiết kế (State Transition 9
+> nhánh token, Decision Table) vẫn còn giá trị tham khảo cho test-plan mới.
+
 > ⚠️ **Còn 2 gap ảnh hưởng scope/risk chưa đóng — xem mục 10, gap #1 và #2.** Theo đúng tiền lệ đã có ở
 > [test-plan-ios26-27.md](test-plan-ios26-27.md) (từng ship với 9 gap mở ở mục 10), tài liệu này **không bị
 > chặn** vì 2 gap đó — chúng được đưa vào mục 10 kèm mức ảnh hưởng cụ thể, và mục 8.1 (Suspension) có điều kiện
