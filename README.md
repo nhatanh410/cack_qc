@@ -41,6 +41,7 @@ theo dõi bug — dùng làm đầu vào cho PRD, spec kỹ thuật, và các ph
 │   ├── test-plans/            ← test plan ISTQB, 1 folder / feature — mỗi folder đặt tên trùng với
 │   │   │                         folder cùng feature trong specs/ và test-cases/
 │   │   ├── ai-assistant/
+│   │   ├── component-editor/
 │   │   ├── decoration-inkai/
 │   │   ├── ink-identity-sync-flow/       ← bundle riêng, xem mục dưới
 │   │   ├── login-and-calendar-sharing/   ← bundle riêng, xem mục dưới
@@ -153,6 +154,19 @@ Bug log  (bugs/bug-log.md)
 
 **Nguyên tắc xuyên suốt:** mọi kết luận phải truy được về bằng chứng (ảnh, change note, hoặc quan sát thật
 trên máy) — không suy diễn khi thiếu dữ liệu, ghi rõ *coverage gap* thay vì đoán.
+
+**Bước "Test plan theo build" ở trên thực chất là 3 skill ISTQB riêng, chạy nối tiếp:**
+[test-analysis](.claude/skills/test-analysis/SKILL.md) ("cái gì cần test" — testability + test condition đã
+ưu tiên hoá) → [test-plan](.claude/skills/test-plan/SKILL.md) (scope, kỹ thuật thiết kế, risk-based priority,
+entry/exit) → [test-case](.claude/skills/test-case/SKILL.md) (case cụ thể chạy được ngay). Với spec mới nhận,
+chạy `/spec-intake` để tự điều phối cả 3 thay vì gọi tay từng skill — lệnh này tôn trọng đúng mọi điểm dừng
+human-in-the-loop mà từng skill quy định, không tự đoán khi test basis mơ hồ/mâu thuẫn hay thiếu căn cứ risk.
+
+3 file đầu ra dùng chung **1 `<slug>`** trong cùng thư mục — `test-analysis-<slug>.md`,
+`test-plan-<slug>.md`, `test-cases-<slug>.md` — để luôn tra ngược được thành bộ. Khi spec đổi đủ lớn (đổi tên
+UI, đổi hành vi cốt lõi, thêm luồng mới — không phải chỉ sửa lỗi chính tả), lập `<slug>` mới thay vì ghi đè bộ
+cũ; **file cũ bị thay thế thì đổi tên thêm hậu tố `-SUPERSEDED` + banner giải thích ở đầu file, không xoá** —
+xem `requirements/test-plans/shortcuts/` (chuỗi `ios26-27` → `ios26-27-v2-updated` → `ios26-27-v3`) làm ví dụ.
 
 **Biến thể cho feature không có UI baseline** (remote-config/content layer, QC không có quyền vào code):
 bỏ qua bước wireframe-từ-ảnh, thay bằng chuỗi
