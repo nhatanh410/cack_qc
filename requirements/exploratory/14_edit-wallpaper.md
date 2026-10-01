@@ -3,7 +3,7 @@
 > **Nguồn:** [wireframe](../ui/ux/wideframes/14_edit-wallpaper.md) · 16 screenshot ·
 > [index screenshot iPhone](../ui/ux/screenshots/iphone/index.md#14_edit-wallpaper--editor-soạntrang-trí-wallpaper-decorate) ·
 > [index screenshot iPad](../ui/ux/screenshots/ipad/index.md) (15 ảnh, cả 2 chiều — bổ sung, không phải nguồn chính)
-> **Change note:** [qc-wallpaper-decoration.md](../specs/wallpaper-decoration/qc-wallpaper-decoration.md) · **Test plan:** [1.2.15-decoration-inkai.md](../test-plans/decoration-inkai/1.2.15-decoration-inkai.md)
+> **Change note:** [qc-wallpaper-decoration.md](../specs/wallpaper-editor/wallpaper-decoration/qc-wallpaper-decoration.md) · **Test plan:** [1.2.15-decoration-inkai.md](../test-plans/wallpaper-editor/wallpaper-decoration/1.2.15-decoration-inkai.md)
 > **Khung đánh giá:** [exploratory-references](../../references/exploratory-references.md) ·
 > [permissions-matrix](../../references/permissions-matrix.md)
 > **Build:** TestFlight 1.2.15 (56) · **Thiết bị:** ____________ · **iOS:** ____________ · **Người test:** ____________
@@ -323,12 +323,14 @@ Q9 15 phút thì test gì:      §6
 
 > **Nguồn:** [wireframe § S03](../ui/ux/wideframes/14_edit-wallpaper.md#s03--component-editor--15-ảnh--6-state-chính-bổ-sung-2026-09-24-cập-nhật-cùng-ngày) (15 ảnh) ·
 > [index screenshot iPhone § 03_component-editor](../ui/ux/screenshots/iphone/index.md#03_component-editor--chỉnh-riêng-từng-band-batch-5-2026-09-24-chưa-có-build-number)
-> **Test basis:** [QC — Component Editor 1.2.md](../specs/wallpaper-component/QC%20—%20Component%20Editor%201.2.md) (TestFlight 1.2.17 (103)) · **Test plan:** [test-plan-component-editor.md](../test-plans/component-editor/test-plan-component-editor.md) · [test-analysis-component-editor.md](../test-plans/component-editor/test-analysis-component-editor.md) (73 test condition)
+> **Test basis:** [QC — Component Editor 1.2-SUPERSEDED.md](../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2-SUPERSEDED.md) (TestFlight 1.2.17 (103)) · **Test plan:** [test-plan-component-editor-SUPERSEDED.md](../test-plans/wallpaper-editor/component-editor/test-plan-component-editor-SUPERSEDED.md) · [test-analysis-component-editor-SUPERSEDED.md](../test-plans/wallpaper-editor/component-editor/test-analysis-component-editor-SUPERSEDED.md) (73 test condition)
 > **Khung đánh giá:** [exploratory-references](../../references/exploratory-references.md) · [permissions-matrix](../../references/permissions-matrix.md)
 > **Build:** TestFlight 1.2.17 (103) — **xác nhận lại trên máy trước khi chạy**, batch ảnh hiện có chưa chắc cùng build (xem test-analysis TB-7) · **Thiết bị:** ____________ · **iOS:** ____________ · **Người test:** ____________
 
 > ⚠️ **Khác S01/S02 ở Phần 1** — S03 đã có **test basis chính thức** (QC spec 1.2.17) và **test plan/test-case riêng** (xem link trên). Checklist này **không thay thế** test plan — dùng để **thăm dò tự do phần gesture/lồng container** mà kỹ thuật black-box khó phủ hết (đúng lý do skill này đề xuất ở mục 11 của test plan), và để tester mới làm quen màn hình trước khi chạy case chính thức. Case nào đã có đáp án rõ từ test basis/test plan thì đánh dấu ✅ nguồn, không phải "chưa biết trước kết quả".
 > ⚠️ **7 câu hỏi mở đã trả lời qua trao đổi trực tiếp với dev (2026-09-24)** — đã đưa thẳng vào §S03-1 (Happy path) dưới dạng kỳ vọng cụ thể thay vì để ở mục Câu hỏi: (1) bấm + khi chưa chọn gì → chèn giữa canvas, (2) Decorate & Component Editor độc lập nhưng wallpaper cuối phải gộp đủ cả 2, (3) bố cục **bắt buộc** sống sót qua automation Shortcut overnight, (4) **không có** dialog xác nhận khi bấm ✕ Cancel (đúng spec, nhưng QA khuyến nghị bổ sung — xem `CMP-Q07`).
+
+> ⛔ **Cập nhật 2026-09-28 — Phần 2 viết cho build 1.2.17 (103), đã có bản 1.2.18 (111).** Spec 1.2.18 đảo ngược/bỏ một số hành vi bên dưới — các mục bị ảnh hưởng đã gắn **⛔ LỖI THỜI** ngay tại chỗ (`CMP-H04`, `H20`, `H28`, `E11`, `Q02`, `Q03`); **không xoá** để giữ dấu vết. Đối chiếu đầy đủ + checklist mới cho 1.2.18: [Phần 3](#phần-3--s03-component-editor--bản-1218-111). Các mục không gắn ⛔ vẫn dùng được (đã đối chiếu bảng ở Phần 3 §P3-1).
 
 ---
 
@@ -371,7 +373,7 @@ Q9 15 phút thì test gì:      §6
 
 | ID | Việc làm | Phải quan sát được | Đo gì | ☐ |
 |---|---|---|---|:---:|
-| **CMP-H04** | Chạm 1 thành phần đơn (không trong container) | Khung viền **xanh lá** + pill mini nổi (icon sliders + trash) | — | ☐ |
+| **CMP-H04** | Chạm 1 thành phần đơn (không trong container) | Khung viền **xanh lá** + pill mini nổi (icon sliders + trash) ⚠️ **Lỗi thời một phần (1.2.18):** pill giờ có 2 mục *Edit component / Delete component* + mũi tên ↑/↓ (← → trong Row) — xem Phần 3 §P3-1 | — | ☐ |
 | **CMP-H05** | Chạm ra vùng trống | Bỏ chọn, pill biến mất | — | ☐ |
 | **CMP-H06** | Thành phần nằm trong Row/Column, chạm lần 1 | Chọn cả **container**, KHÔNG chọn thẳng con — hành vi cố ý (QC spec dòng 28/152) | — | ☐ |
 | **CMP-H07** | Chạm tiếp vào đúng con bên trong container đã chọn | Chọn con, đi sâu đúng 1 cấp mỗi lần chạm | Test qua đủ 3 cấp nếu dựng được layout lồng tối đa | ☐ |
@@ -399,7 +401,7 @@ Q9 15 phút thì test gì:      §6
 | ID | Việc làm | Phải quan sát được | Đo gì | ☐ |
 |---|---|---|---|:---:|
 | **CMP-H19** | 🔴 Chạm chọn, giữ và kéo | Thành phần đi theo ngón tay **ngay lập tức**, không trễ | — | ☐ |
-| **CMP-H20** | Kéo lên/xuống trong stack/column | Có chặn trên và dưới, không đè lên thành phần phía trên | — | ☐ |
+| **CMP-H20** | Kéo lên/xuống trong stack/column | Có chặn trên và dưới, không đè lên thành phần phía trên ⛔ **LỖI THỜI (1.2.18):** giới hạn kéo giờ là **mép ảnh** (không phải vạch grid); band đầu kéo lên được qua vạch trên grid — xem Phần 3 §P3-1 | — | ☐ |
 | **CMP-H21** | Kéo ngang | Dịch trái/phải trong phạm vi cho phép | — | ☐ |
 | **CMP-H22** | Chọn 1 Row/Column rồi kéo cả container | Toàn bộ con đi theo đúng 1 lần, không văng ra ngoài | — | ☐ |
 | **CMP-H23** | 🔴 Nhả tay sau khi kéo | Render lại đúng 1 lần tại vị trí thả, **không** nhảy về chỗ cũ rồi nhảy lại | Đây là điểm verify quan trọng nhất của cả §1.4 | ☐ |
@@ -417,7 +419,7 @@ Q9 15 phút thì test gì:      §6
 
 | ID | Việc làm | Phải quan sát được | Đo gì | ☐ |
 |---|---|---|---|:---:|
-| **CMP-H28** | Bấm + | Sheet Add component đủ 6 nhóm: Calendar, Events, Tasks, Progress, Text, Layout | — | ☐ |
+| **CMP-H28** | Bấm + | Sheet Add component đủ 6 nhóm: Calendar, Events, Tasks, Progress, Text, Layout ⛔ **LỖI THỜI (1.2.18):** còn **5 nhóm / 16 mục** — Calendar 5 · Events 4 · Tasks 2 · Progress 3 · Layout 2; **không** có Text, **không** có Timeline (spec §6/§7.22 + ảnh 2026-09-28) | — | ☐ |
 | **CMP-H29** | Chọn 1 loại bất kỳ | Thêm thành công, toast "Added …" + Undo hiện, **KHÔNG** tự động chọn thành phần vừa thêm (đã xác nhận qua ảnh 2026-09-24) | — | ☐ |
 | **CMP-H30** | Đang chọn 1 thành phần đơn, bấm + | Thành phần mới rơi **ngay dưới** thành phần đang chọn | — | ☐ |
 | **CMP-H31** | Đang chọn 1 Row/Column, bấm + | Thành phần mới rơi vào **TRONG** container đó | — | ☐ |
@@ -488,7 +490,7 @@ Q9 15 phút thì test gì:      §6
 | **CMP-E08** | Máy màn hình nhỏ (iPhone SE/mini) | Pill mini + Inspector có đủ chỗ, hay che khuất canvas quá nhiều? | 🟠 | ☐ |
 | **CMP-E09** | Xoay iPad (nếu có máy) | Khung viền chọn và ô trống Row/Column có khớp đúng khi xoay ngang/dọc? (TC-58 trong test-analysis) | 🟡 | ☐ |
 | **CMP-E10** | Cross-device — lặp lại §S03-1 cơ bản trên iPad | Hành vi có giống iPhone không? **Chưa có ảnh iPad nào cho S03** | 🟠 | ☐ |
-| **CMP-E11** | Thử thêm đủ **16 loại component** (không chỉ 4 loại đã có bằng chứng: Timetable, Year progress, Month grid, Mini month) | Có loại nào gây crash/lỗi hiển thị riêng không? Inspector của loại đó có nhóm/knob gì khác? | 🟠 | ☐ |
+| **CMP-E11** | Thử thêm đủ **16 loại component** (không chỉ 4 loại đã có bằng chứng: Timetable, Year progress, Month grid, Mini month) ⛔ **LỖI THỜI (1.2.18):** còn **14 loại thêm được** (+ Row/Column); Quote / Almanac day / Timeline chỉ sửa được trên template có sẵn | Có loại nào gây crash/lỗi hiển thị riêng không? Inspector của loại đó có nhóm/knob gì khác? | 🟠 | ☐ |
 
 ---
 
@@ -499,7 +501,7 @@ Q9 15 phút thì test gì:      §6
 | S01 · `component-editor-entry` (annotation, chưa phải UI thật) | ✅ | ☐ |
 | S03 · `default` (+v2) — chưa chọn gì | ✅ | ☐ |
 | S03 · `default-v3` (Month grid) · `default-v4` (Mini month) | ✅ | ☐ |
-| S03 · `add-component` (+scrolled) — sheet 6 nhóm | ✅ | ☐ |
+| S03 · `add-component` (+scrolled) — sheet 6 nhóm ⛔ *lứa 1.2.17, không còn đúng — 1.2.18 xem Phần 3 §P3-5* | ✅ | ☐ |
 | S03 · `added` (Year progress) · `added-v2` (Timetable) — toast | ✅ | ☐ |
 | S03 · `selected` — viền xanh lá + pill mini | ✅ | ☐ |
 | S03 · `inspector` → `inspector-scrolled-v4` — 5 mốc cuộn (Timetable) | ✅ | ☐ |
@@ -520,14 +522,14 @@ Q9 15 phút thì test gì:      §6
 
 ## S03 · 5 — Câu hỏi cần PO/dev trả lời — `CMP-Q`
 
-> 4 câu đầu kế thừa từ [test-plan mục 10](../test-plans/component-editor/test-plan-component-editor.md#10-gap-cần-làm-rõ-trước-khi-execute) (câu #2–#5, vẫn mở) — giữ lại để tra cứu nhanh trong phiên, không cần mở file khác.
+> 4 câu đầu kế thừa từ [test-plan mục 10](../test-plans/wallpaper-editor/component-editor/test-plan-component-editor-SUPERSEDED.md#10-gap-cần-làm-rõ-trước-khi-execute) (câu #2–#5, vẫn mở) — giữ lại để tra cứu nhanh trong phiên, không cần mở file khác.
 
 | ID | Câu hỏi | Vì sao cần |
 |---|---|---|
-| **CMP-Q01** | Trong 1 Row có 3+ thành phần con, kéo góc đổi bề rộng 1 phần tử thì các phần tử còn lại bù trừ thế nào? | Chặn `CMP-H27` biến thể 3+ con, và TC-27 (test-analysis) |
-| **CMP-Q02** | Giá trị bề rộng tối thiểu cụ thể (pt hoặc %) khi kéo góc thu nhỏ là bao nhiêu? | Cần cho BVA chính xác ở test-case, hiện chỉ verify được "có chặn", chưa verify đúng ngưỡng |
-| **CMP-Q03** | "Giống Studio" (QC spec dòng 77) nghĩa là gì, và giá trị lề 2 bên mặc định của thành phần mới thêm là bao nhiêu? | Không xác định được lề "đúng" hay "sai" nếu không có con số |
-| **CMP-Q04** | "Tối đa 3 cấp container" — canvas gốc có tính là 1 cấp không, hay chỉ đếm số lớp Row/Column lồng nhau? | Chặn `CMP-N10` — chưa biết chính xác điểm hệ thống phải chặn |
+| **CMP-Q01** 🔄 *(còn mở ở 1.2.18 — Q-13)* | Trong 1 Row có 3+ thành phần con, kéo góc đổi bề rộng 1 phần tử thì các phần tử còn lại bù trừ thế nào? | Chặn `CMP-H27` biến thể 3+ con, và TC-27 (test-analysis) |
+| **CMP-Q02** ⏸ *(bỏ khỏi danh sách hỏi dev 2026-09-28 — giá trị xử lý bên dưới)* | Giá trị bề rộng tối thiểu cụ thể (pt hoặc %) khi kéo góc thu nhỏ là bao nhiêu? | Cần cho BVA chính xác ở test-case, hiện chỉ verify được "có chặn", chưa verify đúng ngưỡng |
+| **CMP-Q03** ⏸ *(bỏ khỏi danh sách hỏi dev 2026-09-28 — giá trị số)* | "Giống Studio" (QC spec dòng 77) nghĩa là gì, và giá trị lề 2 bên mặc định của thành phần mới thêm là bao nhiêu? | Không xác định được lề "đúng" hay "sai" nếu không có con số |
+| **CMP-Q04** 🔄 *(còn mở ở 1.2.18 — Q-3b)* | "Tối đa 3 cấp container" — canvas gốc có tính là 1 cấp không, hay chỉ đếm số lớp Row/Column lồng nhau? | Chặn `CMP-N10` — chưa biết chính xác điểm hệ thống phải chặn |
 | **CMP-Q05** | Nếu có loại component đọc Google Calendar, token hết hạn/thu hồi thì Component Editor hiển thị gì? | `CMP-E01` — cùng câu hỏi đã đặt ở [permissions-matrix §3](../../references/permissions-matrix.md#3--tầng-c--uỷ-quyền-google-calendar-oauth), chưa có câu trả lời riêng cho ngữ cảnh đang edit (khác lúc chỉ xem wallpaper) |
 | **CMP-Q06** | Có giới hạn số lượng thành phần tối đa trên 1 canvas không? | Không đề cập trong test basis — ảnh hưởng `CMP-E02` và hiệu năng máy yếu, tương tự `DEC-Q08` đã hỏi cho sticker ở Decorate |
 | **CMP-Q07** | Nên bổ sung dialog xác nhận khi bấm ✕ (Cancel) giống popup Discard ở S02 không? | `CMP-N01`. Hiện tại đúng spec (không có dialog) nhưng khác hẳn S02 cùng flow — QA đã khuyến nghị bổ sung (xem test-plan mục 10, câu #9), cần PO/design quyết định chính thức trước khi coi đây là việc bắt buộc |
@@ -584,9 +586,256 @@ Q9 15 phút thì test gì:      §S03-6
 
 ## S03 · 8 — Ghi chú về giới hạn checklist này
 
-- **12/16 loại component chưa có bằng chứng ảnh** — chỉ Timetable, Year progress, Month grid, Mini month đã chụp (2026-09-24). Inspector, knob riêng, và hành vi resize của 12 loại còn lại **chưa biết chắc** — `CMP-E11` là điểm cần ưu tiên mở rộng coverage sớm.
+- ⛔ *(số liệu lứa 1.2.17 — với 1.2.18 xem Phần 3 §P3-5, §P3-9)* **12/16 loại component chưa có bằng chứng ảnh** — chỉ Timetable, Year progress, Month grid, Mini month đã chụp (2026-09-24). Inspector, knob riêng, và hành vi resize của 12 loại còn lại **chưa biết chắc** — `CMP-E11` là điểm cần ưu tiên mở rộng coverage sớm.
 - **Chưa có ảnh nào cho trạng thái đang kéo** (cả di chuyển lẫn cả container) — khác S02 vốn cũng thiếu tương tự (`DEC` coverage gap) nhưng ít nghiêm trọng hơn vì S02 đã verify được nhả tay đúng qua ảnh trước/sau; S03 rủi ro cao hơn vì test basis tự xếp đây là *"chỗ sửa đi sửa lại nhiều nhất"*.
 - **`CMP-H38` (automation overnight) là case duy nhất không thể rút ngắn** — bắt buộc chờ thật, không đổi giờ hệ thống. Nên chạy **song song** với các phiên khác, không chờ làm xong hết mới bắt đầu.
 - **`CMP-E07` (VoiceOver) cần người có kinh nghiệm dùng VoiceOver thật**, không phải người test tự bật rồi mò — giống lưu ý đã có ở `DEC-E07`.
 - **Chưa có exploratory session nào chạy trước checklist này** — khác Phần 1 (Decorate) vốn đã qua ít nhất 1 vòng khám phá trước khi checklist hoá. Kết quả phiên đầu tiên trên S03 nên được đối chiếu kỹ với `CMP-Q` và test-plan mục 10 — nhiều khả năng phát sinh câu hỏi/case mới ngoài những gì liệt kê ở đây.
 - **4 câu hỏi mở kế thừa từ test-plan** (`CMP-Q01`–`Q04`) nên hỏi dev **trước** khi coi kết quả `CMP-H27`/`N10` là pass/fail chính thức — nếu chưa có câu trả lời, chỉ ghi lại quan sát thực tế, không tự kết luận đúng/sai.
+
+
+---
+---
+
+# Phần 3 — S03: Component Editor · bản 1.2.18 (111)
+
+> **Nguồn:** [QC — Component Editor 1.2.18.md](../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2.18.md) (test basis, §0–§13) ·
+> [diff 1.2.17 → 1.2.18](../specs/wallpaper-editor/component-editor/diff-component-editor-1.2.17-vs-1.2.18.md) ·
+> [wireframe § S03](../ui/ux/wideframes/14_edit-wallpaper.md#s03--component-editor--15-ảnh--6-state-chính-bổ-sung-2026-09-24-cập-nhật-cùng-ngày) (**ảnh lứa 1.2.17, đã lệch một phần** — không dùng làm oracle cho 1.2.18) ·
+> **2 ảnh sheet "Add component" QC chụp 2026-09-28** (16 mục / 5 nhóm) — đã lưu: [`add-component-v2`](../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_add-component-v2.png) · [`add-component-scrolled-v2`](../ui/ux/screenshots/iphone/14_edit-wallpaper/14_edit-wallpaper_03_component-editor_add-component-scrolled-v2.png) ([index batch 6](../ui/ux/screenshots/iphone/index.md)); **chưa xác nhận số build**
+> **Bộ test chính thức:** [test-analysis-1.2.18](../test-plans/wallpaper-editor/component-editor/test-analysis-1.2.18.md) · [test-plan-1.2.18](../test-plans/wallpaper-editor/component-editor/test-plan-1.2.18.md) · [test-cases-1.2.18](../test-plans/wallpaper-editor/component-editor/test-cases-1.2.18.md) (191 case) · [answers-1.2.18](../test-plans/wallpaper-editor/component-editor/answers-1.2.18.md)
+> **Khung đánh giá:** [exploratory-references](../../references/exploratory-references.md) · [permissions-matrix](../../references/permissions-matrix.md)
+> **Kỹ thuật (ISTQB §4.4):** Checklist-based (§P3-1 → §P3-2) · Error guessing (§P3-3, §P3-4 — dùng khung 6 loại lỗi: *input · output · logic · computation · interfaces · data*) · Exploratory session-based (§P3-7 charter, §P3-8 debrief)
+> **Build:** TestFlight 1.2.18 (111, rc3) — **xác nhận lại trên máy trước khi chạy** (rc1/rc2 không lên TestFlight) · **Thiết bị:** ____________ · **iOS:** ____________ · **Người test:** ____________
+
+> ⚠️ **Phần này KHÔNG lặp lại 191 test case ở `test-cases-1.2.18.md`.** Case nào đã có đáp án viết sẵn trong bộ đó thì chạy ở đó; checklist này chỉ thêm (a) đối chiếu mục cũ Phần 2 với 1.2.18, (b) quy trình **đầu-cuối** và tổ hợp mà case đơn lẻ không phủ, (c) **error guessing** cho hành vi mới của 1.2.18, (d) **charter** thăm dò và câu hỏi thiết kế.
+> ⚠️ **Nhãn dùng trong Phần 3:** ⚠️ = expected dựa trên **ASSUMPTION** chưa dev xác nhận (Q-7 khoá cử chỉ · Q-10 giữ gap từng vị trí · Q-12 mốc gap 0 = vạch trên grid) hoặc **thông tin do QC trả lời** (Q-11) — kết quả pass chỉ là "pass theo giả định", lệch thì **Query → dev**, không mở defect ngay. 🔭 = **quan sát, không có oracle trong test basis** — chỉ ghi nhận, không kết luận đúng/sai.
+> ⚠️ **Không suy diễn** `Year progress "target date"` và `Quote "chữ / số dòng"` (Q-4 — descope, GAP) — không có mục nào dưới đây kiểm hai điểm đó.
+
+---
+
+## P3 · 0 — Framing
+
+**Q1 — Mục tiêu user (S03, 1.2.18):** tự dựng bố cục dashboard cá nhân từ các khối, **kéo tự do** gần như tới mép ảnh, hút vào các mốc gióng, đổi thứ tự bằng nút, và xếp khối vào Row/Column lồng nhau — rồi **thấy đúng bố cục đó** trên lock screen thật.
+
+**Q8 — Mục tiêu business:** chưa thấy badge PRO trong ảnh sheet Add 2026-09-28 (cả 16 mục, cả hai đoạn cuộn) — chưa rõ tính năng miễn phí hay gate theo loại (xem `CMP-Q06`, vẫn mở). Khả năng cao là tính năng **giữ chân/khác biệt hoá**.
+
+**Vùng rủi ro mới của 1.2.18 so với 1.2.17** *(rút từ [diff](../specs/wallpaper-editor/component-editor/diff-component-editor-1.2.17-vs-1.2.18.md))*: (1) kéo **không còn bị chặn ở vạch grid** → toạ độ **âm** đi vào dữ liệu wallpaper; (2) **snap + haptic** = hành vi phụ thuộc thời gian/cử chỉ, khó phủ bằng case tĩnh; (3) **reorder ↑/↓** tương tác với Fixed và gap âm; (4) bảng thuộc tính có **2 đường đóng** và **cuộc tranh giành cử chỉ** slider ↔ cuộn; (5) 7 loại component **không có oracle knob**.
+
+**Rủi ro xuyên suốt chạm vào Phần 3** *(chỉ link)*:
+[§1.1 chuỗi setup sống sót qua người dùng thật](../../references/exploratory-references.md#11--chuỗi-setup-có-sống-sót-qua-người-dùng-thật-không) — áp dụng cho `CMP-N23` (gap âm qua đêm) ·
+[§1.2 lock screen là ảnh tĩnh](../../references/exploratory-references.md#12--lock-screen-là-ảnh-tĩnh-dữ-liệu-cũ-tới-mức-nào-là-chấp-nhận-được) ·
+[§1.6 Google Calendar](../../references/exploratory-references.md#16--google-calendar-nguồn-dữ-liệu-duy-nhất-cần-mạng-và-tài-khoản) và [permissions-matrix](../../references/permissions-matrix.md) — áp dụng cho `CMP-E17`.
+
+**Tiền điều kiện chung** *(entry — không đánh số ID)*: đã đăng nhập, đã cấp quyền Calendar/Reminders (trừ khi mục ghi khác), có ≥1 template dạng stack, biết cách dựng `Column > Row > Column`, có ít nhất 1 template `mix-*` (mix-class-schedule / mix-daily-brief / mix-focus-today / mix-mindful-month), tài khoản có dữ liệu lịch thật (≥1 ngày nhiều event).
+
+---
+
+## P3 · 1 — Đối chiếu Phần 2 (1.2.17) với 1.2.18
+
+> Mục cũ **không xoá**, chỉ đánh dấu. ⛔ = lỗi thời/sai theo 1.2.18 — **không dùng làm oracle**. Xem thêm dấu ⛔ đã gắn thẳng vào từng mục trong Phần 2.
+
+| Mã cũ | Nội dung cũ | Trạng thái với 1.2.18 | Thay bằng |
+|---|---|---|---|
+| `CMP-H04` | Khung viền xanh lá + pill mini (sliders + trash) | ⚠️ **Lỗi thời một phần** — pill có 2 mục *Edit component / Delete component* + mũi tên ↑/↓ (← → trong Row) | `TC-SEL-01`, `TC-ROD-*` |
+| `CMP-H20` | Kéo lên/xuống: "có chặn trên và dưới" | ⛔ **Đảo ngược** — giới hạn là **mép ảnh**; band đầu qua vạch trên grid | `TC-DRG-*`, `TC-SNP-*`, `TC18-22/23/24` |
+| `CMP-H28` | Sheet Add có **6 nhóm** (gồm Text) | ⛔ **Sai** — **5 nhóm, 16 mục**: Calendar 5 · Events 4 · Tasks 2 · Progress 3 · Layout 2 (không Text, không Timeline) | `TC-ADD-01…07` + ảnh 2026-09-28 |
+| `CMP-E11` | Thử thêm đủ **16 loại** component | ⛔ **Cập nhật** — **14 loại thêm được** + Row/Column; Quote/Almanac day/Timeline chỉ có trên template có sẵn | `TC-ADD-09…22`, `TC-ADD-08` |
+| `CMP-H23`, `H27`, `H34`, `H36`, `H38` | Nhả tay 1 lần · Row 2 con · ô trống · gộp Decorate · qua đêm | ✅ **Giữ nguyên** (`H32`, `H36`, `H38` = hành vi QC xác nhận còn đúng ở 1.2.18 — Q-11, ⚠️ chưa dev, vẫn ngoài spec) | — |
+| `CMP-N01…N14`, `E01…E10` | Cancel · Undo · lồng nhau · gián đoạn · Google · Dynamic Type · VoiceOver · máy nhỏ · iPad | ✅ **Giữ nguyên** (bổ sung hành vi mới ở P3-3/P3-4) | — |
+| `CMP-Q01` | Row 3+ con bù trừ thế nào | 🔄 **Còn mở** (Q-13, không chặn) | — |
+| `CMP-Q02`, `Q03` | Bề rộng tối thiểu · lề "giống Studio" | ⏸ **Bỏ khỏi danh sách hỏi dev** (2026-09-28 — giá trị xử lý bên dưới, kiểm hành vi thay vì giá trị) | — |
+| `CMP-Q04` | "Tối đa 3 cấp" đếm từ đâu | 🔄 **Còn mở** (Q-3b, không chặn) | — |
+| `CMP-Q05`, `Q06`, `Q07` | Google token · giới hạn số thành phần · dialog Cancel | 🔄 **Còn mở**, không đổi | — |
+
+---
+
+## P3 · 2 — Happy path — `CMP-H` *(Checklist-based, §4.4.3 — chỉ quy trình đầu-cuối, không lặp case đơn lẻ)*
+
+> Số tiếp theo sau `CMP-H38`. Case đơn lẻ (chọn, kéo, snap, reorder, Inspector…) đã ở `test-cases-1.2.18.md` — ở đây ghép thành **chuỗi** để bắt lỗi *tổ hợp* mà case đơn lẻ không thấy.
+
+| ID | Việc làm | Phải quan sát được | Đo gì | ☐ |
+|---|---|---|---|:---:|
+| **CMP-H39** ⚠️ | 🔴 **Dựng lại bố cục đầu-cuối.** Mở template `mix-daily-brief` → Components → (1) bấm ↓ đổi chỗ band thứ 2 · (2) kéo band đầu lên **qua vạch trên grid** (chip hiện số âm) · (3) thêm 1 Row, lấp cả 2 ô · (4) đổi 1 band sang Position **Fixed** · (5) bấm ✓ → thoát ra → **đặt làm lock screen** → mở lại template → Components | Bố cục sau khi mở lại **giống hệt** lúc bấm ✓ (§8.03, §11.04): thứ tự, gap (kể cả **số âm**), Row 2 con, band Fixed. Lock screen thật khớp preview (§11.01) | Chụp màn hình *trước ✓* và *sau mở lại*, so từng band. Ghi chip gap band đầu ở hai thời điểm | ☐ |
+| **CMP-H40** | 🟠 **Toàn vẹn chuỗi Undo/Redo.** Thực hiện **8–10 thao tác hỗn hợp** trong 1 phiên (thêm · ↑/↓ · kéo · kéo góc · đổi Position · Duplicate · Delete · thêm Row) — chụp màn hình sau **mỗi** bước → bấm Undo từng bước tới hết → rồi Redo tới hết | Sau mỗi Undo, canvas **khớp ảnh chụp bước trước** (§8.01 — 1 thao tác = 1 bước, không phải từng frame); Undo hết → giống lúc vừa mở; Redo hết → giống ảnh cuối. Nút Undo/Redo **disable** đúng lúc | Đếm **số lần bấm Undo** so với **số thao tác** đã làm — phải bằng nhau. So từng ảnh (vị trí, gap, số band) | ☐ |
+| **CMP-H41** | 🟠 Sau chuỗi dài của `CMP-H40` (chưa Undo) → bấm **✕ Cancel** → mở lại Components | Wallpaper trở về **đúng như lúc mở màn** (§8.04), kể cả thành phần vừa thêm; không còn container rỗng/ô trống tàn dư | So với ảnh chụp lúc mới mở màn. Không có dialog xác nhận (đã biết — `CMP-N01`) | ☐ |
+| **CMP-H42** | 🟡 **Đọc-hiểu sheet Add** *(Ma sát — kiểm khả năng hiểu, không kiểm đúng/sai kỹ thuật).* Đọc mô tả một dòng dưới từng mục trong sheet (16 mục), **tự đoán** thành phần sẽ ra gì → thêm → đối chiếu. Ghi mỗi mục: *khớp / lệch / mơ hồ* | Mô tả khớp thành phần thực. Lưu ý sẵn từ ảnh 2026-09-28: **Timetable** *"This week as a grid of cards."* vs **Week schedule** *"This week by the hour, like a timetable."* — hai mô tả dễ nhầm; **Column** *"Two components stacked, as one band."* | Đếm số mục người **lần đầu dùng** chọn nhầm; ghi mục nào phải thử-và-xoá. Đây là quan sát UX, không phải defect (xem `CMP-Q11`) | ☐ |
+
+---
+
+## P3 · 3 — Negative — `CMP-N` *(Error guessing, §4.4.1 — mỗi mục gắn loại lỗi trong khung 6 loại)*
+
+> Số tiếp theo sau `CMP-N14`.
+
+### 3.1 · Thao tác lặp / nhanh
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CMP-N15** ⚠️ | *[logic]* Chọn band giữa stack → bấm ↓ **liên tiếp nhanh** (5 lần trong ~1 giây); rồi ↑ nhanh 5 lần. Sau đó Undo | Mỗi lần bấm hợp lệ = **đúng 1 bước Undo** (§3.07); không band nào đè band khác (§3.08); mũi tên **ẩn** đúng lúc tới đầu/cuối; số bấm dư ở biên không sinh bước Undo ảo. Undo đủ số bước → về đúng ban đầu | Race giữa animation đổi chỗ và lần bấm kế → mất bước, đè band, hoặc Undo lệch số bước | 🟠 | ☐ |
+| **CMP-N16** ⚠️ | *[logic · computation]* Band **đầu** đang **gap âm** (kéo qua vạch). Reorder ↓ rồi ↑ **4 vòng** liên tiếp (bấm chậm), chụp chip gap mỗi vòng | Sau mỗi vòng **quay về đúng cấu hình ban đầu** — gap âm ở lại **vị trí đầu** (giả định Q-10), không tích luỹ trôi vài px mỗi vòng | *Drift* tích luỹ: sau vài vòng gap âm biến thành 0/dương hoặc band đè band — đúng vùng lỗi "đè band" vừa fix | 🟠 | ☐ |
+| **CMP-N17** ⚠️ | *[logic]* Band đầu gap âm → **Duplicate 5 lần liên tiếp** (mỗi lần trên bản vừa tạo) → Undo từng bước | Mỗi bản sao nằm **dưới** bản trước, có khoảng cách, không đè (§3.09); Undo gỡ **đúng 1 bản sao** mỗi lần | Chồng bản sao đè khít → không chọn lại được; Undo gỡ nhiều bản một lúc | 🟠 | ☐ |
+| **CMP-N18** 🔭 | *[interfaces]* Thêm **3 thành phần liên tiếp thật nhanh** (toast *"Added …"* chồng) → bấm **Undo** trên toast | Oracle duy nhất: Undo hoàn **đúng 1 thao tác** (§8.01). **Ghi nhận** Undo hoàn thao tác nào (mới nhất hay cái gắn với toast bấm), toast chồng/thay nhau ra sao — xem `CMP-Q16` | Undo hoàn nhầm thao tác → user mất/giữ nhầm thành phần | 🟡 | ☐ |
+| **CMP-N19** 🔭 | *[interfaces · input]* **Đa chạm:** ngón 1 giữ-kéo band A; **ngón 2** chạm (a) band B, (b) nút **+**, (c) pill, (d) **✓** | Oracle: không bản sao/không mất thành phần khi kéo (§4.10); không nhảy vị trí khi nhả (§4.11). **Ghi nhận** ngón 2 có làm gì; có kẹt trạng thái "đang kéo" (khung viền/ghost lơ lửng) không | Trạng thái kẹt sau đa chạm — kiểu lỗi UI khó tái hiện, người dùng thật hay gặp khi cầm máy 1 tay | 🟠 | ☐ |
+| **CMP-N20** ⚠️ | *[logic · interfaces]* Kéo band hút vào điểm snap (vd **giữa màn**) → nhả → **Undo** → Redo | Undo về **vị trí trước cú kéo** đúng, **không bị hút lại** vào điểm snap gần đó; Redo về đúng điểm snap (§4.06, §8.01). Biến thể gap 0: giả định mốc = vạch trên grid (Q-12) | Undo/Redo ép lại vào snap → vị trí lệch vài px so với trước; user không thể trở về vị trí "không nằm trên điểm snap" | 🟠 | ☐ |
+
+### 3.2 · Gián đoạn
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CMP-N21** 🔭 | *[interfaces]* **Cử chỉ bị huỷ giữa chừng:** đang giữ-kéo band → (a) vuốt Control Center/Notification Center từ cạnh, (b) banner thông báo đè lên, (c) cuộc gọi/FaceTime đến, (d) gọi Siri | Oracle: bất biến §4.10 (không bản sao, không mất) và §4.11 (không nhảy về chỗ cũ rồi nhảy lại). **Ghi nhận** band **kết thúc ở đâu** (chỗ cũ / chỗ hiện tại) và có kẹt trạng thái kéo không — xem `CMP-Q14` | Ghost/khung viền kẹt; band "mắc" theo ngón đã rời; dữ liệu ghi vị trí lơ lửng | 🟠 | ☐ |
+| **CMP-N22** 🔭 | *[data]* *(nếu có iPad)* **Xoay máy giữa lúc đang kéo** một band / một Row | Oracle: không bản sao/không mất (§4.10), khung viền + ô trống vẫn khớp sau xoay (§9.04). **Ghi nhận** phần còn lại | Canvas đo lại khi xoay nhưng cú kéo vẫn dùng bound cũ → band văng ra ngoài | 🟡 | ☐ |
+| **CMP-N23** ⚠️ | 🔴🔴 *[data · interfaces]* **Gap âm qua lưu + automation overnight.** Kéo band đầu lên qua vạch (gap âm rõ rệt, ghi số) → ✓ → đặt làm lock screen → **chờ qua đêm** để automation Shortcut chạy lại (không đổi giờ máy) → xem lock screen | Lock screen thật (§11.01) hiển thị đúng **phần lấn lên vùng đồng hồ** như preview; sau automation bố cục **vẫn nguyên gồm gap âm** (Q-11c — QC xác nhận, ⚠️ chưa dev, không có trong spec). Không bị **kẹp về 0** hay cắt | Toạ độ âm là dữ liệu mới của 1.2.18 — renderer/automation cũ có thể clamp về ≥0 hoặc tính sai → bố cục người dùng dựng bị mất im lặng | 🔴 | ☐ |
+
+### 3.3 · Tương tác chéo giữa các editor / thao tác
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CMP-N24** 🔭 | *[interfaces]* **Decorate → Component Editor.** Ở S02 vẽ nét + thả sticker gần band X → ✓ → vào S03 → **kéo band X sang chỗ khác** → ✓ | Oracle: sticker **không biến mất** khi kéo (§4.13); wallpaper cuối **gộp đủ cả hai** (Q-11b — QC xác nhận, ⚠️). **Ghi nhận** sticker **đứng yên theo ảnh** hay **đi theo band** — xem `CMP-Q10` | Sticker chồng lên nội dung khác sau khi dịch band; hoặc ngược lại, user tưởng sticker "gắn" với band | 🟠 | ☐ |
+| **CMP-N25** ⚠️ | *[data]* **Vòng lặp hai editor:** S03 sửa bố cục → ✓ → S02 thêm sticker → ✓ → **quay lại S03** | Bố cục vừa sửa **còn nguyên**; sticker còn nguyên (Q-11b — ⚠️ chưa dev) | Hai editor ghi đè dữ liệu của nhau khi lưu | 🟠 | ☐ |
+| **CMP-N26** 🔭 | *[logic]* **Xoá thành phần trong Row 2 con** (còn 1 con) → quan sát → thêm vào ô trống → Undo | Oracle một phần (§10 #1): Row 1 con **vẫn chiếm chỗ như 2 con** vì ô trống thứ 2 giữ chỗ; Undo trả con về **đúng ô cũ**. **Ghi nhận** ô trống trả lại có nút **+** đúng như lúc mới thêm Row | Ô trống mất nút + → Row "chết" không thêm lại được | 🟡 | ☐ |
+| **CMP-N27** | 🟠 *[logic · data]* **Delete cả container** (Row 2 con) → bấm **Undo** trên toast *"Removed …"* | Undo trả lại **đủ container + cả 2 con**, đúng vị trí và đúng thứ tự (§3.06 "trả lại đúng chỗ cũ"). *(Việc xoá container **kèm con** hay không — xem `CMP-Q08`)* | Undo chỉ trả container rỗng hoặc mất 1 con → mất dữ liệu | 🟠 | ☐ |
+| **CMP-N28** 🔭 | *[logic]* **Duplicate band Fixed** → xem bản sao; **đổi Position Fixed → Auto** rồi ↑/↓ | Oracle: đổi Auto↔Fixed **không nhảy chỗ** (§7.01); Fixed không có mũi tên (§3.07). **Ghi nhận** bản sao Fixed nằm đâu (đè khít bản gốc?) — xem `CMP-Q15` | Bản sao đè khít bản gốc → user không chọn/kéo được bản dưới | 🟡 | ☐ |
+
+---
+
+## P3 · 4 — Edge — `CMP-E` *(Error guessing, §4.4.1)*
+
+> Số tiếp theo sau `CMP-E11`. `CMP-E06`–`E08` (Dynamic Type/VoiceOver/máy nhỏ) đã có ở Phần 2 — các mục dưới **bổ sung phần hành vi mới** (pill mũi tên, chip gap, sheet Add), không lặp.
+
+| ID | Tình huống | Câu hỏi | Mức | ☐ |
+|---|---|---|:---:|:---:|
+| **CMP-E12** | *[data]* **Dữ liệu rỗng:** hôm nay **không có event/task/reminder nào** (tạo tài khoản/lịch trống hoặc chọn ngày không có gì) → thêm Today's events, Reminders, Priority matrix, Week events | Canvas hiện gì (rỗng có ý nghĩa hay trắng trơn)? Khung viền của thành phần **rất thấp** có **chọn/kéo được** không (§3.04 — khung ôm đúng, vùng chạm nhỏ)? | 🟠 | ☐ |
+| **CMP-E13** | *[data]* **Dữ liệu cực lớn:** ngày có **≥30 event**, tên event rất dài, emoji, tiếng Việt có dấu → Today's events, Timetable, Week events → **kéo góc hẹp lại** | Nội dung cắt/co hợp lý hay tràn khỏi khung viền? Chọn + kéo còn mượt (§4.15)? Khác `CMP-E05` (Quote dài) ở chỗ đây là **dữ liệu lịch thật** | 🟡 | ☐ |
+| **CMP-E14** 🔭 | *[input]* **Caption Countdown** (§7.16): nhập (a) 200 ký tự, (b) emoji ghép (👨‍👩‍👧), (c) tiếng Việt có dấu, (d) xuống dòng (Enter), (e) **chỉ toàn dấu cách**, (f) xoá sạch | Oracle duy nhất: **xoá trống = ẩn caption**; áp khi Done/ra ngoài ô, 1 bước Undo. **Ghi nhận** (e) có tính là "trống" (ẩn) hay hiện khoảng trắng; (d) xuống dòng | 🟡 | ☐ |
+| **CMP-E15** | *[computation]* **Biên thời gian.** (a) Mở editor lúc **23:58** để qua **00:00** khi đang mở → Today's events/Hour timeline/Countdown/Year progress · (b) ngày cuối tháng/cuối năm (**31/12 → 1/1**) · (c) tháng 28/29/30/31 ngày → Month grid, Month progress · (d) tuần bắt đầu **Thứ Hai vs Chủ nhật** → Month grid, Week events, Timetable | Đối chiếu với **nguồn độc lập ngoài app** (Apple Calendar cùng ngày): ngày hôm nay được đánh dấu đúng, số ngày/tuần đúng, phần "đã qua" của Hour timeline (*Elapsed color*) đúng. Canvas có **tự cập nhật qua 00:00** hay chỉ cập nhật khi mở lại — ghi nhận | 🟠 | ☐ |
+| **CMP-E16** 🔭 | *[computation]* **Lunar calendar** *(loại không có oracle knob — nhưng có oracle hiển thị **ngoài app**)*: đối chiếu ngày âm dưới từng ngày với nguồn lịch âm độc lập cho (a) **mùng 1** đầu tháng âm, (b) **tháng có tháng nhuận**, (c) ngày Tết | Lệch là **Query → dev** (chưa rõ app theo lịch âm nào — xem `CMP-Q12`), không mở defect ngay. Ghi nguồn đối chiếu đã dùng | 🟠 | ☐ |
+| **CMP-E17** | *[interfaces]* **Quyền bị Deny/thu hồi:** Settings → Ink → tắt **Calendar** (rồi riêng **Reminders**) → quay lại/vào editor → Today's events, Reminders, Priority matrix, Month grid | Canvas hiển thị gì (trống, cảnh báo, hay dữ liệu cũ)? Có crash không? Thao tác chọn/kéo vẫn hoạt động? Liên quan [permissions-matrix](../../references/permissions-matrix.md) và `CMP-Q05` (Google) — đây là câu tương ứng cho **quyền hệ thống** | 🟠 | ☐ |
+| **CMP-E18** | *[output]* **Dynamic Type lớn nhất** trên phần **mới của 1.2.18**: pill có mũi tên ↑/↓, **chip gap** (số âm), sheet Add (mô tả 1 dòng), toast *Added/Removed* + Undo, header ✕/Undo/Redo/✓ | Không cắt/chồng chữ; chip gap **vẫn đọc được** (số âm có dấu `-`), nút **bấm được** | 🟠 | ☐ |
+| **CMP-E19** | *[interfaces]* **Máy màn hình nhỏ** (SE/mini) + chọn band **sát mép phải/trái**: pill (nay rộng hơn vì có mũi tên) | Pill **không tràn ra ngoài màn** / không che nút; mọi nút trong pill bấm được | 🟠 | ☐ |
+| **CMP-E20** | 🔴 *[interfaces]* **Pill va chạm chrome:** band **đầu** ở **sát/qua mép trên ảnh** (gap âm) → chọn → pill nằm ở đâu? Thử bấm **từng nút** trên pill (Edit · Delete · ↑ · ↓) | Pill **không bị header ✕/Undo/Redo/✓ che**, mọi nút bấm được; không phải kéo band xuống mới chọn được | 🔴 | ☐ |
+| **CMP-E21** | *[output]* **Chrome dạng glass (iOS 26)** trên wallpaper **rất sáng**, **rất tối**, **nhiều màu**: ✕/Undo/Redo/✓/+/Show grid + pill + chip gap | **Đo** tỉ lệ tương phản (Accessibility Inspector hoặc đo màu): text/icon ≥ **4.5:1**, icon lớn ≥ **3:1**; ghi nền dùng. *(Không phải Dark Mode — app chưa hỗ trợ; đây là nền wallpaper thay đổi)* | 🟡 | ☐ |
+| **CMP-E22** | *[interfaces]* **Accessibility & hệ thống:** bật **Reduce Motion**, **Reduce Transparency**, **Bold Text**; **tắt haptic hệ thống** → kéo qua các điểm snap | Snap **vẫn hút** khi haptic tắt *(suy luận từ §4.06 — rung là phản hồi đi kèm, không phải điều kiện hút; nếu thấy không hút khi tắt haptic thì ghi **Query → dev**, chưa mở defect)*; canvas đẩy lên khi bảng che (§7.10) không giật/không sai chỗ khi Reduce Motion; chữ đậm không cắt chip | 🟡 | ☐ |
+| **CMP-E23** | *[computation]* **Hiệu năng:** bật **Low Power Mode** → layout **10+ band** (hoặc `Column > Row > Column` 4–6 con + sticker + card) → kéo liên tục **10 giây** lên-xuống (quay video 60fps, xem từng khung) | Kéo **không giật/không đứng hình** (§4.15); không bản sao, không mất thành phần (§4.10). Ghi **model máy**; *không có ngưỡng fps → kiểm hành vi, không kiểm giá trị* | 🟡 | ☐ |
+| **CMP-E24** | *[interfaces]* **VoiceOver — đường thay thế cho kéo.** Bật VoiceOver → chọn band → duyệt pill: **nút ↑/↓**, **slider Position/Width** (thao tác *adjustable*) | ↑/↓ và slider có **nhãn đọc được** và **thay được thao tác kéo** (khác kết luận `CMP-E07` của 1.2.17 khi chưa có ↑/↓). Cần người quen VoiceOver | 🟠 | ☐ |
+
+---
+
+## P3 · 5 — Coverage matrix (chỉ trạng thái mới của 1.2.18)
+
+| State / màn hình | Đã có ảnh | Đã chạm khi test |
+|---|:---:|:---:|
+| S03 · sheet **Add component** 1.2.18 — 16 mục / 5 nhóm (2 ảnh QC chụp 2026-09-28) | ⚠️ *có, đã lưu repo (batch 6), chưa xác nhận build* | ☐ |
+| S03 · **pill** có mũi tên ↑/↓ (← → trong Row) | ❌ | ☐ |
+| S03 · **chip gap** hiện số âm / `0` | ❌ | ☐ |
+| S03 · **đường gióng snap** (giữa màn) khi kéo | ❌ | ☐ |
+| S03 · **band đầu qua vạch trên grid** (lấn vùng đồng hồ) | ❌ | ☐ |
+| S03 · bảng thuộc tính có **grabber** + nút **✕** | ❌ | ☐ |
+| S03 · Inspector **mục phụ có tiêu đề** (Weekday/Time/Date/Caption) + nút **↺ Reset** | ❌ | ☐ |
+| S03 · Inspector của **7 loại không có oracle knob** (Lunar calendar · Week schedule · Month progress · Reminders · Activity grid · Quote · Almanac day) | ❌ | ☐ |
+| S03 · toast **"Removed the empty layout"** · **"Part of this runs off the screen"** | ❌ | ☐ |
+| Bản **iPad** cho toàn bộ S03 | ❌ | ☐ |
+| **Baseline chụp trên build 111 kèm số build** (Q-19) | ❌ | ☐ |
+
+---
+
+## P3 · 6 — Câu hỏi cần PO/dev trả lời — `CMP-Q`
+
+> Số tiếp theo sau `CMP-Q07`. Chỉ nêu **chủ ý thiết kế / hành vi người dùng thấy** — không hỏi giá trị xử lý bên dưới. Câu đã trả lời/đã descope (Q-1, Q-2, Q-4, Q-6, Q-8, Q-9, Q-17…) **không lặp lại ở đây** — xem [answers-1.2.18](../test-plans/wallpaper-editor/component-editor/answers-1.2.18.md).
+
+| ID | Câu hỏi | Vì sao cần |
+|---|---|---|
+| **CMP-Q08** | **Delete container (Row/Column) đang có con** — xoá luôn cả các con, hay chỉ bỏ container và giữ con lại? Undo trả lại thế nào? | `CMP-N27` — spec chỉ nói "Delete xoá được + toast + Undo" |
+| **CMP-Q09** | **Row/Column chỉ có 1 con:** mũi tên ← / → (hoặc ↑ / ↓) hiện hay ẩn? Ô trống thứ 2 có tính là "kế bên" không? | Test basis §3.07 chỉ nói ẩn "ở đầu/cuối" và loại Fixed |
+| **CMP-Q10** | **Sticker/nét vẽ Decorate khi dịch band sau khi đã trang trí:** sticker **đứng yên theo ảnh** hay **đi theo band**? | `CMP-N24` — người dùng sẽ hỏi ngay; spec chỉ nói sticker không biến mất lúc kéo (§4.13) |
+| **CMP-Q11** | **Timetable** *"This week as a grid of cards."* vs **Week schedule** *"This week by the hour, like a timetable."* — khác nhau chủ ý thế nào? (Tương tự **Today's events** vs **Hour timeline**) | `CMP-H42` — hai mô tả dễ gây chọn nhầm; nếu chủ ý thì cần ví dụ/thumbnail trong sheet |
+| **CMP-Q12** | **Lunar calendar** theo **lịch âm nào** (Việt Nam / Trung Quốc)? Múi giờ nào để xác định ngày mùng 1? | `CMP-E16` — không có oracle nào để đối chiếu nếu chưa biết chuẩn |
+| **CMP-Q13** | **12 ngôn ngữ** có ngôn ngữ **viết phải-sang-trái** (Ả Rập/Hebrew…) không? Nếu có, mũi tên **← / →** trong Row có **đảo theo RTL** không? | Chưa rõ danh sách 12 ngôn ngữ — ảnh hưởng `CMP-E13/E14` và LOC |
+| **CMP-Q14** | **Cử chỉ kéo bị huỷ giữa chừng** (Control Center, cuộc gọi, banner…): band **về chỗ cũ** hay **giữ vị trí hiện tại**? | `CMP-N21` — không có oracle trong test basis |
+| **CMP-Q15** | **Duplicate band Fixed:** bản sao nằm đâu (cùng toạ độ, hay dịch xuống)? | `CMP-N28` — spec chỉ nêu Duplicate band **đầu gap âm** (§3.09) |
+| **CMP-Q16** | **Toast Added/Removed chồng nhau** (thao tác nhanh): Undo trên toast hoàn tác **thao tác nào**? Toast cũ bị thay hay xếp chồng? | `CMP-N18` — spec chỉ nói "toast + Undo" cho từng thao tác |
+
+---
+
+## P3 · 7 — Smoke 15 phút *(Exploratory session-based, §4.4.2 — viết như **charter**, không có đáp án sẵn)*
+
+> Người chạy **vừa thiết kế vừa thực thi vừa đánh giá**. Mỗi charter nêu **mục tiêu quan sát**; ghi lại **điều bất ngờ** chứ không chỉ pass/fail.
+
+| # | Charter — *Khám phá … bằng … để tìm …* | Thời lượng | Mục liên quan |
+|:---:|---|:---:|---|
+| 1 | **Gap âm & đổi thứ tự:** khám phá band đầu ở vùng **âm** bằng cách kéo qua vạch rồi ↑/↓/Duplicate/Undo lặp lại, để tìm **trôi vị trí tích luỹ** và **đè band** ⚠️ | 4 phút | `CMP-N15`, `N16`, `N17`, `CMP-H40` |
+| 2 | **Cảm nhận snap:** khám phá 3 điểm snap bằng kéo chậm và kéo nhanh, **có và không có haptic**, để tìm chỗ **hút quá mạnh, dính, hoặc nhảy** khi thoát ra ⚠️ | 3 phút | `CMP-N20`, `CMP-E22` (+ `TC-SNP-*`) |
+| 3 | **Pill & chrome va chạm:** khám phá band sát **mép trên/dưới/trái/phải** bằng chọn và bấm từng nút trên pill, để tìm chỗ pill **bị che hoặc tràn ngoài màn** | 3 phút | `CMP-E19`, `E20`, `E21` |
+| 4 | **Undo/Cancel sau chuỗi dài:** khám phá độ toàn vẹn bằng chuỗi 8–10 thao tác hỗn hợp rồi Undo hết/Cancel, để tìm **bước Undo bị nuốt hoặc dư** | 3 phút | `CMP-H40`, `H41`, `N18` |
+| 5 | **Đọc-hiểu sheet Add:** khám phá 16 mục qua mô tả một dòng, để tìm mục **gây chọn nhầm** | 2 phút | `CMP-H42`, `Q11` |
+
+> 🔴🔴 **Không nằm trong 15 phút — cần chạy song song ngay từ đầu lịch test:**
+> - **`CMP-N23`** (gap âm qua lưu + **automation overnight**) — gộp cùng chuỗi qua đêm của `CMP-H38` để tiết kiệm một đêm.
+> - **`CMP-E15`** (biên thời gian: 23:58→00:00, 31/12→1/1, tháng 28–31 ngày) — cần **canh giờ/ngày thật**.
+> - **Charter dài (30–45′): 7 loại không có oracle knob** — `TC-EXP-01` trong `test-cases-1.2.18.md`.
+
+---
+
+## P3 · 8 — Kết luận phiên *(Debriefing, §4.4.2)*
+
+```
+Phiên: __________   Build: 1.2.18 (111, rc3)   iOS: ______   Thiết bị: __________
+
+Q1 Mục tiêu user:            tự dựng bố cục từ khối, kéo tới mép ảnh + hút mốc, thấy đúng bố cục đó trên lock screen thật
+Q8 Mục tiêu business:        chưa rõ Free/Pro (CMP-Q06) — chưa thấy badge PRO trong sheet Add
+— Chạy luồng chính —
+Q2 Xong dễ lần đầu?          Có / Không — vì: __________
+Q3 Điểm khựng/bối rối:       __________________________
+   (Timetable vs Week schedule chọn nhầm? pill bị header che? snap hút quá mạnh/dính? gap âm khó hiểu?)
+Q4 Thao tác sai / gián đoạn: __________________________
+Q5 State chưa test:          __________________________
+   (7 loại không oracle knob · gap âm qua đêm · biên thời gian · iPad · quyền bị Deny)
+— Kết luận —
+Q6 Rủi ro #1 nếu ship:       __________________________
+Q7 Tự mình dùng hằng ngày?   Có / Không — vì: __________
+Q9 15 phút thì test gì:      §P3-7
+
+=> Verdict: 🟢 / 🟡 / 🔴  — kèm bằng chứng
+```
+
+**Ngưỡng cho Phần 3 (bổ sung ngưỡng Phần 2 — không thay thế):**
+
+| Verdict | Điều kiện |
+|---|---|
+| 🔴 | **Gap âm bị kẹp/mất** khi lưu hoặc qua automation overnight (`N23`) · **pill bị chrome che, không bấm được** (`E20`) · Undo/Redo lệch số bước hoặc **Cancel không trả về đúng lúc mở** (`H40`, `H41`) · reorder/Duplicate **đè band** hoặc **trôi vị trí** sau vòng lặp (`N16`, `N17`) — *(riêng các mục ⚠️: chỉ ghi "Query → dev" cho tới khi dev xác nhận giả định)* · Delete container **mất con** không Undo được (`N27`) |
+| 🟡 | Timetable ↔ Week schedule dễ chọn nhầm (`H42`) · toast/Undo chồng nhau khó hiểu (`N18`) · pill hơi chật trên máy nhỏ (`E19`) · tương phản chrome kính thấp trên nền sáng (`E21`) · kéo hơi giật ở Low Power Mode (`E23`) |
+| 🟢 | Chuỗi dựng đầu-cuối giữ đúng bố cục sau khi lưu và mở lại (`H39`) · Undo/Redo/Cancel toàn vẹn sau chuỗi dài · snap hút và thoát mượt · pill luôn bấm được ở mọi mép · **gap âm sống sót qua đêm** |
+
+---
+
+## P3 · 9 — Ghi chú về giới hạn của Phần 3
+
+- **Oracle hình ảnh chưa có cho hầu hết hành vi mới.** Toàn bộ ảnh S03 trong repo là lứa **1.2.17**; chỉ sheet Add 1.2.18 có ảnh (2 ảnh QC chụp 2026-09-28, đã lưu vào repo — batch 6 của `iphone/index.md`; **ảnh không hiện số build**). Chụp baseline trên **build 111 kèm số build** (Q-19) rồi mới dùng ảnh để đối chiếu — nếu chưa, ghi *coverage gap*, đừng suy diễn.
+- **Mọi mục ⚠️ chỉ cho ra "pass theo giả định"** — dựa trên Q-7 / Q-10 / Q-12 (ASSUMPTION do QC chấp nhận, chưa dev xác nhận) hoặc Q-11 (QC trả lời, ngoài spec). Khi dev trả lời khác: các mục ⚠️ tương ứng phải viết lại (danh sách nằm ở [test-analysis-1.2.18 §5.1](../test-plans/wallpaper-editor/component-editor/test-analysis-1.2.18.md) và `test-cases-1.2.18.md` Phụ lục A).
+- **Mục 🔭 không có oracle** — chỉ **ghi nhận quan sát** và chuyển thành `CMP-Q` khi cần, tuyệt đối không tự kết luận đúng/sai (`.claude/rules/testing.md`: không biến assumption thành fact).
+- **`CMP-N23` cần qua đêm** và **`CMP-E15` cần canh giờ/ngày thật** — không rút ngắn bằng đổi giờ hệ thống; nên gộp chung một lần qua đêm với `CMP-H38`.
+- **`CMP-E24` (VoiceOver), `CMP-E21` (đo tương phản)** cần người/công cụ phù hợp, không phải bật rồi mò.
+- **Chưa có exploratory session nào chạy trên 1.2.18** — kết quả phiên đầu nên được đối chiếu với `CMP-Q08`–`Q16` và test-plan mục 10; nhiều khả năng phát sinh mục mới (cấp số tiếp theo `CMP-H43`, `CMP-N29`, `CMP-E25`, `CMP-Q17`).
+- **Checklist "mòn"** (Testing Principle #5): mục nào chạy nhiều lần liên tiếp không ra lỗi mới thì đề xuất xem lại với QC lead — **không tự xoá**. Khi có bug mới liên quan Component Editor trong `bugs/bug-log.md`, thêm mục Error guessing tương ứng.
+- **Hai mục đã xử lý trong test basis, không lặp ở đây:** Q-4 (`Year progress "target date"`, `Quote "chữ / số dòng"`) — descope, GAP; Q-3a/Q-14/Q-15/Q-16 (giá trị số) — đã cố ý bỏ.
+
+---
+---
+
+# Phần 4 — S04: Customize (gộp S02 + S03, TF-117) — ⚠️ NỢ KỸ THUẬT, chưa có checklist
+
+> **Đã release 2026-10-02.** Tính năng gộp Decorate (S02) + Component Editor (S03) thành 1 màn
+> **Customize** (công tắc Layout | Decorate) theo ticket TF-117. Bộ test-analysis/test-plan ISTQB đã có
+> đầy đủ: [test-analysis-tf-117.md](../test-plans/wallpaper-editor/wallpaper-customize/test-analysis-tf-117.md)
+> (171 test condition, risk-based) · [test-plan-tf-117.md](../test-plans/wallpaper-editor/wallpaper-customize/test-plan-tf-117.md).
+> 16 ảnh baseline đầu tiên ở [`iphone/index.md` § 04_customize](../ui/ux/screenshots/iphone/index.md).
+>
+> **Phần 4 (checklist experience-based kiểu Phần 1/Phần 3 ở trên) CHƯA được viết** — ghi nhận ở đây để
+> không quên khi quay lại, **không phải** đã phân tích rồi bỏ qua. Vì tính năng đã release trước khi hoàn
+> tất `test-cases-tf-117.md` (QC tự manual-verify, đạt — xem banner WRAP-UP của `test-analysis-tf-117.md`),
+> Phần 4 chưa có input runnable để dựng charter/checklist theo đúng khuôn mẫu đã dùng cho Phần 1/3.
+>
+> **Khi quay lại (hotfix, bug report thật, hoặc feature kế tiếp đụng tới Customize):** chạy skill
+> `exploratory-checklist` trên wireframe S04 (sau khi wireframe S04 được dựng — xem nợ tương ứng ở
+> [wireframe § Tổng kết flow](../ui/ux/wideframes/14_edit-wallpaper.md#tổng-kết-flow)), đối chiếu thêm
+> Phần 1 (`DEC-*`) và Phần 3 (`CMP-*`) ở trên vì phần lớn hành vi gesture/Undo/Layers của S04 kế thừa gần
+> như nguyên văn từ 2 màn cũ — tránh viết lại từ đầu những gì đã học được.

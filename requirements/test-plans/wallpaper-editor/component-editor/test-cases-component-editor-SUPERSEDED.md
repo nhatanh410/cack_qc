@@ -1,9 +1,12 @@
 # Test Case Specification — Wallpaper Component Editor
 
-> Thiết kế case theo [test-plan-component-editor.md](test-plan-component-editor.md) (ISTQB Foundation) — bám
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.
+> Bộ test này viết từ spec **1.2.17 (103)**, đã được thay thế bởi bộ **1.2.18 (111, rc3)**: [test-cases-1.2.18.md](test-cases-1.2.18.md) (test basis: [QC — Component Editor 1.2.18.md](../../../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2.18.md)). Lý do: spec 1.2.18 đảo ngược một số hành vi (giới hạn kéo tới mép ảnh; chữ xuống dòng lại lúc kéo góc; thẻ nền container khi kéo; sheet Add còn 16 mục, bỏ nhóm Text/Timeline) và thêm hành vi mới (snap dọc, reorder ↑/↓, grabber…) — xem [diff-component-editor-1.2.17-vs-1.2.18.md](../../../specs/wallpaper-editor/component-editor/diff-component-editor-1.2.17-vs-1.2.18.md). Giữ lại để truy vết; các condition/case cũ bị 🔴 làm sai (TC-14, TC-29, TC-66, TC-67 / DRG-01, ADD-01, INT-01) đã được thay trong bộ 1.2.18.
+
+> Thiết kế case theo [test-plan-component-editor-SUPERSEDED.md](test-plan-component-editor-SUPERSEDED.md) (ISTQB Foundation) — bám
 > đúng kỹ thuật đã chọn ở mục 5 test plan (State Transition cho SEL, EP + Checklist cho DRG, Decision Table +
 > BVA cho RSZ/NST, EP + Decision Table cho ADD, Compatibility matrix cho DEV, Checklist-based cho ENT/PRP/LOC/REG/INT).
-> Test basis: [QC — Component Editor 1.2.md](../../specs/wallpaper-component/QC%20—%20Component%20Editor%201.2.md)
+> Test basis: [QC — Component Editor 1.2-SUPERSEDED.md](../../../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2-SUPERSEDED.md)
 > (TestFlight 1.2.17 (103), bảng thiết bị/OS đã sửa khớp PDF gốc).
 
 ## Quy ước
@@ -12,7 +15,7 @@
 - **🔭 Exploratory** — không áp dụng cho bộ case này: test basis 1.2.17 không tự khai phần nào là thăm dò thuần
   (khác `test-plan-ios26-27.md`). Toàn bộ case dưới đây có kỳ vọng cụ thể.
 - **⚠️ Phụ thuộc gap mở** — case có thể đổi kết quả mong đợi sau khi dev trả lời 4 câu hỏi còn mở ở
-  [test-plan mục 10](test-plan-component-editor.md#10-gap-cần-làm-rõ-trước-khi-execute) (câu #2–#5). Chạy và ghi
+  [test-plan mục 10](test-plan-component-editor-SUPERSEDED.md#10-gap-cần-làm-rõ-trước-khi-execute) (câu #2–#5). Chạy và ghi
   nhận thực tế, **không tự suy đoán câu trả lời** — chỉ 4 case dưới đây bị đánh dấu (`RSZ-04`, `RSZ-08`, `ADD-03`,
   `NST-03`).
 - **Ảnh bằng chứng khi chạy case:** lưu vào [`screenshots/`](screenshots/) (thư mục con theo mã nhóm: ENT/DEV/
@@ -217,7 +220,7 @@
 ## 13 · Câu hỏi còn treo — ảnh hưởng trực tiếp 4 case đã đánh ⚠️
 
 Không chặn việc chạy toàn bộ bộ case còn lại. 4 case sau **chạy được ngay** nhưng kết quả mong đợi ghi ở dạng
-"quan sát/ghi lại làm bằng chứng", chưa phải PASS/FAIL cố định — chờ dev trả lời [test-plan mục 10](test-plan-component-editor.md#10-gap-cần-làm-rõ-trước-khi-execute)
+"quan sát/ghi lại làm bằng chứng", chưa phải PASS/FAIL cố định — chờ dev trả lời [test-plan mục 10](test-plan-component-editor-SUPERSEDED.md#10-gap-cần-làm-rõ-trước-khi-execute)
 câu #2–#5 để chốt lại thành kỳ vọng cụ thể:
 
 - `RSZ-04` — chờ câu #2 (bù trừ bề rộng Row 3+ con)
