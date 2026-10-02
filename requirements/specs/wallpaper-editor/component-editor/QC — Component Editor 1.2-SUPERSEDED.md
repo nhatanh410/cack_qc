@@ -1,5 +1,8 @@
 ## QC — Component Editor 1.2.17
 
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.
+> Đã được thay thế bởi [QC — Component Editor 1.2.18.md](QC%20—%20Component%20Editor%201.2.18.md) (TestFlight 1.2.18 (111, rc3), 2026-09-28). Bản 1.2.18 đảo ngược một số "hành vi cố ý" của bản này (chữ xuống dòng lại lúc kéo góc; thẻ nền container lúc kéo), thêm snap dọc, đổi thứ tự ↑/↓, kéo tới mép ảnh, và mở rộng bảng thuộc tính — xem bảng D-1…D-12 ở cuối bản 1.2.18. Giữ lại để truy vết; bộ test plan/analysis/case hiện tại (`requirements/test-plans/component-editor/`) vẫn được viết từ bản này cho tới khi chạy lại pipeline với slug `1.2.18`.
+
 Sep 24, 2026 · @Someone
 
 > *Ghi chú 2026-09-24: bảng "Máy / Bắt buộc / Lý do" và tiêu đề "Hành vi cố ý" bên dưới đã được sửa lại theo đúng [bản PDF gốc](QC%20—%20Component%20Editor%201.2.17.pdf) — bản markdown trước đó bị vỡ định dạng khi copy (bảng dính chữ thành 1 dòng, tiêu đề mất khoảng trắng). Nội dung không đổi, chỉ sửa format.*

@@ -1,13 +1,13 @@
 # Screenshot evidence — Wallpaper Component Editor
 
-Ảnh chụp màn hình thật khi thực thi từng test case trong [test-cases-component-editor.md](../test-cases-component-editor.md),
+Ảnh chụp màn hình thật khi thực thi từng test case trong [test-cases-component-editor-SUPERSEDED.md](../test-cases-component-editor-SUPERSEDED.md),
 dùng để đối chiếu với cột "Kết quả mong đợi" đã viết sẵn — **không phải** bộ ảnh UX/wireframe, **không** theo
-rule [`screenshot-naming.md`](../../../../.claude/rules/screenshot-naming.md) (rule đó dành cho
+rule [`screenshot-naming.md`](../../../../../.claude/rules/screenshot-naming.md) (rule đó dành cho
 `requirements/ui/ux/screenshots/`, mục đích dựng wireframe/flow, khác mục đích ở đây).
 
 ## Quy ước đặt tên
 
-**Thư mục con = mã nhóm case** (khớp đúng tiêu đề mục trong test-cases-component-editor.md): `ENT`, `DEV`,
+**Thư mục con = mã nhóm case** (khớp đúng tiêu đề mục trong test-cases-component-editor-SUPERSEDED.md): `ENT`, `DEV`,
 `SEL`, `DRG`, `RSZ`, `ADD`, `NST`, `PRP`, `LOC`, `REG`, `INT`. **Tên file = ID case + hậu tố mô tả trạng thái:**
 
 ```
@@ -27,7 +27,7 @@ screenshots/REG/REG-08-morning.png    ← wallpaper thật sáng hôm sau, sau a
 
 ## Log kết quả
 
-> Ghi lại đây mỗi khi thêm ảnh — không bắt buộc sửa lại bảng case chính trong `test-cases-component-editor.md`,
+> Ghi lại đây mỗi khi thêm ảnh — không bắt buộc sửa lại bảng case chính trong `test-cases-component-editor-SUPERSEDED.md`,
 > bảng dưới đây là nơi track thực thi thật.
 
 | File | TC tương ứng | Ngày chụp | Kết quả | Ghi chú |

@@ -41,8 +41,10 @@ theo dõi bug — dùng làm đầu vào cho PRD, spec kỹ thuật, và các ph
 │   ├── test-plans/            ← test plan ISTQB, 1 folder / feature — mỗi folder đặt tên trùng với
 │   │   │                         folder cùng feature trong specs/ và test-cases/
 │   │   ├── ai-assistant/
-│   │   ├── component-editor/
-│   │   ├── decoration-inkai/
+│   │   ├── wallpaper-editor/             ← bundle riêng, xem mục dưới (gộp component-editor + decoration cũ)
+│   │   │   ├── component-editor/         ← phiên bản trước TF-117, giữ để ref (README banner trong folder)
+│   │   │   ├── wallpaper-decoration/     ← trước đây `decoration-inkai/`, cùng lý do trên
+│   │   │   └── wallpaper-customize/      ← bộ hiện hành, sau khi 2 editor gộp thành màn Customize
 │   │   ├── ink-identity-sync-flow/       ← bundle riêng, xem mục dưới
 │   │   ├── login-and-calendar-sharing/   ← bundle riêng, xem mục dưới
 │   │   ├── matrix-guide-l10n/
@@ -81,6 +83,14 @@ là **2 thế hệ tài liệu độc lập, không thay thế nhau** — thế 
 shift-left trước khi feature build, thế hệ sau viết từ kiến trúc backend thật đã ship và **chủ động không**
 đối chiếu thế hệ trước. Đừng gộp 2 bundle này khi thêm tài liệu mới — thêm vào folder tương ứng, và hỏi
 dev/PM nếu chưa rõ thế hệ nào còn hiệu lực cho phần bạn đang viết.
+
+**Lưu ý khi thêm tài liệu cho `wallpaper-editor/`:** đây là 1 folder cha gộp **3 thế hệ** của cùng 1 màn
+hình sửa wallpaper — `component-editor/` (nút Components, trước TF-117) và `wallpaper-decoration/` (chip
+Decorate, trước TF-117, tên cũ `decoration-inkai`) là **tài liệu cũ, chỉ dùng để tham khảo** (method, số
+liệu, bug đã fix) kể từ khi dev gộp 2 editor thành 1 màn **Customize** (Layout | Decorate) ở TF-117; mỗi
+folder cũ có README banner ghi rõ điều này. Bộ tài liệu **đang chạy** cho màn Customize nằm ở
+`wallpaper-customize/` — thêm test-analysis/test-plan/test-case mới cho spec TF-117 (và các đợt sau) vào
+đây, **không** viết tiếp vào 2 folder cũ.
 
 ### Bundle riêng cho feature dạng remote-config/content-layer
 

@@ -114,7 +114,7 @@ và [`requirements/specs/phase-2-feedback/phase-2-feedback.md`](../../../../spec
 
 ## 14_edit-wallpaper — editor soạn/trang trí wallpaper (Decorate)
 
-> Nguồn: [qc-wallpaper-decoration.md](../../../../specs/wallpaper-decoration/qc-wallpaper-decoration.md), build 1.2.15 (56). **2 screen-no riêng biệt** — `01_wallpaper-editor` là màn hình chỉnh wallpaper đã có từ trước (chứa nút "Trang trí" mới), `02_decorate` là canvas trang trí thực sự (mới hoàn toàn), vào từ nút Trang trí ở màn 01. Đã chụp **cả 2 chiều** — khớp yêu cầu bắt buộc của R8 (bug xoay ngang làm lệch sticker, đã sửa).
+> Nguồn: [qc-wallpaper-decoration.md](../../../../specs/wallpaper-editor/wallpaper-decoration/qc-wallpaper-decoration.md), build 1.2.15 (56). **2 screen-no riêng biệt** — `01_wallpaper-editor` là màn hình chỉnh wallpaper đã có từ trước (chứa nút "Trang trí" mới), `02_decorate` là canvas trang trí thực sự (mới hoàn toàn), vào từ nút Trang trí ở màn 01. Đã chụp **cả 2 chiều** — khớp yêu cầu bắt buộc của R8 (bug xoay ngang làm lệch sticker, đã sửa).
 
 | File | Gốc | Mô tả |
 |------|-----|-------|

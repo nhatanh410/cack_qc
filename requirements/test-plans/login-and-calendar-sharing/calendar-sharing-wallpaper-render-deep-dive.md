@@ -6,7 +6,7 @@
 > nhận qua share để **render ra wallpaper** trên Lock Screen của Receiver.
 > **Test basis:** không có tài liệu sharing nào đề cập giai đoạn này (đã xác nhận ở
 > [calendar-sharing-event-interaction-deep-dive.md](calendar-sharing-event-interaction-deep-dive.md) mục 1.7).
-> File này đọc thêm [wallpaper-component-editor-prd.md](../../specs/wallpaper-component/wallpaper-component-editor-prd.md)
+> File này đọc thêm [wallpaper-component-editor-prd.md](../../specs/wallpaper-editor/component-editor/wallpaper-component-editor-prd.md)
 > (spec renderer/editor wallpaper) để xác nhận: tài liệu đó **cũng không** nhắc calendar nào cấp dữ liệu cho
 > renderer — chỉ nói về layout/style của "band" (`monthGrid`, `weekEvents`, `todayList`, `hourTimeline`…).
 > **Kết luận nền tảng:** đây là **pipeline chưa từng được thiết kế ở tầm sản phẩm** (không phải chỉ thiếu vài

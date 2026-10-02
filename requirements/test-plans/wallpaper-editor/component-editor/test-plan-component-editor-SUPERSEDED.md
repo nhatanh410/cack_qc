@@ -1,15 +1,18 @@
 # Test Plan — Wallpaper Component Editor (TestFlight 1.2.17)
 
-> **Test basis:** [QC — Component Editor 1.2.md](../../specs/wallpaper-component/QC%20—%20Component%20Editor%201.2.md) — bàn giao QC nội bộ, TestFlight **1.2.17 (103)**, Sep 24 2026, tác giả `@Someone`. Bảng thiết bị/OS đã sửa khớp [bản PDF gốc](../../specs/wallpaper-component/QC%20—%20Component%20Editor%201.2.17.pdf) (xem test-analysis TB-1) — dùng bản markdown hiện tại, không dùng lại bản cũ có bảng vỡ định dạng.
-> **Test analysis:** [test-analysis-component-editor.md](test-analysis-component-editor.md) — 73 test condition đã ưu tiên hoá (27 P1 · 30 P2 · 15 P3 · 1 TBD), dùng thẳng cho mục 2 và mục 6 dưới đây, không phân tích lại từ đầu. TC-71/TC-72/TC-73 bổ sung 2026-09-24 (câu hỏi #6, #7, #8 mục 10 đã có trả lời từ dev — **TC-73 là case quan trọng nhất: bố cục có sống sót qua automation Shortcut overnight không**).
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.
+> Bộ test này viết từ spec **1.2.17 (103)**, đã được thay thế bởi bộ **1.2.18 (111, rc3)**: [test-plan-1.2.18.md](test-plan-1.2.18.md) (test basis: [QC — Component Editor 1.2.18.md](../../../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2.18.md)). Lý do: spec 1.2.18 đảo ngược một số hành vi (giới hạn kéo tới mép ảnh; chữ xuống dòng lại lúc kéo góc; thẻ nền container khi kéo; sheet Add còn 16 mục, bỏ nhóm Text/Timeline) và thêm hành vi mới (snap dọc, reorder ↑/↓, grabber…) — xem [diff-component-editor-1.2.17-vs-1.2.18.md](../../../specs/wallpaper-editor/component-editor/diff-component-editor-1.2.17-vs-1.2.18.md). Giữ lại để truy vết; các condition/case cũ bị 🔴 làm sai (TC-14, TC-29, TC-66, TC-67 / DRG-01, ADD-01, INT-01) đã được thay trong bộ 1.2.18.
+
+> **Test basis:** [QC — Component Editor 1.2-SUPERSEDED.md](../../../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2-SUPERSEDED.md) — bàn giao QC nội bộ, TestFlight **1.2.17 (103)**, Sep 24 2026, tác giả `@Someone`. Bảng thiết bị/OS đã sửa khớp [bản PDF gốc](../../../specs/wallpaper-editor/component-editor/QC%20—%20Component%20Editor%201.2.17.pdf) (xem test-analysis TB-1) — dùng bản markdown hiện tại, không dùng lại bản cũ có bảng vỡ định dạng.
+> **Test analysis:** [test-analysis-component-editor-SUPERSEDED.md](test-analysis-component-editor-SUPERSEDED.md) — 73 test condition đã ưu tiên hoá (27 P1 · 30 P2 · 15 P3 · 1 TBD), dùng thẳng cho mục 2 và mục 6 dưới đây, không phân tích lại từ đầu. TC-71/TC-72/TC-73 bổ sung 2026-09-24 (câu hỏi #6, #7, #8 mục 10 đã có trả lời từ dev — **TC-73 là case quan trọng nhất: bố cục có sống sót qua automation Shortcut overnight không**).
 > **Chuẩn:** ISTQB Foundation Level v4.0.1 (test basis → test object → kỹ thuật thiết kế → rủi ro → entry/exit)
-> **Test case cụ thể:** [test-cases-component-editor.md](test-cases-component-editor.md) — sẽ sinh bởi skill test-case sau khi test plan này được duyệt.
+> **Test case cụ thể:** [test-cases-component-editor-SUPERSEDED.md](test-cases-component-editor-SUPERSEDED.md) — sẽ sinh bởi skill test-case sau khi test plan này được duyệt.
 > **Đối chiếu tài liệu đã có:**
-> [wideframe 14_edit-wallpaper.md § S03](../../ui/ux/wideframes/14_edit-wallpaper.md#s03--component-editor--8-state-có-ảnh-bổ-sung-2026-09-24) (vừa dựng 2026-09-24 từ 8 screenshot thực tế),
-> [screenshots iphone/index.md § 03_component-editor](../../ui/ux/screenshots/iphone/index.md),
-> [wallpaper-component-editor-prd.md](../../specs/wallpaper-component/wallpaper-component-editor-prd.md) (PRD gốc, **Draft**, đã lỗi thời một phần — xem mục 1),
-> [wallpaper-component-editor-wireframe.html](../../specs/wallpaper-component/wallpaper-component-editor-wireframe.html) (đề xuất UI, **Draft**),
-> [exploratory/14_edit-wallpaper.md](../../exploratory/14_edit-wallpaper.md) (checklist hiện có — **chỉ cover S01/S02 Decorate, chưa có case nào cho S03**),
+> [wideframe 14_edit-wallpaper.md § S03](../../../ui/ux/wideframes/14_edit-wallpaper.md#s03--component-editor--8-state-có-ảnh-bổ-sung-2026-09-24) (vừa dựng 2026-09-24 từ 8 screenshot thực tế),
+> [screenshots iphone/index.md § 03_component-editor](../../../ui/ux/screenshots/iphone/index.md),
+> [wallpaper-component-editor-prd.md](../../../specs/wallpaper-editor/component-editor/wallpaper-component-editor-prd.md) (PRD gốc, **Draft**, đã lỗi thời một phần — xem mục 1),
+> [wallpaper-component-editor-wireframe.html](../../../specs/wallpaper-editor/component-editor/wallpaper-component-editor-wireframe.html) (đề xuất UI, **Draft**),
+> [exploratory/14_edit-wallpaper.md](../../../exploratory/14_edit-wallpaper.md) (checklist hiện có — **chỉ cover S01/S02 Decorate, chưa có case nào cho S03**),
 > `bugs/bug-log.md` (đã rà soát — **không có bug nào liên quan trực tiếp** tới wallpaper-component/component-editor).
 > **Ngày lập:** 2026-09-24 · **Người lập:** QC
 
@@ -55,7 +58,7 @@
 
 ### 3.1 Ảnh hưởng chéo tới flow khác
 
-> Đối chiếu [screenshot-naming.md §7](../../../.claude/rules/screenshot-naming.md#7-flow-map--ink-calendar-ios).
+> Đối chiếu [screenshot-naming.md §7](../../../../.claude/rules/screenshot-naming.md#7-flow-map--ink-calendar-ios).
 
 | Flow | Ảnh hưởng? | Lý do |
 |---|---|---|
@@ -218,7 +221,7 @@ Mỗi dòng regression (dòng 160–170) = 1 case độc lập, nhưng **toàn b
 ## 8. Entry criteria
 
 - Build TestFlight **1.2.17 (103)** cài được trên máy test, đã xác nhận số hiệu khớp đúng — nếu không cài được đúng build này, dừng và báo lại trước khi dùng build khác thay thế.
-- Testware sẵn sàng: test basis (đã sửa khớp PDF), [test-analysis-component-editor.md](test-analysis-component-editor.md), wireframe S03 — cả 3 đã có tại thời điểm lập test plan này.
+- Testware sẵn sàng: test basis (đã sửa khớp PDF), [test-analysis-component-editor-SUPERSEDED.md](test-analysis-component-editor-SUPERSEDED.md), wireframe S03 — cả 3 đã có tại thời điểm lập test plan này.
 - Tài khoản test có sẵn tối thiểu 1 template dạng stack.
 - **Smoke test ban đầu phải pass:** TC-01 (nút Components hiện đúng) và TC-05 (mở được S03, chọn được 1 thành phần) — nếu smoke fail, dừng lại, không tiếp tục các mục khác của test plan.
 
@@ -240,7 +243,7 @@ Mỗi dòng regression (dòng 160–170) = 1 case độc lập, nhưng **toàn b
 
 ## 10. Gap cần làm rõ trước khi execute
 
-> Câu #1–#5 kế thừa nguyên trạng từ [test-analysis mục 4](test-analysis-component-editor.md#4-câu-hỏi-cần-làm-rõ-trước-khi-lập-test-plan) — câu #1 đã giải quyết, giữ lại để tra cứu nhanh không cần mở file khác. Câu #6–#8 mới phát hiện khi lập test plan này.
+> Câu #1–#5 kế thừa nguyên trạng từ [test-analysis mục 4](test-analysis-component-editor-SUPERSEDED.md#4-câu-hỏi-cần-làm-rõ-trước-khi-lập-test-plan) — câu #1 đã giải quyết, giữ lại để tra cứu nhanh không cần mở file khác. Câu #6–#8 mới phát hiện khi lập test plan này.
 
 1. ~~Bảng thiết bị/OS bị vỡ định dạng~~ — **✅ Đã giải quyết** (đối chiếu PDF gốc). Không ảnh hưởng scope nữa.
 2. **[Ảnh hưởng RSZ-DT4 / TC-27]** Trong 1 Row có 3+ thành phần con, kéo góc đổi bề rộng 1 phần tử thì các phần tử còn lại bù trừ thế nào?
