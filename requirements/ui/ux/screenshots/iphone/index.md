@@ -3,7 +3,7 @@
 Bảng tra tên file mới ↔ tên gốc từ iOS ↔ mô tả màn hình.
 Quy tắc đặt tên: [.claude/rules/screenshot-naming.md](../../../../../.claude/rules/screenshot-naming.md)
 
-Tổng: **111 screenshot** / 11 flow đã build. iPhone (1290×2796 trừ khi ghi chú khác).
+Tổng: **114 screenshot** / 11 flow đã build. iPhone (1290×2796 trừ khi ghi chú khác).
 
 ## Lịch sử chụp
 
@@ -16,6 +16,7 @@ Tổng: **111 screenshot** / 11 flow đã build. iPhone (1290×2796 trừ khi gh
 | 5 | 2026-09-24 | Ink Dev, nhánh `feat/component-editor`, build/commit chưa xác nhận | 12 ảnh — screen-no mới `03_component-editor` (+ 1 state entry trên `01_wallpaper-editor`) cho tính năng "Wallpaper Component Editor" đang build, xem [wallpaper-component-editor-prd.md](../../../../specs/wallpaper-editor/component-editor/wallpaper-component-editor-prd.md). Chụp ngoài quy trình batch (file gốc dạng `Screenshot ... .png`, không phải `IMG_xxxx`). Kích thước chưa xác nhận qua công cụ. |
 | 6 | 2026-09-28 | **Build chưa xác nhận qua công cụ** — ảnh không hiện số build; nội dung khớp spec 1.2.18 (111, rc3) nên nhiều khả năng cùng lứa, **chưa có bằng chứng** (xem `answers-1.2.18.md` mục Q-21, Q-19) | 2 ảnh — `03_component-editor` `add-component-v2` + `add-component-scrolled-v2`: sheet **Add component** bản **1.2.18** (16 mục, 5 nhóm, **không** có nhóm Text, **không** có Timeline). QC gửi trực tiếp (dán vào chat), 1290×2796. Còn thiếu ảnh baseline khác cho 1.2.18 — xem Coverage matrix Phần 3 của [`exploratory/14_edit-wallpaper.md`](../../../../exploratory/14_edit-wallpaper.md). |
 | 7 | 2026-09-29 | **TestFlight, build/commit chưa xác nhận** — ảnh không hiện số build; nội dung khớp spec TF-117 (`component-editor-specs-dev-change(TF-117).md`) nên nhiều khả năng cùng lứa, **chưa có bằng chứng qua công cụ** | 17 ảnh — screen-no mới **`04_customize`** (16 ảnh) + 1 state mới trên `01_wallpaper-editor` (`customize-entry`), cho màn **Customize** gộp `02_decorate` + `03_component-editor` theo TF-117. QC thả trực tiếp vào repo (file gốc `IMG_14xx.PNG` + 1 `Screenshot ... .png`), 1290×2796. Đây là **bằng chứng ảnh đầu tiên** cho màn Customize — trước đó `test-plan-tf-117.md` (Entry criterion E2) ghi nhận **chưa có baseline nào**. Còn thiếu nhiều state so với spec TF-117 (xem ghi chú cuối mục `04_customize`). |
+| 8 | 2026-10-02 | TestFlight **1.2.19** | 3 ảnh — sheet **Add component** bản 1.2.19, state `add-component-v2` / `add-component-scrolled-v2` / `add-component-scrolled-v3` trên `04_customize` (23 mục, 6 nhóm — nhóm **Fitness** mới xuất hiện lần đầu). Khớp 6 component mới mô tả ở [stack-components.md](../../../../specs/wallpaper-editor/wallpaper-customize/stack-components.md). QC dán trực tiếp vào chat, không có tên file gốc, 1290×2796. |
 
 > Khi chụp batch mới cho màn hình **đã có ảnh**: giữ nguyên `screen-no`, chỉ đổi `state` nếu UI đổi
 > trạng thái, hoặc thêm hậu tố `-v2` nếu cùng `state` nhưng nội dung/layout khác (rule §5.3). Ảnh cũ
@@ -247,6 +248,19 @@ Xem [phase-2-feedback.md § P6](../../../../specs/phase-2-feedback/phase-2-feedb
 | `14_edit-wallpaper_04_customize_layers.png` | `IMG_1482 2.PNG` | Sheet **Layers** — nhóm **LAYOUT** (Week schedule, Countdown, mũi tên ↓ ở tiêu đề nhóm), nhóm **DECORATE** (1 dòng "Decorate", mũi tên ↑ ở tiêu đề), nhóm **BACKGROUND** cuối panel (dải ảnh nền + nút **+**, ảnh "Default" đang chọn) và thanh **Darken** — khớp đúng cấu trúc 3 nhóm ở §8.2 |
 | `14_edit-wallpaper_04_customize_coach-step-2-decorate.png` | `IMG_1485 2.PNG` | Coach tour bước 2 **riêng cho Decorate** (lần đầu chuyển sang Decorate, không phải lần đầu mở màn) — tiêu đề **"Your toolbar"**, mô tả "Text, emoji, photos and a pen. The top two switches preview the clock and calendar.", rail Decorate khoanh sáng (Draw, Aa, Emoji, Photo, Show calendar, Grid) — khớp §2 "sang Decorate lần đầu thì có riêng bước rail Decorate" |
 | `14_edit-wallpaper_04_customize_decorate-mode.png` | `IMG_1486 2.PNG` | Canvas ở chế độ **Decorate** — công tắc đáy chuyển sang "Decorate" (tô đậm), rail đổi thành Draw/Aa/Emoji/Photo/Show calendar/Grid, nền tối + minh hoạ trang trí sẵn có |
+| `14_edit-wallpaper_04_customize_add-component-v2.png` | *(dán trực tiếp, không có tên gốc — batch 8, 2026-10-02, TestFlight **1.2.19**, 1290×2796)* | **Bản 1.2.19 — thay cho `add-component.png`/`add-component-scrolled.png` của batch 7 (TF-117), sheet đã đổi nội dung đáng kể → `-v2` (rule §5.3).** Đầu sheet **Add component** — nhóm **CALENDAR** 7 mục: Daily page, Month grid, **Month heatmap** (mới, icon trống trong ảnh), Mini month, Lunar calendar, Timetable, Week schedule; đầu nhóm **EVENTS**: Today at a glance, Today's events, **Agenda**, **Event tickets**, Hour timeline (cắt ở mép dưới). 5/6 component mới của [stack-components.md](../../../../specs/wallpaper-editor/wallpaper-customize/stack-components.md) lộ trong ảnh này |
+| `14_edit-wallpaper_04_customize_add-component-scrolled-v2.png` | *(dán trực tiếp, không có tên gốc — batch 8, cùng nguồn)* | Cuộn tiếp — cuối **EVENTS** (Agenda, Event tickets, Hour timeline, Week events, Activity grid), nhóm **FITNESS** mới xuất hiện lần đầu (**Workout**), **TASKS** (Reminders, Priority matrix), đầu **PROGRESS** (Milestones, Year progress, Month progress, Countdown cắt ở mép dưới) |
+| `14_edit-wallpaper_04_customize_add-component-scrolled-v3.png` | *(dán trực tiếp, không có tên gốc — batch 8, cùng nguồn)* | Cuối sheet — **FITNESS** (Workout), **TASKS** (Reminders, Priority matrix), **PROGRESS** đủ 4 mục (**Milestones**, Year progress, Month progress, Countdown), **LAYOUT** (Row, Column) |
+
+> 🆕 **Batch 8 xác nhận đủ 6/6 component mới** mô tả trong `stack-components.md` (Agenda, Event tickets,
+> Workout, Daily page, Today at a glance, Milestones) — tên khớp chính xác chữ, không lệch. Sheet tăng từ
+> 16 → **23 mục**, thêm nhóm **Fitness** chưa từng có ở batch 6/7.
+>
+> ⚠️ **Chưa đối chiếu được:** `Month heatmap` xuất hiện như **component độc lập** trong nhóm Calendar,
+> nhưng mục 8 của `stack-components.md` mô tả "Heat map" là một **style/knob của Week events**
+> (`Style: Bars / Dots / Heat map`), không phải component riêng. Chưa rõ đây là 2 tính năng khác nhau hay
+> tài liệu ghi nhầm chỗ — **cần hỏi lại dev**, không tự suy diễn. Icon của `Month heatmap` cũng đang trống
+> trong ảnh, có thể UI chưa xong.
 
 > ⏳ **Còn thiếu rất nhiều so với spec TF-117** (chưa chụp, không chặn nhưng nên bổ sung sớm — đây mới
 > là 16/~40+ state có thể liệt kê từ spec): chọn/xoá 1 thành phần (pill Edit/Delete, §3), kéo đổi vị trí
