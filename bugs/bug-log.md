@@ -291,13 +291,14 @@ Intent nền (Shortcuts automation, thường lúc máy khoá, không UI):
 ### Steps to reproduce
 
 1. Set the app language to Vietnamese.
-2. ❓ Open "Bộ sưu tập của bạn" (Your collection) — entry point not recorded yet.
-3. Select the "Màn hình k..." (Lockscreen) tab and look at the tab bar above the list.
-4. Set the app language to English, open "Your collection" again, select the "Lockscreen" tab and look again.
+2. Set up a template as the wallpaper, so that the "Bộ sưu tập của bạn" (Your collection) section is shown.
+3. Open the "Bộ sưu tập của bạn" (Your collection) screen.
+4. Select the "Màn hình k..." (Lockscreen) tab and look at the tab bar above the list.
+5. Set the app language to English, reopen "Your collection", select the "Lockscreen" tab and look again.
 
 ### Expected
 
-❓ No spec/design — needs PM/design confirmation. Suggestion: tabs have clear spacing and titles are not truncated.
+The tabs have clear spacing between them and their titles are not truncated, on smaller-screen devices (non-Pro Max iPhones) as well. Check with both a short and a long app language.
 
 ### Actual
 
@@ -321,6 +322,7 @@ Frequency: ❓ not retested.
 ### To verify
 
 - [ ] Build, install type, device model and iOS version.
-- [ ] Entry point to the *Your collection* screen.
+- [x] Entry point to the *Your collection* screen — provided by the user 2026-10-11 (set up a template as wallpaper → the section appears).
 - [ ] Do the "All" and "Widget" tabs also stick together?
-- [ ] Spec/design for tab spacing and handling of long tab titles.
+- [x] Expected result — provided by the QC owner 2026-10-11 (no formal spec/design; still worth PM/design confirmation).
+- [ ] Repro on a non-Pro Max iPhone and with another long language (device of the original screenshots is unknown).
