@@ -16,6 +16,7 @@
 | BUG-002 | 2026-08-14 | 04_discover | collection | default | Medium | Lockscreen dạng Note hiển thị tên `(Untitled)` trong Your collection | Open |
 | BUG-003 | 2026-09-15 | 08_paywall | plan-list | default | Medium | `discount: 1` là giá trị invalid (`discount` phải nhỏ hơn 1) nhưng pill "SAVE 100%" vẫn hiện — thiếu 1 nhánh validate | Open |
 | BUG-004 | 2026-09-16 | 10_lockscreen | lock-screen | default | High | Event tạo trên Google Calendar không xuất hiện trên wallpaper hôm sau dù Google Calendar sync đang bật | Need info |
+| BUG-005 | 2026-10-09 | 04_discover | collection | default | Low | Lockscreen and Live Activity tab titles are stuck together on Your collection, in both vi and en (vi tab title truncated to "Màn hình k...") | Need info |
 
 ---
 
@@ -268,3 +269,58 @@ Intent nền (Shortcuts automation, thường lúc máy khoá, không UI):
       xuất hiện không? (test trực tiếp hypothesis #1).
 - [ ] Máy có bị khởi động lại (update iOS, hết pin...) đêm trước khi phát hiện bug không? (test hypothesis #3).
 - [ ] Thu thập screenshot: wallpaper thực tế + tab Calendar trong Ink + màn `Settings → Google Calendar`.
+
+---
+
+## BUG-005 · Lockscreen and Live Activity tab titles are stuck together on Your collection
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-10-09 |
+| **Flow** | `04_discover` — *Your collection* screen ("Bộ sưu tập của bạn") |
+| **Screen** | `collection` |
+| **State** | `default` (Lockscreen tab selected) |
+| **Severity** | Low — UI / cosmetic, no functional impact |
+| **Status** | Need info |
+| **Device / Build** | ❓ not recorded — needs confirmation (screenshots are from an iPhone with Dynamic Island; model, iOS and build unknown) |
+| **App language** | Vietnamese and English (reproduces in both) |
+| **GitHub issue** | ❓ not created yet |
+
+**Issue title:** `[QC] [Your collection] Lockscreen and Live Activity tab titles are stuck together, in both Vietnamese and English`
+
+### Steps to reproduce
+
+1. Set the app language to Vietnamese.
+2. ❓ Open "Bộ sưu tập của bạn" (Your collection) — entry point not recorded yet.
+3. Select the "Màn hình k..." (Lockscreen) tab and look at the tab bar above the list.
+4. Set the app language to English, open "Your collection" again, select the "Lockscreen" tab and look again.
+
+### Expected
+
+❓ No spec/design — needs PM/design confirmation. Suggestion: tabs have clear spacing and titles are not truncated.
+
+### Actual
+
+- Vietnamese: the selected "Màn hình k..." tab sits right against the "Live Activity" tab with almost no gap. The tab title is truncated to "Màn hình k...".
+- English: the selected "Lockscreen" tab is also right against "Live Activity" — same stuck-together layout.
+
+Frequency: ❓ not retested.
+
+### Evidence
+
+2 screenshots provided in the 2026-10-09 session: Vietnamese (15:31, "Bộ sưu tập của bạn", tab "Màn hình k...") and English (15:26, "Your collection", tab "Lockscreen").
+
+> ⚠️ **Images are not saved in the repo yet.** Export and place them in [`requirements/ui/ux/screenshots/iphone/04_discover/`](../requirements/ui/ux/screenshots/iphone/04_discover/) following the naming rule, then update `index.md`.
+
+### Notes
+
+- "Title" is interpreted as the tab labels (per the screenshots), not the screen title — needs confirmation.
+- "Stuck together" and "Vietnamese tab title truncated" are kept in one issue because both are on the same tab bar; split if dev finds they are two separate defects.
+- Same screen as [BUG-002](#bug-002--lockscreen-dạng-note-hiển-thị-tên-untitled-trong-your-collection).
+
+### To verify
+
+- [ ] Build, install type, device model and iOS version.
+- [ ] Entry point to the *Your collection* screen.
+- [ ] Do the "All" and "Widget" tabs also stick together?
+- [ ] Spec/design for tab spacing and handling of long tab titles.
