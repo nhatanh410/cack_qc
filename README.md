@@ -22,6 +22,8 @@ theo dõi bug — dùng làm đầu vào cho PRD, spec kỹ thuật, và các ph
 | Tra cứu quyền hệ thống app cần | [`references/permissions-matrix.md`](references/permissions-matrix.md) |
 | Hiểu rủi ro xuyên suốt sản phẩm + mindset QC | [`references/exploratory-references.md`](references/exploratory-references.md) |
 | Xem bug đang mở | [`bugs/bug-log.md`](bugs/bug-log.md) |
+| Đẩy bug lên GitHub issue của repo source / đồng bộ trạng thái về bug log | [`docs/guides/bug-issue-automation-setup.md`](docs/guides/bug-issue-automation-setup.md) — skill `github-issue-bug` + `scripts/` |
+| Dựng lại bộ khung QC này cho project khác | [`PORTING-GUIDE.md`](PORTING-GUIDE.md) |
 | Đặt tên file khi thêm screenshot mới | [`.claude/rules/screenshot-naming.md`](.claude/rules/screenshot-naming.md) |
 
 ---
@@ -37,10 +39,13 @@ theo dõi bug — dùng làm đầu vào cho PRD, spec kỹ thuật, và các ph
 │   │   │   └── ipad/          ← cùng flow-no với iPhone, để đối chiếu song song
 │   │   ├── wideframes/        ← wireframe dựng từ screenshot, 1 file / flow
 │   │   └── end-user-perspectives/  (chưa dùng)
-│   ├── exploratory/           ← checklist khám phá, 1 file / flow, ID dạng `<PREFIX>-H01`
+│   ├── exploratory/           ← checklist khám phá, 1 file / flow, ID dạng `<PREFIX>-H01`; thêm
+│   │                             `release-<version>-checklist.md` (checklist chạy nhanh theo bản release)
 │   ├── test-plans/            ← test plan ISTQB, 1 folder / feature — mỗi folder đặt tên trùng với
 │   │   │                         folder cùng feature trong specs/ và test-cases/
 │   │   ├── ai-assistant/
+│   │   ├── ai-photo-pro-picks-setup/     ← bộ ISTQB đủ 3 file (slug `pr317`) + screenshots/
+│   │   ├── share-template-link/          ← bộ ISTQB đủ 3 file (slug `1-2-19`) + answers dev + screenshots/
 │   │   ├── wallpaper-editor/             ← bundle riêng, xem mục dưới (gộp component-editor + decoration cũ)
 │   │   │   ├── component-editor/         ← phiên bản trước TF-117, giữ để ref (README banner trong folder)
 │   │   │   ├── wallpaper-decoration/     ← trước đây `decoration-inkai/`, cùng lý do trên
@@ -53,7 +58,11 @@ theo dõi bug — dùng làm đầu vào cho PRD, spec kỹ thuật, và các ph
 │   │   ├── shortcuts/
 │   │   └── uiux-9sep/
 │   ├── specs/                 ← change note / PRD / runbook gốc từ dev (input, không phải QA tự viết)
-│   │                             — cùng bộ folder theo feature như test-plans/ ở trên
+│   │                             — cùng bộ folder theo feature như test-plans/ ở trên. Một số spec chỉ là
+│   │                             checklist QC chạy nhanh theo bản release (không có test-plan/test-case đi kèm):
+│   │                             file lẻ `ink-1.2.20-vi.md`, `paywall-components-decorate-shortcut-vi.md`…,
+│   │                             folder `five-languages-pro-gating/`, `home-widgets/`, và
+│   │                             `wallpaper-editor/wallpaper-customize/{stack-components,day-brief-vi}.md`
 │   └── mermaid-flowchart/     ← sơ đồ Mermaid minh hoạ riêng cho bundle `login-and-calendar-sharing`
 │                                  (không phải nguồn sự thật độc lập, xem README trong đó)
 ├── test-cases/                 ← test case ISTQB chi tiết (ID, tiền điều kiện, test data, expected result,
@@ -68,12 +77,25 @@ theo dõi bug — dùng làm đầu vào cho PRD, spec kỹ thuật, và các ph
 │   └── shortcut-flow-cases.md      ← đào sâu flow rủi ro nhất (Shortcut Setup)
 ├── bugs/
 │   └── bug-log.md             ← 1 file duy nhất cho toàn bộ bug, sort theo ngày
+├── scripts/                   ← đẩy bug-log → GitHub issue (`create-bug-issue.sh`, dry-run mặc định) và đồng bộ
+│                                 trạng thái về (`sync-bug-status.sh`); cấu hình ở `bug-issue.conf`
+├── docs/
+│   ├── guides/                ← hướng dẫn setup (bug-issue-automation-setup.md)
+│   └── proposals/             ← đề xuất gửi review (bản đã ẩn thông tin nội bộ)
+├── PORTING-GUIDE.md           ← cách tái sử dụng bộ khung QC này cho project khác
+├── CLAUDE.md                  ← hướng dẫn cho Claude Code ở gốc repo
 └── .claude/
-    ├── rules/screenshot-naming.md      ← quy tắc đặt tên file/folder screenshot
-    └── skills/exploratory-checklist/   ← skill sinh checklist tự động từ wireframe
+    ├── CLAUDE.md                       ← tóm tắt pipeline + trỏ tới rules/testing.md
+    ├── rules/
+    │   ├── testing.md                  ← governance toàn cục: pipeline, DRAFT/READY/BLOCKED, human-in-the-loop
+    │   └── screenshot-naming.md        ← quy tắc đặt tên file/folder screenshot + flow map
+    ├── agents/                         ← qc-test-analysis · qc-test-plan · qc-test-case (mỗi agent 1 skill, 1 loại artifact)
+    ├── commands/spec-intake.md         ← `/spec-intake`: điều phối cả 3 agent cho spec mới
+    └── skills/                         ← test-analysis · test-plan · test-case · exploratory-checklist · github-issue-bug
 ```
 
-`end-user-perspectives/` đang **để trống** — dự trù cho sau, chưa có nội dung.
+`end-user-perspectives/` đang **để trống** (cũng như `test-cases/component-editor/` và `specs/component-editor/`
+ở gốc — folder cũ trước khi gộp vào `wallpaper-editor/`, chưa dọn) — dự trù cho sau, chưa có nội dung.
 
 Mỗi feature có 1 folder cùng tên lặp lại ở `specs/`, `test-plans/`, `test-cases/` (khi có) — kể cả feature
 chỉ có 1 file vẫn nằm trong folder riêng, để tên feature luôn khớp nhau ở cả 3 nơi.
@@ -90,7 +112,8 @@ Decorate, trước TF-117, tên cũ `decoration-inkai`) là **tài liệu cũ, c
 liệu, bug đã fix) kể từ khi dev gộp 2 editor thành 1 màn **Customize** (Layout | Decorate) ở TF-117; mỗi
 folder cũ có README banner ghi rõ điều này. Bộ tài liệu **đang chạy** cho màn Customize nằm ở
 `wallpaper-customize/` — thêm test-analysis/test-plan/test-case mới cho spec TF-117 (và các đợt sau) vào
-đây, **không** viết tiếp vào 2 folder cũ.
+đây, **không** viết tiếp vào 2 folder cũ. Spec/checklist QC cho component mới thêm qua nút **+** (ví dụ
+`stack-components.md`, `day-brief-vi.md`) cũng đặt cạnh nhau ở `specs/wallpaper-editor/wallpaper-customize/`.
 
 ### Bundle riêng cho feature dạng remote-config/content-layer
 
@@ -155,11 +178,15 @@ Exploratory checklist  (requirements/exploratory/<NN>_<flow>.md)
         │   — mỗi mục phải quan sát được, có ID để trích dẫn khi báo bug
         │   — sinh bằng skill `/exploratory-checklist`, hoặc tay theo cùng chuẩn
         ▼
-Test plan theo build  (requirements/test-plans/<version>.md)
+Test plan theo build  (requirements/test-plans/<feature>/test-plan-<slug>.md)
         │   — chuẩn ISTQB: test basis → scope → kỹ thuật thiết kế case → risk-based priority → entry/exit
         ▼
 Bug log  (bugs/bug-log.md)
             — khi phát hiện sai khác, log kèm Flow/Screen theo đúng tên trong screenshot-naming.md
+        │
+        ▼
+GitHub issue  (repo source, form "QC bug")  — skill `github-issue-bug` soạn nội dung, `scripts/create-bug-issue.sh`
+            đẩy lên sau khi người dùng duyệt; `scripts/sync-bug-status.sh` kéo trạng thái đóng/mở về bug-log
 ```
 
 **Nguyên tắc xuyên suốt:** mọi kết luận phải truy được về bằng chứng (ảnh, change note, hoặc quan sát thật

@@ -79,6 +79,8 @@ Tổng: **114 screenshot** / 11 flow đã build. iPhone (1290×2796 trừ khi gh
 | `04_discover_08_add-widget_step-1.png` | IMG_0076 | Hướng dẫn add widget 1/3 — giữ màn hình chính |
 | `04_discover_08_add-widget_step-2.png` | IMG_0077 | Hướng dẫn add widget 2/3 — tap "+", tìm Ink |
 | `04_discover_08_add-widget_step-3.png` | IMG_0078 | Hướng dẫn add widget 3/3 — chọn style, Add Widget |
+| `04_discover_09_widget_editing.png` | *(QC thả trực tiếp 2026-10-12, build 1.2.22 (147), file gốc không có tên, 1290×2796)* | Màn cấu hình widget **Calendar** — preview 2 cỡ (tuần, tháng), tab **Style / Layout / Calendars** đang ở **Calendars** (danh sách lịch Công Việc, Ngày lễ Việt Nam, Calendar, Fitness), CTA "Add widget". Không có tuỳ chọn ngày đầu tuần ở đầu tab (BUG-007) |
+| `04_discover_10_ios-calendar-settings_default.png` | *(QC thả trực tiếp 2026-10-12, 1290×2796, file gốc không có tên)* | **External (iOS)** — Settings của app Calendar hệ thống, màn "Start Week On": đang chọn **System Setting (Monday)**. Máy iPhone 15, iOS 18.5 của BUG-009 (QC cung cấp) |
 
 ## 05_calendar — tab Calendar
 

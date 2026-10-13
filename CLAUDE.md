@@ -54,6 +54,23 @@ explaining what replaced it and why (see any `*-SUPERSEDED.md` file in `requirem
 the pattern). This preserves the reasoning trail — a later re-analysis often reuses a superseded doc's
 *method* (e.g. a token/branch enumeration, a Decision Table shape) even when its specific numbers are stale.
 
+## Specs that stay checklist-only
+
+Not every spec goes through the ISTQB pipeline. Quick release-QC checklists (e.g.
+`requirements/specs/ink-1.2.20-vi.md`, `five-languages-pro-gating/`, and under
+`requirements/specs/wallpaper-editor/wallpaper-customize/`: `stack-components.md`, `day-brief-vi.md`) are
+run by hand and have no test-plan/test-case counterpart — don't generate one unless asked. The
+`wallpaper-editor/` bundle has three generations (`component-editor/` and `wallpaper-decoration/` are
+pre-TF-117 reference only); new Customize-screen docs go in `wallpaper-customize/`.
+
+## Bug log → GitHub issue
+
+`bugs/bug-log.md` is the single bug log. Pushing a bug to the dev source repo's issue tracker goes through
+the `github-issue-bug` skill and `scripts/create-bug-issue.sh` (dry-run by default; `--submit` only after
+the user approves). **Build, Bản cài, Thiết bị và iOS and Tần suất must be typed by the user every run —
+never infer them.** `scripts/sync-bug-status.sh` pulls open/closed status back. Setup:
+`docs/guides/bug-issue-automation-setup.md`. Read the skill's `SKILL.md` before running either script.
+
 ## Memory
 
 This project uses Claude's cross-session memory (see the system prompt's "auto memory" section when

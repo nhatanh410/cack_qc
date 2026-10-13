@@ -17,6 +17,10 @@
 | BUG-003 | 2026-09-15 | 08_paywall | plan-list | default | Medium | `discount: 1` là giá trị invalid (`discount` phải nhỏ hơn 1) nhưng pill "SAVE 100%" vẫn hiện — thiếu 1 nhánh validate | Open |
 | BUG-004 | 2026-09-16 | 10_lockscreen | lock-screen | default | High | Event tạo trên Google Calendar không xuất hiện trên wallpaper hôm sau dù Google Calendar sync đang bật | Need info |
 | BUG-005 | 2026-10-09 | 04_discover | collection | default | Low | Lockscreen and Live Activity tab titles are stuck together on Your collection, in both vi and en (vi tab title truncated to "Màn hình k...") | Need info |
+| BUG-006 | 2026-10-12 | 04_discover | live-activity | editing | Low | Live Activity editor's Calendars tab has no option to choose Monday or Sunday as the first day of the week (user feedback) | Open |
+| BUG-007 | 2026-10-12 | 04_discover | widget | editing | Low | Widget configuration's Calendars tab has no option to choose Monday or Sunday as the first day of the week (user feedback) | Open |
+| BUG-008 | 2026-10-12 | 04_discover | lockscreen | editing | Low | Lockscreen editor's Calendars tab has the first-day-of-week option at the bottom, below the calendar list, so users can't find it (should be at the top) | Open |
+| BUG-009 | 2026-10-12 | 04_discover | live-activity | default | Medium | On some devices (e.g. iPhone 15, iOS 18.5) Live Activity starts the week on Sunday while Calendar and Widget start on Monday | Open |
 
 ---
 
@@ -326,3 +330,225 @@ Frequency: ❓ not retested.
 - [ ] Do the "All" and "Widget" tabs also stick together?
 - [x] Expected result — provided by the QC owner 2026-10-11 (no formal spec/design; still worth PM/design confirmation).
 - [ ] Repro on a non-Pro Max iPhone and with another long language (device of the original screenshots is unknown).
+
+---
+
+## BUG-006 · Live Activity editor has no first-day-of-week option (Monday/Sunday) on the Calendars tab
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-10-12 |
+| **Flow** | `04_discover` — Live Activity section, Live Activity editor |
+| **Screen** | `live-activity` |
+| **State** | `editing` (Calendars tab) |
+| **Severity** | Low — missing feature requested by users, no data loss, main flow not blocked |
+| **Status** | Open |
+| **Device / Build** | iPhone 14 Pro Max, iOS 26 · 1.2.22 (147) · App Store |
+| **App language** | ❓ not recorded |
+| **Frequency** | Always |
+| **GitHub issue** | https://github.com/sfunvn/lockscreen-calendar/issues/422 |
+
+**Issue title:** `[QC] [Live Activity] Calendars tab has no first-day-of-week option (Monday/Sunday)`
+
+### Steps to reproduce
+
+1. Open the app and stay on the Discover tab.
+2. Scroll down to the Live Activity section.
+3. Tap a Live Activity item to open the Live Activity editor.
+4. Tap the Calendars tab.
+5. Look at the top of the tab: it only shows the list of calendars. There is no option to choose the first day of the week.
+
+### Expected
+
+At the top of the Calendars tab, above the list of calendars, there is an option to choose the first day of the week: Monday or Sunday.
+
+### Actual
+
+The Calendars tab shows only the list of calendars. There is no option to choose Monday or Sunday as the first day of the week, so users cannot change it. Users repeatedly request this in feedback.
+
+### Evidence
+
+No screenshot of the Calendars tab is saved in the repo. The existing editor screenshot [`04_discover_07_live-activity_editing.png`](../requirements/ui/ux/screenshots/iphone/04_discover/04_discover_07_live-activity_editing.png) is an older build that has no Calendars tab (only Display Time and Event Display).
+
+> ⚠️ **Screenshot not saved in the repo yet.** Capture the Calendars tab and place it in [`requirements/ui/ux/screenshots/iphone/04_discover/`](../requirements/ui/ux/screenshots/iphone/04_discover/) following the naming rule, then update `index.md`.
+
+### Notes
+
+- This is a user-feedback item (feature request) logged to serve user needs, not a regression.
+- Default value (Monday, Sunday, or follow iOS setting) is not specified — needs PM/design confirmation.
+- Whether the option applies to the Live Activity only or app-wide is not decided here.
+
+### To verify
+
+- [x] Build, install type, device and iOS — provided by the QC owner 2026-10-12.
+- [x] Frequency — provided by the QC owner (always).
+- [ ] Feedback source (channel, count) — not provided.
+- [ ] Default value and scope (Live Activity only vs app-wide) — PM/design.
+- [ ] Screenshot of the Calendars tab.
+
+---
+
+## BUG-007 · Widget configuration has no first-day-of-week option (Monday/Sunday) on the Calendars tab
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-10-12 |
+| **Flow** | `04_discover` — Widget section, widget configuration screen |
+| **Screen** | `widget` |
+| **State** | `editing` (Calendars tab) |
+| **Severity** | Low — missing feature requested by users, no data loss, main flow not blocked |
+| **Status** | Open |
+| **Device / Build** | iPhone 14 Pro Max, iOS 26 · 1.2.22 (147) · App Store |
+| **App language** | ❓ not recorded |
+| **Frequency** | Always |
+| **GitHub issue** | https://github.com/sfunvn/lockscreen-calendar/issues/423 |
+
+**Issue title:** `[QC] [Widget] Calendars tab has no first-day-of-week option (Monday/Sunday)`
+
+### Steps to reproduce
+
+1. Open the app and stay on the Discover tab.
+2. Scroll down to the Widget section.
+3. Tap the Calendar widget item to open the widget configuration screen.
+4. Tap the Calendars tab.
+5. Look at the top of the tab: it only shows the list of calendars. There is no option to choose the first day of the week.
+
+### Expected
+
+At the top of the Calendars tab, above the list of calendars, there is an option to choose the first day of the week: Monday or Sunday.
+
+### Actual
+
+The Calendars tab shows only the list of calendars. There is no option to choose Monday or Sunday as the first day of the week, so users cannot change it. Users repeatedly request this in feedback.
+
+### Evidence
+
+Screenshot of the Calendar widget configuration screen, Calendars tab selected: [`04_discover_09_widget_editing.png`](../requirements/ui/ux/screenshots/iphone/04_discover/04_discover_09_widget_editing.png) (build 1.2.22 (147)). The preview shows the week starting on Monday (M T W T F S S).
+
+### Notes
+
+- This is a user-feedback item (feature request) logged to serve user needs, not a regression.
+- Reproduced on the **Calendar** widget only (the one in the screenshot). Other widgets that have a Calendars tab (Agenda, Today Timeline, Up Next, Today's Schedule, Calendar & Matrix, Date & Matrix) were not checked.
+- Same request as [BUG-006](#bug-006--live-activity-editor-has-no-first-day-of-week-option-mondaysunday-on-the-calendars-tab) but on a different screen; kept as a separate issue (one issue per bug).
+- Default value (Monday, Sunday, or follow iOS setting) is not specified — needs PM/design confirmation.
+- Whether the option applies to this widget only or app-wide is not decided here.
+
+### To verify
+
+- [x] Build, install type, device and iOS — provided by the QC owner 2026-10-12 (same as BUG-006).
+- [x] Frequency — provided by the QC owner (always).
+- [ ] Feedback source (channel, count) — not provided.
+- [ ] Other widgets with a Calendars tab — same missing option?
+- [ ] Default value and scope (this widget only vs app-wide) — PM/design.
+
+---
+
+## BUG-008 · First-day-of-week option is at the bottom of the Calendars tab in the Lockscreen editor and hard to find
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-10-12 |
+| **Flow** | `04_discover` — Lockscreen section, Lockscreen editor (template editor, bottom panel under the canvas — TF-117) |
+| **Screen** | `lockscreen` |
+| **State** | `editing` (Calendars tab) |
+| **Severity** | Low — the option works, only hard to discover (UI/UX), no data loss |
+| **Status** | Open |
+| **Device / Build** | iPhone 14 Pro Max, iOS 26 · 1.2.22 (147) · App Store |
+| **App language** | ❓ not recorded |
+| **Frequency** | Always |
+| **GitHub issue** | https://github.com/sfunvn/lockscreen-calendar/issues/424 |
+
+**Issue title:** `[QC] [Lockscreen] First-day-of-week option is buried at the bottom of Calendars tab`
+
+### Steps to reproduce
+
+1. Open the app and stay on the Discover tab.
+2. Scroll to the Lockscreens section.
+3. Tap a Lockscreen item to open the Lockscreen editor.
+4. Tap the Calendars tab.
+5. Look at the tab: the first-day-of-week option is not visible at the top. It is placed at the bottom, below the list of calendars, and users have to scroll past the whole list to find it.
+
+### Expected
+
+The first-day-of-week option is shown at the top of the Calendars tab, above the list of calendars, so users can find it easily.
+
+### Actual
+
+The first-day-of-week option exists, but it is placed at the bottom of the Calendars tab, below the list of calendars. Users have to scroll past the whole list to find it and often do not notice it.
+
+### Evidence
+
+No screenshot of this tab is saved in the repo yet. The spec [template-editor.md](../requirements/specs/wallpaper-editor/wallpaper-customize/template-editor.md) §2 (Calendar tab) lists the order as calendar list → divider → **First day of week**, which matches the reported layout.
+
+> ⚠️ **Screenshot not saved in the repo yet.** Capture the Calendars tab of the Lockscreen editor scrolled to the option, place it in [`requirements/ui/ux/screenshots/iphone/04_discover/`](../requirements/ui/ux/screenshots/iphone/04_discover/) following the naming rule, then update `index.md`.
+
+### Notes
+
+- This is a UX improvement based on user feedback (users cannot find the option), not a regression.
+- Related to [BUG-006](#bug-006--live-activity-editor-has-no-first-day-of-week-option-mondaysunday-on-the-calendars-tab) and [BUG-007](#bug-007--widget-configuration-has-no-first-day-of-week-option-mondaysunday-on-the-calendars-tab): those two screens have no option at all; this screen has it, at the bottom. Kept as a separate issue (one issue per bug). If dev moves the option to the top of all three, the placement should be the same.
+- Option values were not recorded here; take them from the real screenshot.
+
+### To verify
+
+- [x] Build, install type, device and iOS — provided by the QC owner 2026-10-12 (same as BUG-006/007).
+- [x] Frequency — provided by the QC owner (always).
+- [x] Entry path and screen (template editor) — provided by the QC owner 2026-10-12.
+- [ ] Screenshot of the Calendars tab scrolled to the option (also gives the option values).
+- [ ] Exact tab label on this screen: "Calendars" per the QC owner; spec text says "Calendar".
+
+---
+
+## BUG-009 · Live Activity starts the week on Sunday while Calendar and Widget start on Monday
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-10-12 |
+| **Flow** | `04_discover` — Live Activity section |
+| **Screen** | `live-activity` |
+| **State** | `default` (Live Activity showing a week) |
+| **Severity** | Medium — week is shown inconsistently with the rest of the app, users can misread days |
+| **Status** | Open |
+| **Device / Build** | iPhone 15, iOS 18.5 · 1.2.22 (147) · App Store |
+| **App language** | ❓ not recorded |
+| **Frequency** | Always (on the affected device; not every device is affected) |
+| **GitHub issue** | https://github.com/sfunvn/lockscreen-calendar/issues/425 |
+
+**Issue title:** `[QC] [Live Activity] Week starts on Sunday but Calendar and Widget start on Monday`
+
+### Steps to reproduce
+
+1. On iPhone 15 (iOS 18.5), open the app and go to the Calendar tab, Week view. Note that the week starts on Monday.
+2. Add the Calendar widget to the Home Screen. Note that the week starts on Monday.
+3. Open the Discover tab, scroll down to the Live Activity section, tap a Live Activity that shows a week (e.g. Weekly Schedule) and start it.
+4. Look at the week shown in the Live Activity.
+5. Compare the first day of the week of the Live Activity with the Calendar tab and the Widget.
+
+### Expected
+
+The Live Activity starts the week on the same day as the Calendar tab and the Widget (Monday). The Live Activity takes the first day of the week from the device setting, the same way the Calendar tab and the Widget do.
+
+### Actual
+
+On iPhone 15 (iOS 18.5), the Calendar tab and the Widget start the week on Monday, but the Live Activity starts the week on Sunday. This happens every time a Live Activity that shows a week is used on this device.
+
+Not every device is affected: it does not reproduce on iPhone 14 Pro Max (iOS 26) with the same setting.
+
+### Evidence
+
+- iOS Calendar app setting on the affected iPhone 15: *Start Week On* = **System Setting (Monday)** — [`04_discover_10_ios-calendar-settings_default.png`](../requirements/ui/ux/screenshots/iphone/04_discover/04_discover_10_ios-calendar-settings_default.png) (external iOS screen).
+
+> ⚠️ **No screenshot of the Live Activity (Sunday-first) or of the Calendar tab / Widget (Monday-first) on the iPhone 15 is saved in the repo yet.** Capture them, place them in [`requirements/ui/ux/screenshots/iphone/04_discover/`](../requirements/ui/ux/screenshots/iphone/04_discover/) following the naming rule, then update `index.md`.
+
+### Notes
+
+- Reproduces on iPhone 15 / iOS 18.5; does not reproduce on iPhone 14 Pro Max / iOS 26 with the same setting (reported by the QC owner).
+- Any Live Activity that shows a week is affected (reported by the QC owner).
+- The cause is not known and is not assumed here. The screenshot above only shows the iOS Calendar app setting (Monday), not Settings → General → Language & Region.
+
+### To verify
+
+- [x] Build, install type, device and iOS — provided by the QC owner 2026-10-12.
+- [x] Frequency, comparison device and Live Activity scope — provided by the QC owner 2026-10-12.
+- [ ] Screenshots of the Live Activity and of the Calendar tab / Widget on the iPhone 15.
+- [ ] Settings → General → Language & Region → First Day of Week and Region on the iPhone 15.
+- [ ] Does the Live Activity on the Lock Screen and in the Dynamic Island both show Sunday first, or only one of them?
