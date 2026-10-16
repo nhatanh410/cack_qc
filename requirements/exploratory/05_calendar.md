@@ -335,3 +335,186 @@ Q7 Tự mình dùng hằng ngày?   Có / Không — vì: __________
   không chứng minh được gì.
 - **Cần data thật, dày** cho `E04`, `E18`, `E22`. Máy sạch với 3 event không tái hiện được vấn đề Week view —
   đó chính là lý do wireframe phải dùng data thật của user để phát hiện.
+
+---
+
+## 9 · Bổ sung 2026-10-16 — Tạo event lên Google Calendar / Outlook Calendar từ Ink
+
+> **Trạng thái bằng chứng: MỎNG.** Dev báo app vừa bổ sung tạo event cho Google và Outlook. **Chưa có spec,
+> wireframe hay screenshot** cho luồng này. Phần này chỉ dùng bằng chứng đã có trong repo:
+> - [pipeline.html](../../references/pipeline.html) — Nguồn 3 Outlook: scope hiện ghi **`Calendars.Read`**, OAuth tự viết (PKCE), Graph v1.0, header `Prefer: outlook.timezone="UTC"`, lỗi `AADSTS50011`; Google dùng `GIDSignIn`, `calendar/v3`.
+> - [calendar-tasks-and-list-vi (1).md §5](../specs/calendar-tasks-and-list-vi%20(1).md) — ô Calendar có icon nguồn (G, Outlook), menu chia nhóm, lịch chỉ đọc không có trong menu, lịch chọn sẵn được nhớ.
+> - [bug-log BUG-004](../../bugs/bug-log.md) — event Google không lên wallpaper (Nhóm A: token thu hồi).
+> - [permissions-matrix §3](../../references/permissions-matrix.md) — Tầng C OAuth.
+>
+> **Mọi thứ về hình dạng UI mới = coverage gap, không viết như đã biết.** Các mục dưới đây chỉ kiểm **kết quả
+> ở phía provider** (mở Google Calendar web / Outlook web để đối chiếu), không phụ thuộc UI chưa thấy.
+> ID tiếp nối số đã cấp ở trên (H31, N34, E30, Q12) — không tái sử dụng.
+>
+> **Điều kiện chuẩn bị** *(không đánh ID)*: 1 tài khoản Google cá nhân + 1 tài khoản Google Workspace có
+> sự kiện có người tham dự · 1 tài khoản Outlook.com cá nhân + 1 tài khoản Microsoft 365 công việc ·
+> truy cập web của cả hai để đối chiếu · 1 máy **đã kết nối từ bản cũ** (chỉ quyền đọc) và 1 máy **cài mới**.
+
+### 9.1 · Happy path — `CAL-H`
+
+| ID | Việc làm | Phải quan sát được | Đo gì | ☐ |
+|---|---|---|---|:---:|
+| **CAL-H32** | 🔴 Tạo event, chọn calendar đích là lịch **Google** → lưu | Event có trên **Google Calendar web** đúng title, giờ, ngày, calendar đích | Không tin UI Ink. Đối chiếu cả **múi giờ** hiển thị trên web | ☐ |
+| **CAL-H33** | 🔴 Như H32 với lịch **Outlook** → mở **Outlook web** | Event có thật đúng title, giờ, calendar đích | Đối chiếu giờ; Graph dễ lệch theo offset máy — xem `CAL-E31` | ☐ |
+| **CAL-H34** | Điền đủ **Notes · URL · All day · Repeat · Reminder** rồi lưu lên Google | Từng trường xuất hiện đúng ở Google web | Ghi trường nào **mất** hoặc **sai dạng** *(vd URL vào Notes hay vào field riêng)* | ☐ |
+| **CAL-H35** | Như H34 với Outlook | Từng trường đúng ở Outlook web | Cùng cách ghi; so sánh với H34 — hai nhà cung cấp có khác nhau không | ☐ |
+| **CAL-H36** | Mở menu chọn calendar ở form tạo event | Lịch Google và Outlook **có mặt**, có icon nguồn (G / Outlook), có tích ở lịch đang chọn | Theo [spec §5](../specs/calendar-tasks-and-list-vi%20(1).md): nhóm theo tài khoản, lịch **chỉ đọc không có trong menu** | ☐ |
+| **CAL-H37** | Chọn calendar Google, lưu, **mở form tạo mới lần sau** | Calendar vừa dùng được chọn sẵn | Theo spec §5 *(nhớ lịch đã lưu)*. Kiểm với Outlook | ☐ |
+| **CAL-H38** | Event vừa tạo trở lại **Ink** sau khi app refresh | Hiện ở 4 view, icon nguồn đúng, **không bị nhân đôi** | Đếm số bản ghi: Ink-local vs bản kéo về từ provider | ☐ |
+| **CAL-H39** | Event vừa tạo có lên **wallpaper** ở lần chạy shortcut kế tiếp không | Có, đúng giờ | Nối với [BUG-004](../../bugs/bug-log.md): đây là đường ghi → đọc → vẽ | ☐ |
+| **CAL-H40** | Sửa hoặc xoá event vừa tạo từ Ink | Thay đổi phản ánh ở provider web | ⚠️ **coverage gap** — chưa biết tính năng mới có bao gồm sửa/xoá không → `CAL-Q13` | ☐ |
+
+### 9.2 · Negative — `CAL-N`
+
+#### Quyền OAuth & phiên
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CAL-N35** | 🔴 Máy **đã kết nối từ bản cũ** *(chỉ quyền đọc)* → update lên bản mới → tạo event lên Outlook | App phát hiện thiếu scope ghi và **yêu cầu cấp quyền lại** rõ ràng | pipeline.html ghi scope hiện chỉ `Calendars.Read` → ghi sẽ bị Graph từ chối **403**. Lưu thất bại **im lặng** = user tưởng đã tạo | 🔴 | ☐ |
+| **CAL-N36** | 🔴 Như N35 với **Google** | Như trên | Cùng mẫu. Scope Google cho đọc ≠ scope cho ghi; token cũ không ghi được | 🔴 | ☐ |
+| **CAL-N37** | Máy **cài mới**, kết nối Google/Outlook lần đầu | Màn đồng ý liệt kê quyền **ghi** rõ ràng; user hiểu app sẽ tạo event | Consent mô tả sai hoặc mơ hồ; Google có thể hiện cảnh báo *"app chưa được xác minh"* với scope mới → [permissions-matrix §3](../../references/permissions-matrix.md) | 🟠 | ☐ |
+| **CAL-N38** | 🔴 Thu hồi quyền Ink ở [myaccount.google.com/permissions](https://myaccount.google.com/permissions) / Microsoft account → tạo event | Báo lỗi **gọi đúng tên** + đường đăng nhập lại; **không** lưu local rồi báo thành công | Event "ma" chỉ nằm trong Ink; user tưởng đã vào lịch công việc | 🔴 | ☐ |
+| **CAL-N39** | Tài khoản **Workspace / Microsoft 365** mà admin **chặn** app bên thứ ba ghi lịch | Lỗi rõ ràng, không treo | Lỗi trả mơ hồ hoặc spinner vô hạn | 🟠 | ☐ |
+| **CAL-N40** | Đăng nhập Outlook báo `AADSTS50011` *(redirect URI lệch)* | Chỉ xảy ra ở build lỗi cấu hình — nếu gặp thì log **ngay**, mức chặn | Không đăng nhập được = không dùng được tính năng | 🔴 | ☐ |
+
+#### Lịch đích & phân quyền ghi
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CAL-N41** | 🔴 Lịch Google/Outlook mà user chỉ có quyền **xem** *(lịch công ty chia sẻ chỉ đọc, `Holidays`)* | **Không có** trong menu chọn calendar, hoặc chặn rõ khi lưu | Ghi thất bại im lặng; cùng mẫu `CAL-N11` | 🔴 | ☐ |
+| **CAL-N42** | Lịch được chia sẻ với quyền **sửa** nhưng không phải chủ | Tạo được, event có mặt với người khác | Tạo được ở Ink nhưng bị provider từ chối, hoặc ngược lại bị chặn oan | 🟠 | ☐ |
+| **CAL-N43** | 🔴 Lịch Google đang chọn bị **xoá** hoặc user mất quyền *(ở provider)* → mở lại form | Chọn sẵn quay về lịch mặc định hợp lệ | Chọn sẵn trỏ vào lịch không tồn tại → lưu lỗi *(spec §5: xoá lịch được nhớ → về lịch Ink)* | 🟠 | ☐ |
+
+#### Mạng & độ tin cậy khi ghi
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CAL-N44** | 🔴 Tạo event lên Google/Outlook khi **offline** (chế độ máy bay) | Báo rõ **chưa lưu**, hoặc xếp hàng và **hiển thị trạng thái đang chờ** | Hiện event như đã tạo nhưng không bao giờ lên provider | 🔴 | ☐ |
+| **CAL-N45** | 🔴 Bấm `✓` rồi **bật máy bay ngay** / mạng rớt giữa chừng | Không mất event, không tạo nửa vời | Không rõ đã tạo hay chưa → user bấm lại → **nhân đôi** | 🔴 | ☐ |
+| **CAL-N46** | 🔴 Bấm `✓` **2 lần thật nhanh** *(đích Google/Outlook)* | Chỉ **1** event ở provider | Gọi API 2 lần = event nhân đôi **cho cả người được mời** | 🔴 | ☐ |
+| **CAL-N47** | Mạng **rất chậm** *(Network Link Conditioner)* | Có chỉ báo đang lưu · có timeout · nút huỷ/khoá nút `✓` | Treo UI; user thoát giữa chừng rồi event vẫn được tạo sau đó | 🟠 | ☐ |
+| **CAL-N48** | Kill app ngay sau khi bấm `✓` | Mở lại: hoặc đã có ở provider, hoặc không có — **không** trạng thái lửng | Event trong local mà không có ở provider | 🟠 | ☐ |
+| **CAL-N49** | Tạo hàng loạt *(10 event liên tiếp)* | Không bị rate limit lỗi im lặng | Google/Graph throttle → vài event rớt không báo | 🟡 | ☐ |
+
+#### Người tham dự & tác động ra ngoài
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CAL-N50** | 🔴 Tạo event lên lịch **Workspace/M365** → mở web, xem **thông báo/email** đã gửi | Không gửi thông báo cho ai ngoài ý định | Form hiện **không có** trường người tham dự — nhưng provider có thể tự thêm *(vd phòng họp, Meet/Teams link)* — ghi lại những gì **tự động được thêm** | 🔴 | ☐ |
+| **CAL-N51** | 🔴 Event **Repeat** tạo lên Google/Outlook | Chuỗi lặp ở provider **đúng quy tắc** *(hằng ngày, hằng tuần, hằng tháng ngày 6)* | Chuỗi sai hoặc chỉ 1 lần; sửa/xoá sau này dính cả chuỗi | 🔴 | ☐ |
+| **CAL-N52** | Event có **Reminder** | Reminder ở provider đúng thời điểm *(ghi lại default của provider so với lựa chọn trong Ink)* | Reminder mặc định của provider ghi đè lựa chọn của user, hoặc mất | 🟡 | ☐ |
+
+#### Provider → Ink: thay đổi ở Google / Outlook không về Ink *(thêm 2026-10-16, nguồn [BUG-010](../../bugs/bug-log.md))*
+
+> Đã **tái hiện** trên 1.2.24 (152): sửa hay xoá ở provider không bao giờ về tab Calendar; Ink → provider thì đúng.
+> Kill app và chờ vài phút không giúp. Xảy ra với event do Ink tạo lẫn event không do Ink tạo. Các mục dưới để
+> **khoanh vùng nguyên nhân**, không phải để xác nhận lại bug.
+
+| ID | Tình huống | Kỳ vọng | Rủi ro nếu sai | Mức | ☐ |
+|---|---|---|---|:---:|:---:|
+| **CAL-N53** | 🔴 Sửa title / giờ / ngày một event ở **Google** → tab Calendar | Ink hiện bản mới | **BUG-010.** Ink giữ bản cũ vĩnh viễn | 🔴 | ☐ |
+| **CAL-N54** | 🔴 Như N53 với **Outlook** | Như trên | BUG-010. Cùng triệu chứng ở cả hai provider → nghi tầng chung | 🔴 | ☐ |
+| **CAL-N55** | 🔴 **Xoá** event ở Google / Outlook | Event biến khỏi Ink | BUG-010. User thấy cuộc họp đã huỷ vẫn nằm trong lịch | 🔴 | ☐ |
+| **CAL-N56** | Tạo event **mới** ở Google / Outlook *(sau khi đã kết nối)* | Event mới có mặt trong Ink | Phân biệt "không kéo gì về" với "chỉ không kéo bản cập nhật". Nối `BUG-004` | 🔴 | ☐ |
+| **CAL-N57** | Ngắt kết nối rồi **đăng nhập lại** provider | Event hiện đúng bản mới nhất | Nếu đăng nhập lại sửa được → dữ liệu cũ nằm ở cache/local của Ink, không phải ở provider | 🟠 | ☐ |
+| **CAL-N58** | So sánh cùng event ở **List, Day, Week, Month** | Cả 4 view cùng một bản | Chỉ một view cũ → lỗi ở view đó; cả 4 cũ → lỗi ở tầng dữ liệu | 🟠 | ☐ |
+| **CAL-N59** | So sánh tab Calendar với **wallpaper / Widget** sau khi sửa ở provider | Cùng một bản | Wallpaper (live fetch) mới mà tab Calendar cũ → lỗi riêng ở tab. Cả hai cũ → lỗi ở nguồn | 🟠 | ☐ |
+| **CAL-N60** | **Cài sạch 1.2.24 (152)** rồi kết nối Google/Outlook, so với máy **đã kết nối từ 1.2.23 rồi update** | Ghi kết quả từng máy | Đã xác nhận **hồi quy** (1.2.23 đúng, 1.2.24 hỏng). Cần biết lỗi nằm ở **đường update** (giữ phiên cũ thiếu scope ghi, nối `N35`/`N36`) hay ở **chính bản build** | 🔴 | ☐ |
+
+### 9.3 · Edge — `CAL-E`
+
+| ID | Tình huống | Câu hỏi | Mức | ☐ |
+|---|---|---|:---:|:---:|
+| **CAL-E31** | 🔴 **Múi giờ**: tạo event 09:00 khi máy ở `GMT+7`, rồi **đổi múi giờ máy** sang khác, mở ở Google web / Outlook web | Event ở provider là **09:00 GMT+7**, hay bị lệch? Với Outlook: Graph trả `dateTime` **không mang offset** — kiểm lệch đúng bằng offset máy *(bug Graph kinh điển, xem pipeline.html Nguồn 3 bước 03)* | 🔴 | ☐ |
+| **CAL-E32** | 🔴 Event **All day** lên Outlook / Google | Hiện cả ngày đúng ngày, **không lệch sang ngày hôm trước/sau**. Ở Ink có **hiện 2 lần** không *(pipeline.html: all-day phân giải sai nửa đêm UTC → nhân đôi)* | 🔴 | ☐ |
+| **CAL-E33** | Event **qua nửa đêm** `23:30 → 00:30` lên provider | Đúng ở provider, đúng ở Ink | 🟠 | ☐ |
+| **CAL-E34** | Event **nhiều ngày** lên provider | Đúng khoảng ngày; All day nhiều ngày — ngày kết thúc **exclusive** ở cả Google và Graph, dễ lệch 1 ngày | 🟠 | ☐ |
+| **CAL-E35** | Title **500+ ký tự**, emoji, **tiếng Việt có dấu**, ký tự đặc biệt `& < > " '` | Provider hiển thị nguyên vẹn, không mất dấu, không bị escape lộ `&amp;` | 🟠 | ☐ |
+| **CAL-E36** | Notes **rất dài** / nhiều dòng / chứa link | Không bị cắt; xuống dòng giữ đúng | 🟡 | ☐ |
+| **CAL-E37** | `URL` ghi lên provider | Nằm ở đâu *(field riêng hay chèn vào mô tả)*; URL sai định dạng bị chặn trước khi gửi hay provider từ chối | 🟡 | ☐ |
+| **CAL-E38** | Máy đặt **lịch Phật giáo / Nhật** *(`th_TH@calendar=buddhist`)* | Gửi lên đúng năm Gregorian, **không phải 2569** *(pipeline.html: dựng RFC 3339 bằng Gregorian)* | 🟠 | ☐ |
+| **CAL-E39** | **Nhiều tài khoản** Google / Outlook cùng kết nối | Menu chọn calendar phân biệt được tài khoản nào; ghi vào **đúng** tài khoản đã chọn | 🔴 | ☐ |
+| **CAL-E40** | 2 lịch **trùng tên** ở 2 tài khoản *(`Calendar` ở Gmail và Outlook)* | Phân biệt được ở menu và ở sheet Calendars; không ghi nhầm | 🟠 | ☐ |
+| **CAL-E41** | Đăng xuất / ngắt kết nối Google khi còn event vừa tạo ở Ink | Event **còn ở provider** (đã đẩy lên), Ink không xoá bản của provider | 🟠 | ☐ |
+| **CAL-E42** | **Dark Mode** trên màn đăng nhập, menu chọn calendar, thông báo lỗi mới | Đọc được, icon nguồn G / Outlook hiển thị đúng | 🟡 | ☐ |
+| **CAL-E43** | **VoiceOver** ở menu chọn calendar | Đọc ra tên lịch **và tên nguồn** *(Google/Outlook)*, không chỉ icon | 🟡 | ☐ |
+| **CAL-E44** | **Đổi ngôn ngữ máy** sang tiếng Việt / Anh khi có lỗi OAuth / lưu thất bại | Thông báo lỗi mới đã được dịch | 🟡 | ☐ |
+| **CAL-E45** | Free vs **Pro** | Tạo event lên Google/Outlook có thuộc nhóm bị khoá Pro không? ⚠️ **coverage gap** → `CAL-Q15` | 🟠 | ☐ |
+
+### 9.4 · Coverage matrix bổ sung
+
+| State / màn hình | Đã có ảnh | Đã chạm khi test |
+|---|:---:|:---:|
+| Menu chọn calendar có lịch Google / Outlook | ❌ *(spec §5 mô tả bằng chữ, chưa ảnh)* | ☐ |
+| Màn consent xin **quyền ghi** Google / Outlook | ❌ | ☐ |
+| Luồng **cấp quyền lại** cho người dùng cũ | ❌ | ☐ |
+| Thông báo lỗi khi ghi thất bại *(403 / offline / token hết hạn)* | ❌ | ☐ |
+| Trạng thái **đang lưu / chờ đồng bộ** | ❌ | ☐ |
+| Event Google / Outlook ở **event detail** | ❌ | ☐ |
+| Sửa / xoá event Google / Outlook | ❌ | ☐ |
+| Settings → Google Calendar / Outlook sau khi đổi scope | ❌ *(có toggle Google ở Flow 09)* | ☐ |
+
+> Các mục ❌ này chặn: `CAL-H36` đến `H40`, `N35` đến `N38`, `N44`, `N45`.
+> **Ưu tiên chụp số 1:** màn consent và thông báo lỗi khi ghi thất bại — hai chỗ nằm trên đường *"user tưởng đã tạo nhưng không có"*.
+
+### 9.5 · Câu hỏi cần PO / dev trả lời — `CAL-Q`
+
+| ID | Câu hỏi | Vì sao cần |
+|---|---|---|
+| **CAL-Q13** | 🔴 Phạm vi tính năng mới: **chỉ tạo**, hay gồm cả **sửa / xoá** event Google/Outlook? | Quyết định `CAL-H40` và toàn bộ nhóm N15/N18/N19 của §2.3 có còn là coverage gap không |
+| **CAL-Q14** | 🔴 **Scope OAuth** mới là gì *(Google: `calendar.events`? · Microsoft: `Calendars.ReadWrite`?)* và người dùng đã kết nối **có bị buộc cấp lại quyền** không, bằng luồng nào? | pipeline.html ghi scope hiện chỉ đọc. Nếu không yêu cầu cấp lại → `CAL-N35`/`N36` là lỗi chắc chắn. Scope ghi của Google còn có thể kéo theo **OAuth verification** lại |
+| **CAL-Q15** | Tính năng thuộc **Free** hay **Pro**? Tạo lên Google/Outlook có bị gate không | `CAL-E45`. Liên quan [five-languages-pro-gating](../specs/five-languages-pro-gating/) |
+| **CAL-Q16** | Khi ghi **thất bại** (403, offline, token hết hạn): có **fallback** lưu vào lịch local/Ink không, hay chỉ báo lỗi? Có xếp hàng retry không? | `CAL-N38`, `N44`, `N45`. Fallback im lặng = event ở sai nơi |
+| **CAL-Q17** | Event tạo xong: app **chờ phản hồi provider** rồi mới hiện, hay hiện ngay (optimistic) rồi đẩy nền? Có lưu **id của provider** để chống trùng khi kéo về không? | `CAL-H38`, `N46`. Quyết định nguy cơ nhân đôi |
+| **CAL-Q18** | Trường nào của form **được ánh xạ** lên Google/Outlook, trường nào bị bỏ *(Color, ⭐ emoji, URL)*? Màu Ink có đẩy lên provider không | `CAL-H34`, `H35`. Color/⭐ là khái niệm riêng của Ink, provider khó có chỗ chứa |
+| **CAL-Q19** | Outlook: tạo bằng `POST /me/events` hay `/me/calendars/{id}/events`? Có gửi header `Prefer: outlook.timezone` khi **ghi** không, và truyền `timeZone` nào? | `CAL-E31`, `E32`. Nơi bug lệch giờ thường nằm |
+| **CAL-Q20** | Với lịch **Workspace/M365**: có thêm họp online *(Meet/Teams)* hoặc người tham dự mặc định không? Provider tự thêm có bị Ink chặn không | `CAL-N50` |
+| **CAL-Q21** | Privacy: onboarding nói *"Ink only reads events…"* — câu này có **sai** khi app đã **ghi** event không? Privacy Label / policy đã cập nhật chưa | Đã nêu ở [exploratory-references §1.6](../../references/exploratory-references.md#16--google-calendar-nguồn-dữ-liệu-duy-nhất-cần-mạng-và-tài-khoản); giờ mâu thuẫn rõ hơn |
+| **CAL-Q22** | Còn `.writeOnly` / `Add Events Only` của EventKit: tính năng mới có đi đường nào bỏ qua được ràng buộc *"cần Full Access"* không | Nối `CAL-N30` đến `N32` |
+| **CAL-Q23** | 🔴 Tab Calendar lấy event Google / Outlook từ đâu: **gọi API mỗi lần mở**, hay đọc từ **bản lưu local** ghi một lần khi tạo/kết nối? | BUG-010. Nếu có bản lưu local mà không ghi đè bằng bản kéo về → khớp "event của provider cũng không cập nhật" |
+| **CAL-Q24** | Có cơ chế **kéo thay đổi** từ provider không *(syncToken / ETag / delta query / làm mới khi về foreground)*? Tính năng tạo event mới có **thay đổi** đường đọc này không | BUG-010. Hai bản trước khi có tính năng tạo event có cùng triệu chứng không → quyết định hồi quy |
+| **CAL-Q25** | Khử trùng lặp bằng `title \| start \| end` *(pipeline.html)* có áp dụng ở tab Calendar không? Sau khi sửa ở provider, vân tay đổi → bản cũ và bản mới có bị coi là hai event và bản cũ được giữ? | BUG-010. Nối `CAL-Q17` (Ink có lưu id provider không) |
+
+### 9.6 · Smoke 20 phút cho phần bổ sung *(charter — mục tiêu quan sát, không có đáp án viết sẵn)*
+
+**Charter:** *Khám phá việc tạo event lên Google và Outlook để tìm ra nơi nào event "nói đã tạo mà thực ra không có", hoặc có nhưng sai giờ, sai chỗ, nhân đôi.*
+
+| # | Việc | ID | Thời lượng |
+|:---:|---|---|:---:|
+| 1 | 🔴 **Máy đã kết nối từ bản cũ**: tạo event lên Outlook rồi Google, mở web đối chiếu. Ghi lại *có bị hỏi cấp quyền lại không* và *điều gì xảy ra nếu không* | `N35` `N36` `H32` `H33` | 6 phút |
+| 2 | 🔴 Tạo event **9:00 hôm nay** + 1 event **All day** lên mỗi provider, mở web kiểm giờ và ngày | `E31` `E32` | 4 phút |
+| 3 | 🔴 **Offline + double-tap `✓`**: bật máy bay, tạo event, bật mạng lại; rồi bấm `✓` hai lần nhanh. Đếm số event ở provider | `N44` `N46` | 4 phút |
+| 4 | Chọn lịch **chỉ đọc** của Google/Outlook trong menu — nó có trong danh sách không? Thử lưu | `N41` | 2 phút |
+| 5 | Tạo event có Title tiếng Việt có dấu + emoji + Repeat hằng tuần; kiểm chuỗi ở web | `E35` `N51` | 4 phút |
+
+### 9.7 · Kết luận phiên *(điền sau khi chạy — bổ sung vào §7)*
+
+```
+Phiên: __________   Build: ________ (phải có bản chứa tính năng mới)   iOS: ______   Thiết bị: __________
+Tài khoản đã dùng: Google cá nhân ☐ · Workspace ☐ · Outlook.com ☐ · M365 ☐
+Tạo lên Google đúng ở web?          Có / Không / Chưa kiểm được
+Tạo lên Outlook đúng ở web?         Có / Không / Chưa kiểm được
+Người dùng cũ bị hỏi cấp quyền lại? Có / Không — nếu Không: ghi thất bại thế nào? ______
+Giờ + All day đúng ở cả hai?        Có / Không
+Ghi thất bại có báo lỗi rõ?         Có / Không (im lặng = 🔴)
+Có nhân đôi event?                  Có / Không
+```
+
+**Ngưỡng bổ sung cho phần này:**
+
+| Verdict | Điều kiện |
+|---|---|
+| 🔴 | Ghi thất bại **im lặng** *(N35, N36, N38, N41, N44)* · người dùng cũ không được cấp quyền lại mà tạo event vẫn "thành công" ở Ink · event **lệch giờ / lệch ngày / nhân đôi** ở provider *(E31, E32, N45, N46)* · ghi nhầm tài khoản *(E39)* · provider tự gửi thông báo ra ngoài *(N50)* |
+| 🟡 | Một vài trường không ánh xạ được nhưng **có báo** hoặc **không** làm mất dữ liệu · thông báo lỗi chưa dịch · thiếu VoiceOver |
+| 🟢 | Tạo đúng ở cả hai provider, đúng giờ/ngày/chuỗi lặp · mọi lỗi ghi đều **hiển thị rõ** · người dùng cũ được cấp quyền lại mượt · không nhân đôi |
+
+### 9.8 · Giới hạn của phần bổ sung này
+
+- **Viết từ bằng chứng gián tiếp.** Không có spec hay ảnh cho tính năng mới. Các mục dựa trên *"scope hiện chỉ đọc"* (`N35`, `N36`) là **giả thuyết từ pipeline.html**, có thể đã lỗi thời — xác nhận bằng `CAL-Q14` **trước khi** log bug.
+- **Mọi mục đều pass giả nếu chỉ nhìn UI Ink.** Bắt buộc mở Google Calendar web và Outlook web đối chiếu. Không có tài khoản Workspace/M365 → ghi `N39`, `N50`, `E39` là **coverage gap**, không suy diễn.
+- **Khi có spec/wireframe cho tính năng này**, chuyển sang `/spec-intake` để có test plan + test case black-box (BVA cho ranh giới giờ, Decision Table cho ma trận *provider × quyền × mạng*) thay vì chỉ dựa vào checklist kinh nghiệm này.
