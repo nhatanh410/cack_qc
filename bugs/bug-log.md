@@ -569,7 +569,7 @@ Not every device is affected: it does not reproduce on iPhone 14 Pro Max (iOS 26
 | **Device / Build** | iPhone 14 Pro Max, iOS 26 · 1.2.24 (152) · TestFlight |
 | **App language** | All languages |
 | **Frequency** | Always |
-| **GitHub issue** | not created yet |
+| **GitHub issue** | https://github.com/sfunvn/lockscreen-calendar/issues/437 |
 
 **Issue title:** `[QC] [Calendar] Google Calendar / Outlook changes never reach Ink (Calendar tab, Widget, wallpaper)`
 
@@ -596,6 +596,8 @@ The Calendar tab shows the latest version of the event (all fields), and an even
 - Reproduces with events created in Ink and with events not created in Ink.
 - Reproduces in all app languages.
 - The other direction works: an update made in Ink shows up in Google Calendar and Outlook.
+- Regression: on build 1.2.23 (before event creation from Ink to Google / Outlook was added), changes made in the provider did show up in Ink.
+- Workaround: signing out of Google / Outlook and signing in again makes the events come through. It is not known how long they stay up to date afterwards.
 
 ### Evidence
 
