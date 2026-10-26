@@ -21,6 +21,7 @@
 | BUG-007 | 2026-10-12 | 04_discover | widget | editing | Low | Widget configuration's Calendars tab has no option to choose Monday or Sunday as the first day of the week (user feedback) | Open |
 | BUG-008 | 2026-10-12 | 04_discover | lockscreen | editing | Low | Lockscreen editor's Calendars tab has the first-day-of-week option at the bottom, below the calendar list, so users can't find it (should be at the top) | Open |
 | BUG-009 | 2026-10-12 | 04_discover | live-activity | default | Medium | On some devices (e.g. iPhone 15, iOS 18.5) Live Activity starts the week on Sunday while Calendar and Widget start on Monday | Open |
+| BUG-010 | 2026-10-16 | 05_calendar | list-view | default | High | Nothing that happens in Google Calendar or Outlook (edit, delete, new event) reaches Ink: Calendar tab, Widget and wallpaper all keep the old data, even after killing the app and waiting; Ink → provider changes do sync | Open |
 
 ---
 
@@ -552,3 +553,76 @@ Not every device is affected: it does not reproduce on iPhone 14 Pro Max (iOS 26
 - [ ] Screenshots of the Live Activity and of the Calendar tab / Widget on the iPhone 15.
 - [ ] Settings → General → Language & Region → First Day of Week and Region on the iPhone 15.
 - [ ] Does the Live Activity on the Lock Screen and in the Dynamic Island both show Sunday first, or only one of them?
+
+---
+
+## BUG-010 · Nothing that changes in Google Calendar or Outlook (edit, delete, new event) reaches Ink
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-10-16 |
+| **Flow** | `05_calendar` |
+| **Screen** | `list-view` — seen in the Calendar tab; also seen in the Widget and on the wallpaper (see Actual) |
+| **State** | `default` |
+| **Severity** | High — data coming from Google / Outlook is permanently stale on every surface (Calendar tab, Widget, wallpaper) and deletions and new events do not arrive, so the user can act on events that no longer exist or are missing, with no warning |
+| **Status** | Open |
+| **Device / Build** | iPhone 14 Pro Max, iOS 26 · 1.2.24 (152) · TestFlight |
+| **App language** | All languages |
+| **Frequency** | Always |
+| **GitHub issue** | https://github.com/sfunvn/lockscreen-calendar/issues/437 |
+
+**Issue title:** `[QC] [Calendar] Google Calendar / Outlook changes never reach Ink (Calendar tab, Widget, wallpaper)`
+
+### Steps to reproduce
+
+1. Connect Google Calendar (and, separately, Outlook) in Ink.
+2. In the Ink Calendar tab, find an event on the connected calendar. Do this once with an event **created in Ink** and once with an event **not created in Ink**.
+3. In Google Calendar (app or web) / Outlook (app or web), edit that event: change the title, time, date or any other field.
+4. Go back to the Ink Calendar tab and look at the event.
+5. Kill the app, reopen it, look at the event again. Wait a few minutes and look again.
+6. In Google Calendar / Outlook, delete one of the events. Look at it in Ink the same way.
+
+### Expected
+
+The Calendar tab shows the latest version of the event (all fields), and an event deleted in Google Calendar / Outlook disappears from Ink.
+
+### Actual
+
+- No field of the event changes in Ink: Ink keeps showing the old version, for both Google and Outlook.
+- Killing and reopening the app does not help. Waiting a few minutes does not help.
+- An event deleted in Google Calendar / Outlook is **not** removed from Ink.
+- An event **created** in Google Calendar / Outlook after the connection does **not** show up in Ink at all.
+- The **Widget and the wallpaper** also show the old version, so the data is stale at the source, not only in the Calendar tab.
+- Reproduces with events created in Ink and with events not created in Ink.
+- Reproduces in all app languages.
+- The other direction works: an update made in Ink shows up in Google Calendar and Outlook.
+- Regression: on build 1.2.23 (before event creation from Ink to Google / Outlook was added), changes made in the provider did show up in Ink.
+- Workaround: signing out of Google / Outlook and signing in again makes the events come through. It is not known how long they stay up to date afterwards.
+
+### Evidence
+
+Screenshots of the same event in Ink and in Google Calendar / Outlook after the change will be added by the QC owner directly in git.
+
+### Notes
+
+- Reported for both Google Calendar and Outlook with the same symptom, so the cause may be in a layer shared by both rather than in one provider. This is not assumed here.
+- **Regression:** on the previous build **1.2.23**, which did not yet have creating events from Ink to Google / Outlook, changes made in the provider did come through to Ink. They stop coming through on 1.2.24 (152), the build that adds event creation (provided by the QC owner 2026-10-16). The link to the new write feature is a likely suspect, not confirmed.
+- **Signing out and signing in again** to Google / Outlook makes the events come through (provided by the QC owner 2026-10-16). So the provider data is reachable; the problem is more likely the session or token Ink holds than the provider or the display. Not confirmed with dev.
+- Because new events do not arrive either, this is wider than "updates are not applied": Ink may not be reading from the providers at all (for example an expired or revoked session, or reading only a stored copy). Not confirmed. Compare with [BUG-004](#bug-004--event-tạo-trên-google-calendar-không-xuất-hiện-trên-wallpaper-hôm-sau) (Google events missing on the wallpaper), which may be the same cause.
+- [`references/pipeline.html`](../references/pipeline.html) describes the **wallpaper render** path (a live fetch with a 10 s limit, and a 120 s cache for the editor preview). It does not describe how the in-app Calendar tab loads Google / Outlook events, so nothing there explains this bug. A restart and a wait of several minutes also rule out the 120 s cache as the only cause.
+- Related checklist items: [`CAL-N53`–`N60`](../requirements/exploratory/05_calendar.md) (provider → Ink direction), `CAL-Q23`–`Q25`.
+
+### To verify
+
+- [x] Build, install type, device and iOS — provided by the QC owner 2026-10-16.
+- [x] Frequency, and that it affects events created in Ink and not created in Ink — provided by the QC owner 2026-10-16.
+- [ ] Screenshots: the same event in Ink vs Google Calendar / Outlook after the edit, and after the delete (QC owner will add in git).
+- [x] Wallpaper and Widget show the old version too — provided by the QC owner 2026-10-16.
+- [x] New events created in Google Calendar / Outlook do not appear in Ink — provided by the QC owner 2026-10-16.
+- [x] App language: reproduces in all languages — provided by the QC owner 2026-10-16.
+- [ ] Do the other views (Day, Week, Month) show the old version too, or only List?
+- [ ] Settings → Google Calendar / Outlook: does it still show Connected while the data is stale (no sign-in prompt)?
+- [x] Signing out and in again brings the latest events — provided by the QC owner 2026-10-16.
+- [ ] How long after signing in does the data go stale again (minutes, hours, a day)? Does it go stale after a token lifetime (about 1 hour) or after the app is killed?
+- [x] Works on 1.2.23, broken on 1.2.24 (152) — regression, provided by the QC owner 2026-10-16.
+- [ ] Does it reproduce on a **clean install** of 1.2.24 (152), or only on a device that was connected on 1.2.23 and then updated? This tells whether the problem is the update path (old session kept) or the build itself.
