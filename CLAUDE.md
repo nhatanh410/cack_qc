@@ -4,26 +4,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A **documentation-only QA workspace** for the iOS app **Ink: Lockscreen Calendar, Note** — not the app's
-source code. There is no build, lint, or test command: every file is Markdown (plus a few standalone HTML
-tools and image assets). "Testing" in this repo means writing/executing ISTQB-style test documentation, not
-running an automated suite. See [README.md](README.md) for full navigation and the product architecture
-summary.
+A **documentation-only QA workspace** for **Hệ thống Quản lý vụ việc Công An Cửa Khẩu Nội Bài (CACK)** — a
+case-management system with two platforms: a **mobile app** (assigners create violation cases / tasks, officers
+receive and handle them, sign records on the device) and a **web admin** ("trang quản trị hệ thống chung", not yet
+described). It is not the system's source code. There is no build, lint, or test command: every file is Markdown
+(plus image assets and a few shell scripts for bug → GitHub issue). "Testing" in this repo means writing/executing
+ISTQB-style test documentation, not running an automated suite. All documentation is written in **Vietnamese**.
+See [README.md](README.md) for navigation.
+
+The repo was seeded from an earlier QC workspace (Ink Calendar iOS). That content was deleted from the working tree
+on 2026-10-26 but is still in git history at commit `3ada18a` (original paths, e.g.
+`git show 3ada18a:requirements/test-plans/shortcuts/test-plan-ios26-27.md`). Skills cite a few of those files as
+**format references** only (how a test plan / test case / checklist is laid out) — never as test basis or domain
+knowledge for CACK.
+
+## Product facts that shape every test
+
+- **Two roles** (spec v2.1 §3): *người giao việc* (Đội trưởng/Chỉ huy Đội, Tổ trưởng, Tổ phó, Phó đội trưởng, Phó
+  trưởng CACK, Trưởng CACK, plus any *cán bộ được uỷ quyền Tổ phó* granted by an admin) and *cán bộ* (receives work). Role/permission is a cross-cutting risk.
+- **Personal data**: CCCD/passport scanning, names, dates of birth, passenger flight/seat, signatures. Never put
+  real personal data in docs, bug reports or committed images — test data only.
+- **Primary test basis:** [dac-ta-chuc-nang-v2.1.md](requirements/specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md)
+  (customer-review spec v2.1, 22/10/2026: use cases XL01–XL05, GV01–GV03, CH01–CH07, permission matrix, state
+  model, business rules). It supplements the overview below and **wins on conflict** (QC lead, 2026-10-26). Its
+  `[Bn]` codes are the spec's Appendix B, not the test-analysis blocking questions; `[Bn*]` are unconfirmed.
+- The overview spec is
+  [requirements/specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md](requirements/specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md)
+  (exported from Google Doc 2026-10-26; the source doc stops mid-section at "Ký lại biên bản"). Always read it together
+  with [lam-ro-2026-10-26.md](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md) — the QC lead's answers
+  (case-action roles, re-signing, iPhone-only, mandatory fields) and its "Đối chiếu với đặc tả v2.1" section, which
+  records where those answers differ from spec v2.1.
 
 ## Architecture: how a feature's documentation set fits together
 
 Every feature has a matching folder name repeated across `requirements/specs/<feature>/` (input from dev/PM,
 authoritative "test basis"), `requirements/test-plans/<feature>/` (QC-authored), and sometimes a top-level
 `test-cases/<feature>/` (only for features complex enough to need test cases split out from the test plan).
-Three documentation bundle shapes exist depending on what evidence is available — see README.md §"Bundle
-riêng..." for the two special-cased ones (remote-config/content-layer features with no UI baseline, and
-architecture-first features whose UI lands on `main` later). Don't invent a fourth shape; extend one of the
-three.
 
 **Screenshot → wireframe → exploratory checklist → test plan → bug log** is the standard pipeline for any
 feature with real UI. Screenshot filenames are the source of truth for flow/screen naming everywhere else in
-the repo — see `.claude/rules/screenshot-naming.md` (also holds the canonical flow map, §7, including which
-flows are 🚧 not yet built).
+the repo — see `.claude/rules/screenshot-naming.md` (device folders `iphone/` and `web/` — the app currently runs on iPhone only; §7 holds the flow map,
+confirmed 2026-10-26, and marks with 🚧 the flows not yet described).
 
 ## The ISTQB skill pipeline (test-analysis → test-plan → test-case)
 
@@ -40,36 +61,31 @@ design technique doesn't fit) where the skill must stop and ask rather than sile
 these stops to finish a pipeline run in one pass, even under time pressure — a wrong guess at test-analysis
 propagates wrong risk levels into test-plan and wrong expected results into test-case.
 
+The overview spec covers the whole module; split it per feature (one `requirements/specs/<feature>/` per flow in
+the flow map, citing back to the overview) before running `/spec-intake`, so each pipeline run has a focused
+test basis.
+
 **Naming convention that ties the three together:** all three outputs for one delivery share one `<slug>`
 in the same folder — `test-analysis-<slug>.md`, `test-plan-<slug>.md`, `test-cases-<slug>.md` — so they're
 easy to find as a set and trace between. When a feature gets re-tested from a materially different spec
-(not just a typo-level correction), mint a new slug rather than overwriting the old trio in place; see
-`requirements/test-plans/shortcuts/` for the current example chain (`ios26-27` → `ios26-27-v2-updated` →
-`ios26-27-v3`, each transition triggered by a real spec change — chip renames, action-count changes, brand
-new flows).
+(not just a typo-level correction), mint a new slug rather than overwriting the old trio in place.
 
 **Superseded docs are archived, never deleted or silently overwritten.** Rename with a `-SUPERSEDED` suffix
 and add a `> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.` banner right under the title,
-explaining what replaced it and why (see any `*-SUPERSEDED.md` file in `requirements/specs/shortcuts/` for
-the pattern). This preserves the reasoning trail — a later re-analysis often reuses a superseded doc's
-*method* (e.g. a token/branch enumeration, a Decision Table shape) even when its specific numbers are stale.
-
-## Specs that stay checklist-only
-
-Not every spec goes through the ISTQB pipeline. Quick release-QC checklists (e.g.
-`requirements/specs/ink-1.2.20-vi.md`, `five-languages-pro-gating/`, and under
-`requirements/specs/wallpaper-editor/wallpaper-customize/`: `stack-components.md`, `day-brief-vi.md`) are
-run by hand and have no test-plan/test-case counterpart — don't generate one unless asked. The
-`wallpaper-editor/` bundle has three generations (`component-editor/` and `wallpaper-decoration/` are
-pre-TF-117 reference only); new Customize-screen docs go in `wallpaper-customize/`.
+explaining what replaced it and why. This preserves the reasoning trail — a later re-analysis often reuses a
+superseded doc's *method* even when its specific numbers are stale.
 
 ## Bug log → GitHub issue
 
-`bugs/bug-log.md` is the single bug log. Pushing a bug to the dev source repo's issue tracker goes through
-the `github-issue-bug` skill and `scripts/create-bug-issue.sh` (dry-run by default; `--submit` only after
-the user approves). **Build, Bản cài, Thiết bị và iOS and Tần suất must be typed by the user every run —
-never infer them.** `scripts/sync-bug-status.sh` pulls open/closed status back. Setup:
-`docs/guides/bug-issue-automation-setup.md`. Read the skill's `SKILL.md` before running either script.
+`bugs/bug-log.md` is the single bug log (content in Vietnamese; section headings/field keys stay English because
+the scripts parse them). Issues go to **this repo** (`nhatanh410/cack_qc`) via the `github-issue-bug` skill and
+`scripts/create-bug-issue.sh` (dry-run by default; `--submit` only after the user approves). **Phiên bản, Nền
+tảng, Thiết bị / Trình duyệt and Tần suất must be typed by the user every run — never infer them.**
+`scripts/sync-bug-status.sh` pulls open/closed status back. Setup: `docs/guides/bug-issue-setup.md`. Read the
+skill's `SKILL.md` before running either script.
+
+⚠️ As of 2026-10-26 the GitHub repo is **public** — spec images and screenshots are git-ignored for that reason.
+Remind the user before any push or `--submit` until it is private.
 
 ## Memory
 

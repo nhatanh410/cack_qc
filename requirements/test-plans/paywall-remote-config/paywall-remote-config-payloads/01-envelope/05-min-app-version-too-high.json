@@ -1,8 +1,0 @@
-{
-  "schema_version": 1,
-  "min_app_version": "99.0.0",
-  "variant": "env_05_min_app_version_too_high",
-  "headline": {
-    "en": "[TC env-05] KHONG duoc hien - build test chac chan < 99.0.0"
-  }
-}

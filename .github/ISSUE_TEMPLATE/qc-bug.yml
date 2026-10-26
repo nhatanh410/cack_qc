@@ -1,0 +1,88 @@
+name: QC bug
+description: Báo lỗi do QC phát hiện trên hệ thống Quản lý vụ việc CACK Nội Bài (app mobile / web quản trị)
+title: "[QC] "
+labels: ["qc-bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Mỗi issue một lỗi. Ghi đủ để người khác (và agent) tái hiện được mà không phải hỏi lại.
+        ⚠️ **Không** đưa dữ liệu cá nhân thật (họ tên, CCCD/hộ chiếu, ngày sinh, chữ ký, số ghế/chuyến bay của hành khách) vào issue — chỉ dùng dữ liệu test.
+  - type: input
+    id: build
+    attributes:
+      label: Phiên bản
+      description: Phiên bản / build đang test
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Nền tảng
+      options:
+        - App mobile
+        - Web quản trị
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Thiết bị / Trình duyệt
+      description: "vd: iPhone 13, iOS 17.5 — hoặc Chrome 129, Windows 11"
+    validations:
+      required: true
+  - type: input
+    id: role
+    attributes:
+      label: Vai trò tài khoản
+      description: "vd: Cán bộ / Tổ trưởng / Đội trưởng"
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Các bước tái hiện
+      placeholder: |
+        1. Đăng nhập bằng tài khoản ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Mong đợi
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Thực tế
+    validations:
+      required: true
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Tần suất
+      options:
+        - Luôn luôn
+        - Thỉnh thoảng
+        - Chỉ gặp một lần
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Mức độ
+      options:
+        - critical — crash, mất dữ liệu, lộ dữ liệu cá nhân, sai quyền, chặn luồng chính
+        - major — sai chức năng, có cách né
+        - minor — lỗi hiển thị, chữ, chi tiết nhỏ
+    validations:
+      required: true
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Ảnh, video, log
+      description: Kéo thả file. Che toàn bộ dữ liệu cá nhân trước khi đính kèm.
+    validations:
+      required: false

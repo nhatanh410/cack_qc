@@ -1,9 +1,9 @@
 ---
 name: test-case
-description: Sinh Test Case Specification theo chuẩn ISTQB Foundation Level (CTFL v4.0.1) từ một Test Plan đã có của Ink Calendar iOS. Dùng khi user nói "viết test case cho <feature>", "thiết kế test case theo test plan X", "sinh case theo EP/BVA/Decision Table cho <feature>". Bắt buộc đã có test-plan-*.md (chạy skill test-plan trước nếu chưa có). Đọc mục 5 (kỹ thuật thiết kế) + mục 6 (risk) của test plan, xuất file test-cases-*.md cùng thư mục.
+description: Sinh Test Case Specification theo chuẩn ISTQB Foundation Level (CTFL v4.0.1) từ một Test Plan đã có của hệ thống Quản lý vụ việc CACK Nội Bài. Dùng khi user nói "viết test case cho <feature>", "thiết kế test case theo test plan X", "sinh case theo EP/BVA/Decision Table cho <feature>". Bắt buộc đã có test-plan-*.md (chạy skill test-plan trước nếu chưa có). Đọc mục 5 (kỹ thuật thiết kế) + mục 6 (risk) của test plan, xuất file test-cases-*.md cùng thư mục.
 ---
 
-# Sinh Test Case Specification (ISTQB Foundation Level) — Ink Calendar iOS
+# Sinh Test Case Specification (ISTQB Foundation Level) — Hệ thống Quản lý vụ việc CACK Nội Bài
 
 Chuyển **kỹ thuật thiết kế** đã chọn trong Test Plan (mục 5) thành **bảng test case chạy được ngay**: mỗi case
 có ID, bước thực hiện, kết quả mong đợi truy được về đúng partition/rule/transition, và độ ưu tiên kế thừa từ
@@ -41,8 +41,8 @@ case khác không bị chặn vẫn có thể viết bình thường trong lúc 
 | `requirements/test-plans/<feature>/test-plan-<slug>.md` | **Bắt buộc phải tồn tại.** Mục 2 (test object + mã nhóm), mục 5 (kỹ thuật thiết kế — nguồn trực tiếp để suy case), mục 6 (risk → priority), mục 10/11 (gap, coverage gap) |
 | Tài liệu **test basis** gốc mà test plan trích dẫn | Giá trị cụ thể (chuỗi, số, tên màn hình thật) để viết bước thực hiện chính xác, không suy đoán |
 | `requirements/istqb-foundation/ISTQB_CTFL_Syllabus_v4.0.1.md` | Cách tính coverage đúng cho từng kỹ thuật — xem bảng mục 1.1 |
-| `requirements/test-plans/shortcuts/test-cases-ios26-27.md` | **Mẫu chuẩn** — cách viết "Quy ước" đầu file, cách gộp nhiều case vào 1 trình tự chạy, cách đánh dấu 🔭/⚠️ |
-| `requirements/test-plans/shortcuts/screenshots/README.md` | Mẫu quy ước đặt tên ảnh bằng chứng nếu feature cần chụp màn hình khi chạy case |
+| `requirements/test-plans/case-create/test-cases-dac-ta-v2.1.md` | **Mẫu chuẩn về hình thức** (bộ test case đầu tiên của dự án CACK — học cách trình bày; nội dung chỉ đúng cho XL01) — cách viết "Quy ước" đầu file, cách gộp nhiều case vào 1 trình tự chạy, cách đánh dấu 🔭/⚠️ |
+| `requirements/test-plans/case-create/screenshots/README.md` | Mẫu quy ước đặt tên ảnh bằng chứng nếu feature cần chụp màn hình khi chạy case |
 
 Nếu **chưa có test-plan-*.md** cho feature này → dừng lại, báo user chạy skill **test-plan** trước. Không tự suy
 ra kỹ thuật thiết kế từ đầu — test-case luôn thiết kế **dựa trên** test plan đã duyệt, không thay thế nó.
@@ -66,7 +66,7 @@ ra kỹ thuật thiết kế từ đầu — test-case luôn thiết kế **dự
 tương ứng, để 2 file luôn đi cặp và dễ tra ngược.
 
 Nếu case cần bằng chứng ảnh khi chạy thật → tạo thêm `requirements/test-plans/<feature>/screenshots/README.md`
-theo đúng mẫu ở `shortcuts/screenshots/README.md` (thư mục con = mã nhóm case, tên file = ID case + hậu tố màn
+theo đúng mẫu ở `requirements/test-plans/case-create/screenshots/README.md` (thư mục con = mã nhóm case, tên file = ID case + hậu tố màn
 hình/state).
 
 ---
@@ -95,7 +95,7 @@ hình/state).
 
 > (Nếu nhóm case có thể gộp thành 1 trình tự chạy liên tục để đỡ tốn thời gian setup — vd đổi lần lượt qua các
 > giá trị của cùng 1 tổ hợp Decision Table — viết phần "Trình tự chạy gộp" trước bảng, liệt kê case nào gộp
-> được/không gộp được, theo đúng mẫu shortcuts/test-cases-ios26-27.md mục 3.)
+> được/không gộp được, theo cách trình bày ở mục "Quy ước" của `requirements/test-plans/case-create/test-cases-dac-ta-v2.1.md`.)
 
 | ID | Bước thực hiện | Kết quả mong đợi | Ưu tiên |
 |---|---|---|:---:|

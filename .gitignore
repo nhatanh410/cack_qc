@@ -1,1 +1,5 @@
 .DS_Store
+
+# Ảnh spec có thể chứa dữ liệu cá nhân thật (CCCD, họ tên) — repo đang public. Bỏ dòng dưới khi repo private hoặc ảnh đã che.
+requirements/specs/*/images/
+requirements/ui/ux/screenshots/**/*.png

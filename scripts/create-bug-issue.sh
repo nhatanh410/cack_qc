@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-# Tạo GitHub issue (repo source, form "QC bug") từ một bug đã được duyệt trong bugs/bug-log.md.
+# Tạo GitHub issue (repo trong bug-issue.conf, form "QC bug") từ một bug đã được duyệt trong bugs/bug-log.md.
 #
 #   scripts/create-bug-issue.sh BUG-005 [--build V] [--install V] [--device V] [--lang V]
 #                                       [--frequency V] [--severity V] [--title-prefix P] [--submit]
 #
 # Mặc định là dry-run: chỉ in title/labels/body. Chỉ tạo issue thật khi có --submit.
-# 4 field PHẢI do người dùng nhập tay mỗi lần chạy, không lấy từ bug-log và không đoán: Build, Bản cài,
-# Thiết bị và iOS, Tần suất. Truyền bằng flag; nếu chạy trong terminal tương tác mà thiếu thì script hỏi trực tiếp.
+# 4 field PHẢI do người dùng nhập tay mỗi lần chạy, không lấy từ bug-log và không đoán: Phiên bản, Nền tảng,
+# Thiết bị, Tần suất. Truyền bằng flag; nếu chạy trong terminal tương tác mà thiếu thì script hỏi trực tiếp.
 # Không có giá trị (vd chạy qua Claude Code, không có TTY) -> dừng exit 3 và liệt kê field cần nhập.
 # Các field còn lại lấy từ bug-log; thiếu, còn ❓ (trừ Mong đợi) hoặc dropdown không khớp option -> dừng (exit 3).
-#   --install   TestFlight (Prod) | Firebase App Distribution (Dev) | App Store | Build local từ Xcode
+#   --install   App mobile | Web quản trị   (option lấy từ scripts/bug-issue.conf)
+#   --lang      Vai trò tài khoản test (tuỳ chọn; mặc định lấy dòng "Account role" trong bug-log)
 #   --frequency Luôn luôn | Thỉnh thoảng | Chỉ gặp một lần   (hoặc always | sometimes | once)
 #   --allow-duplicate bỏ qua kiểm tra trùng (vd issue cũ chứa mã bug chỉ là issue thử đã đóng). Dùng khi đã tự xem danh sách trùng.
 #   --title-prefix P  thêm P vào ĐẦU title (vd "[TEST script push issue] ") để dễ tìm và xoá issue thử
@@ -113,12 +114,12 @@ TITLE=$(bug_issue_title "$ID")
 [[ "$TITLE" == "[QC] "* ]] || TITLE="[QC] $TITLE"
 TITLE="${TITLE_PREFIX}${TITLE}"
 
-# Build / Bản cài / Thiết bị / Tần suất: chỉ từ flag hoặc nhập tay (prompt). Ngôn ngữ app (tuỳ chọn) lấy từ bug-log.
+# Phiên bản / Nền tảng / Thiết bị / Tần suất: chỉ từ flag hoặc nhập tay (prompt). Vai trò tài khoản (tuỳ chọn) lấy từ bug-log.
 [[ -n "$BUILD" ]] || BUILD=$(prompt_field "$H_BUILD")
 [[ -n "$INSTALL" ]] || INSTALL=$(prompt_field "$H_INSTALL" "${INSTALL_OPTIONS[@]}")
 [[ -n "$DEVICE" ]] || DEVICE=$(prompt_field "$H_DEVICE")
 [[ -n "$FREQ" ]] || FREQ=$(prompt_field "$H_FREQ" "${FREQ_OPTIONS[@]}")
-[[ -n "$LANG_APP" ]] || LANG_APP=$(bug_field "$ID" "App language")
+[[ -n "$LANG_APP" ]] || LANG_APP=$(bug_field "$ID" "Account role")
 
 STEPS=$(bug_sub "$ID" "Steps to reproduce")
 EXPECTED=$(bug_sub "$ID" "Expected")

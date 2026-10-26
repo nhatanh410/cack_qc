@@ -1,9 +1,9 @@
 ---
 name: test-plan
-description: Sinh Test Plan theo chuẩn ISTQB Foundation Level (CTFL v4.0.1) từ tài liệu bàn giao QC / spec (test basis) của một feature/flow Ink Calendar iOS. Dùng khi user nói "viết test plan cho <feature>", "lập test plan theo ISTQB cho...", "cập nhật test plan sau khi spec đổi version". Đọc test basis + đối chiếu tài liệu đã có, xuất file vào requirements/test-plans/<feature>/.
+description: Sinh Test Plan theo chuẩn ISTQB Foundation Level (CTFL v4.0.1) từ tài liệu bàn giao QC / spec (test basis) của một feature/flow hệ thống Quản lý vụ việc CACK Nội Bài. Dùng khi user nói "viết test plan cho <feature>", "lập test plan theo ISTQB cho...", "cập nhật test plan sau khi spec đổi version". Đọc test basis + đối chiếu tài liệu đã có, xuất file vào requirements/test-plans/<feature>/.
 ---
 
-# Sinh Test Plan (ISTQB Foundation Level) — Ink Calendar iOS
+# Sinh Test Plan (ISTQB Foundation Level) — Hệ thống Quản lý vụ việc CACK Nội Bài
 
 Chuyển một tài liệu bàn giao QC/spec (**test basis**) thành **Test Plan** đúng cấu trúc ISTQB Foundation Level:
 xác định phạm vi, kỹ thuật thiết kế case, độ ưu tiên theo rủi ro, tiêu chí vào/ra — làm nền để skill
@@ -45,7 +45,7 @@ bằng text **trước khi** tạo file — không âm thầm chọn 1 phương 
 | Tài liệu **test basis** (spec/QC handoff của feature, thường ở `requirements/specs/<feature>/...`) | Nguồn sự thật duy nhất để suy ra scope, hành vi kỳ vọng, câu hỏi mở |
 | `requirements/test-plans/<feature>/test-analysis-<slug>.md` (nếu đã chạy skill test-analysis) | Danh sách test condition **đã ưu tiên hoá** — dùng thẳng cho mục 2/6, không phân tích lại |
 | `requirements/istqb-foundation/ISTQB_CTFL_Syllabus_v4.0.1.md` | Định nghĩa chuẩn cho mọi khái niệm dùng trong test plan — xem bảng mục 2 dưới đây để biết đọc mục nào |
-| `requirements/test-plans/<feature khác gần nhất>/test-plan-*.md` đã có (đặc biệt `shortcuts/test-plan-ios26-27.md`) | **Mẫu chuẩn** về độ sâu, cách trình bày, cách viết mục risk/entry-exit/gap |
+| `requirements/test-plans/<feature khác gần nhất>/test-plan-*.md` đã có; mẫu hiện có: `requirements/test-plans/case-create/test-plan-dac-ta-v2.1.md` (test plan đầu tiên của dự án CACK — học hình thức; nội dung chỉ đúng cho XL01) | **Mẫu chuẩn** về độ sâu, cách trình bày, cách viết mục risk/entry-exit/gap |
 | `.claude/rules/screenshot-naming.md` §7 (flow map) | Liệt kê toàn bộ flow của app để điền bảng "Ảnh hưởng chéo tới flow khác" (mục 3.1) |
 | `requirements/exploratory/<NN>_<flow>.md`, wireframe cùng flow (nếu có) | Đối chiếu case/checklist cũ — phát hiện điểm mâu thuẫn hoặc case cần chạy lại (regression) |
 | `bugs/bug-log.md` (nếu có bug liên quan) | Bug cũ cần regression lại trong test plan mới |
@@ -107,7 +107,7 @@ in hoa) mà skill test-case sẽ dùng làm tiền tố ID — vd `INS`, `HS`, `
 Mỗi mục out-of-scope phải có **lý do** (đã xác nhận không phải bug, ngoài phạm vi bàn giao, chưa build...).
 
 ### 3.1 Ảnh hưởng chéo tới flow khác (regression impact ngoài phạm vi note)
-Bảng: Flow (theo đúng flow-no/flow-name của [screenshot-naming.md §7](../../rules/screenshot-naming.md#7-flow-map--ink-calendar-ios))
+Bảng: Flow (theo đúng flow-no/flow-name của [screenshot-naming.md §7](../../rules/screenshot-naming.md#7-flow-map--hệ-thống-quản-lý-vụ-việc-cack-nội-bài))
 · Ảnh hưởng? (Trực tiếp/Gián tiếp/Không) · Lý do.
 
 ## 4. Test levels & test types
@@ -174,7 +174,8 @@ biết trước kết quả đúng (thăm dò thật), không phải nơi vứt 
 flow ở screenshot-naming.md §7.
 
 **Version cũ bị thay thế → không xoá, chỉ đánh dấu superseded** và giải thích rõ sai ở đâu, đúng ở đâu (xem cách
-làm ở `shortcuts/test-plan-ios26-27.md` mục "V2 thay thế V1").
+làm ở `requirements/test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md` — banner SUPERSEDED — và mục 6 "đối chiếu với đợt cũ" của
+`requirements/test-plans/case-create/test-analysis-dac-ta-v2.1.md`).
 
 **Gap (mục 10) khác Coverage gap (mục 11).** Mục 10 = câu hỏi mà **câu trả lời sẽ đổi kết quả mong đợi** của case
 đã viết. Mục 11 = case **hoàn toàn chưa được nghĩ tới** trong test basis, QC tự bổ sung.

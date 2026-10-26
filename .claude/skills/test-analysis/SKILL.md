@@ -3,7 +3,7 @@ name: test-analysis
 description: Phân tích test basis theo ISTQB Foundation Level (§1.4.1 Test Analysis + §3 Static Testing + §5.2 Risk Management) trước khi lập test plan — rà soát testability của tài liệu bàn giao (mơ hồ/thiếu/mâu thuẫn), trích xuất và ưu tiên hoá test condition. Dùng khi user nói "phân tích test basis cho <feature>", "review testability của spec X", "trích test condition cho <feature>", hoặc trước khi chạy skill test-plan trên một spec mới/dài/nhiều bên liên quan. Xuất file vào requirements/test-plans/<feature>/test-analysis-<slug>.md.
 ---
 
-# Sinh Test Analysis (ISTQB Foundation Level) — Ink Calendar iOS
+# Sinh Test Analysis (ISTQB Foundation Level) — Hệ thống Quản lý vụ việc CACK Nội Bài
 
 Theo [ISTQB CTFL v4.0.1 §1.4.1](../../../requirements/istqb-foundation/ISTQB_CTFL_Syllabus_v4.0.1.md), test
 process gồm các nhóm hoạt động: **Test Planning → Monitoring & Control → Test Analysis → Test Design → Test

@@ -1,8 +1,0 @@
-{
-  "schema_version": 1,
-  "min_app_version": "1.9.0-beta1",
-  "variant": "env_04_min_app_version_bad_format",
-  "headline": {
-    "en": "[TC env-04] KHONG duoc hien - min_app_version sai dinh dang"
-  }
-}

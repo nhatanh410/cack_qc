@@ -1,49 +1,53 @@
 ---
 name: github-issue-bug
-description: Soạn GitHub issue báo bug theo đúng form "QC bug" của team (repo sfunvn/lockscreen-calendar) cho app Ink Calendar iOS. Dùng khi user nói "log bug", "tạo issue bug", "viết issue cho lỗi này", "báo bug lên GitHub", hoặc đưa mô tả/screenshot/ghi chú một lỗi và muốn có issue sẵn để dán vào form. Xuất nội dung theo từng field của form, không tự bịa Build/thiết bị. Có thể đẩy thẳng lên repo source bằng script nhưng chỉ sau khi user duyệt và xác nhận rõ.
+description: Soạn GitHub issue báo bug theo đúng form "QC bug" (repo nhatanh410/cack_qc) cho hệ thống Quản lý vụ việc CACK Nội Bài (app mobile + web quản trị). Dùng khi user nói "log bug", "tạo issue bug", "viết issue cho lỗi này", "báo bug lên GitHub", hoặc đưa mô tả/screenshot/ghi chú một lỗi và muốn có issue sẵn để dán vào form. Xuất nội dung theo từng field của form, không tự bịa Phiên bản/thiết bị. Có thể đẩy thẳng lên repo issue bằng script nhưng chỉ sau khi user duyệt và xác nhận rõ.
 ---
 
-# Soạn GitHub Issue — QC bug (Ink Calendar iOS)
+# Soạn GitHub Issue — QC bug (Hệ thống Quản lý vụ việc CACK Nội Bài)
 
 Biến mô tả lỗi thô (text, screenshot, ghi chú, 1 mục trong `bugs/bug-log.md`) thành **nội dung điền sẵn cho form
 "QC bug"** trên GitHub. Form nguyên văn nhắc: *"Mỗi issue một lỗi. Ghi đủ để người khác (và agent) tái hiện
 được mà không phải hỏi lại."* — đó là tiêu chí chất lượng duy nhất của skill này.
 
-## Ngôn ngữ — bắt buộc tiếng Anh
+## Ngôn ngữ — tiếng Việt
 
-**Toàn bộ nội dung báo cáo viết bằng tiếng Anh**: Title, Build, Thiết bị, Ngôn ngữ app, Các bước tái hiện (gồm
-Mong đợi / Thực tế / Tần suất / Mức độ), và nội dung ghi vào `bugs/bug-log.md` (section chi tiết của bug).
-Dù input của user là tiếng Việt, hoặc app đang ở tiếng Việt, report vẫn là tiếng Anh.
+**Toàn bộ nội dung báo cáo viết bằng tiếng Việt** (app và team dev dùng tiếng Việt): Title, các field, và nội dung
+ghi vào `bugs/bug-log.md`.
 
-- Tên nút/màn hình/tab: dùng **đúng nhãn UI bản English của app** (`Your collection`, `Lockscreen`, `Set as current`).
-  Nếu lỗi chỉ ở bản Việt và chưa biết nhãn English → ghi nhãn Việt trong ngoặc kép kèm bản dịch nghĩa, vd
-  `"Bộ sưu tập của bạn" (Your collection)`.
-- Nội dung do user nhập hoặc text hiển thị sai (tên event, message lỗi) giữ nguyên gốc trong ngoặc kép, không dịch.
-- Tên field của form GitHub (Build, Bản cài, Thiết bị và iOS…) giữ nguyên tên gốc tiếng Việt để user biết dán vào đâu.
-- Chỉ phần trao đổi với user (hỏi thông tin thiếu, lời dẫn, danh sách `❓` cần bổ sung) dùng tiếng Việt.
-- Nhãn `❓` trong report ghi tiếng Anh: `❓ needs confirmation`, `❓ not retested`.
+- Tên nút/màn hình/tab: dùng **đúng nhãn trên UI** (`Tạo vụ việc`, `Tiếp nhận`, `Kiểm tra & chốt để ký`).
+- Nội dung do user nhập hoặc text hiển thị sai (mô tả vụ việc, message lỗi) giữ nguyên gốc trong ngoặc kép.
+- **Tiêu đề section trong bug-log giữ nguyên tiếng Anh** (`### Steps to reproduce`, `### Expected`, `### Actual`, các
+  dòng `| **Severity** |`, `| **Account role** |`…) vì `scripts/` đọc đúng các khoá này — chỉ nội dung bên dưới là
+  tiếng Việt.
+- Nhãn `❓` trong report: `❓ cần xác nhận`, `❓ chưa thử lại`.
+
+## Dữ liệu cá nhân — bắt buộc
+
+Hệ thống xử lý CCCD/hộ chiếu, họ tên, ngày sinh, chuyến bay/số ghế hành khách, chữ ký. **Không bao giờ** đưa dữ
+liệu cá nhân thật vào title, steps, bug-log hay ảnh đính kèm — chỉ dùng dữ liệu test, hoặc thay bằng mô tả
+(`<CCCD 12 số hợp lệ>`). Input của user có dữ liệu thật → thay thế khi soạn và nói rõ với user đã thay.
 
 ## Các field của form (thứ tự đúng như trên GitHub)
 
-Nguồn: file issue form thật `.github/ISSUE_TEMPLATE` của repo (đọc 2026-10-11). Form tự gắn label `qc-bug`,
+Nguồn: issue form `.github/ISSUE_TEMPLATE/qc-bug.yml` của repo này (tạo 2026-10-26). Form tự gắn label `qc-bug`,
 `needs-triage` và tiền tố title `[QC] `. Phần "Mỗi issue một lỗi…" là lời dẫn đầu form.
 
 | # | Field | Bắt buộc | Dạng | Ghi chú |
 |---|---|---|---|---|
-| 1 | **Build** | ✅ | text | `<version> (<build>) — <rc tag nếu biết>`, vd `1.2.13 (456) — v1.2.13-rc2`. Lấy ở Cài đặt → Giới thiệu hoặc TestFlight |
-| 2 | **Bản cài** | ✅ | dropdown | `TestFlight (Prod)` · `Firebase App Distribution (Dev)` · `App Store` · `Build local từ Xcode` |
-| 3 | **Thiết bị và iOS** | ✅ | text | vd `iPhone 15 Pro, iOS 18.6` |
-| 4 | **Ngôn ngữ app** | ❌ | text | vd `Vietnamese` / `English` |
-| 5 | **Các bước tái hiện** | ✅ | textarea | danh sách đánh số, bước đầu thường là `Open the Calendar tab` |
-| 6 | **Mong đợi** | ✅ | textarea | chỉ ghi khi có căn cứ; chưa có spec → `❓ no spec — needs PM/dev confirmation` |
+| 1 | **Phiên bản** | ✅ | text | phiên bản / build đang test — ❓ dự án chưa thống nhất cách đánh số, hỏi user |
+| 2 | **Nền tảng** | ✅ | dropdown | `App mobile` · `Web quản trị` |
+| 3 | **Thiết bị / Trình duyệt** | ✅ | text | vd `iPhone 13, iOS 17.5` (app hiện chỉ chạy trên iPhone) hoặc `Chrome 129, Windows 11` |
+| 4 | **Vai trò tài khoản** | ❌ | text | vai trò của tài khoản test, vd `Cán bộ` / `Tổ trưởng` / `Đội trưởng` — nên điền vì quyền khác nhau theo vai trò |
+| 5 | **Các bước tái hiện** | ✅ | textarea | danh sách đánh số, bước đầu thường là `Đăng nhập bằng tài khoản <vai trò>` |
+| 6 | **Mong đợi** | ✅ | textarea | chỉ ghi khi có căn cứ; chưa có spec → `❓ spec chưa nêu — cần PM/dev xác nhận` |
 | 7 | **Thực tế** | ✅ | textarea | điều quan sát được, không phỏng đoán nguyên nhân |
 | 8 | **Tần suất** | ✅ | dropdown | `Luôn luôn` · `Thỉnh thoảng` · `Chỉ gặp một lần` — chưa thử lại thì **phải thử lại** hoặc hỏi user |
-| 9 | **Mức độ** | ✅ | dropdown | `critical — crash, mất dữ liệu, chặn luồng chính` · `major — sai chức năng, có cách né` · `minor — lỗi hiển thị, chữ, chi tiết nhỏ` |
-| 10 | **Ảnh, video, log** | ❌ | textarea | kéo thả file; **không đính kèm dữ liệu lịch thật của người dùng** |
+| 9 | **Mức độ** | ✅ | dropdown | `critical — crash, mất dữ liệu, lộ dữ liệu cá nhân, sai quyền, chặn luồng chính` · `major — sai chức năng, có cách né` · `minor — lỗi hiển thị, chữ, chi tiết nhỏ` |
+| 10 | **Ảnh, video, log** | ❌ | textarea | kéo thả file; **che toàn bộ dữ liệu cá nhân trước khi đính kèm** |
 
 Title: form chỉ điền sẵn `[QC] `; phần còn lại theo "Quy tắc Title" bên dưới.
 
-**Map Severity của bug-log → Mức độ của form** (bug-log có 4 mức, form có 3; QC đã đồng ý, vẫn hiện ở dry-run): `Critical → critical` · `High → major` · `Medium → major` · `Low → minor`. Nếu user muốn khác thì ghi đè
+**Map Severity của bug-log → Mức độ của form** (bug-log có 4 mức, form có 3; QC lead xác nhận giữ quy ước của dự án Ink ngày 2026-10-26, vẫn hiện ở dry-run): `Critical → critical` · `High → major` · `Medium → major` · `Low → minor`. Nếu user muốn khác thì ghi đè
 (`--severity`).
 
 ## Quy trình
@@ -51,50 +55,47 @@ Title: form chỉ điền sẵn `[QC] `; phần còn lại theo "Quy tắc Title
 1. **Đọc input**: mô tả, screenshot, hoặc bug trong `bugs/bug-log.md`. Một issue = một lỗi; nếu input chứa ≥2 lỗi
    khác nhau → tách thành nhiều issue, hỏi user nếu ranh giới không rõ.
 2. **Gom dữ kiện theo field**. Tên màn hình/flow dùng đúng tên trong
-   `.claude/rules/screenshot-naming.md` §7 (vd `04_discover`, `create-note`) nhưng **trong Title/Steps viết tên
-   hiển thị trên UI app** (tab "Lịch", "Discover"…), vì dev đọc theo UI chứ không theo tên file.
-3. **Dừng hỏi (human-in-the-loop)** khi thiếu field bắt buộc mà không suy ra được từ input: **Build**, **Bản
-   cài**, **Thiết bị và iOS**, **Tần suất** (chưa thử lại → nhờ user thử lại hoặc cho biết). Không đoán, không dùng lại giá trị cũ của bug khác trừ khi user nói "giống bug
+   `.claude/rules/screenshot-naming.md` §7 (vd `03_case-create`, `subject-info`) nhưng **trong Title/Steps viết tên
+   hiển thị trên UI** (tab "Tiếp nhận", nút "Tạo vụ việc"…), vì dev đọc theo UI chứ không theo tên file.
+3. **Dừng hỏi (human-in-the-loop)** khi thiếu field bắt buộc mà không suy ra được từ input: **Phiên bản**, **Nền
+   tảng**, **Thiết bị / Trình duyệt**, **Tần suất** (chưa thử lại → nhờ user thử lại hoặc cho biết). Không đoán, không dùng lại giá trị cũ của bug khác trừ khi user nói "giống bug
    trước". Nếu user bảo cứ xuất bản nháp → để `❓ cần bổ sung` đúng tại field đó.
-4. **Viết Steps** (xem quy tắc dưới), **soát lại** theo checklist cuối, rồi xuất **bản nháp (tiếng Anh) kèm Mức độ đề xuất** (map từ Severity, xem bảng ở trên).
+4. **Viết Steps** (xem quy tắc dưới), **soát lại** theo checklist cuối, rồi xuất **bản nháp (tiếng Việt) kèm Mức độ đề xuất** (map từ Severity, xem bảng ở trên).
 5. **Chờ user duyệt** → sau khi duyệt mới **ghi vào `bugs/bug-log.md`** (xem mục "Ghi nhận vào bug log").
-6. **Đẩy lên GitHub (chỉ khi user muốn)** → làm đúng mục "Đẩy issue lên repo source": hỏi 4 field nhập tay → dry-run →
+6. **Đẩy lên GitHub (chỉ khi user muốn)** → làm đúng mục "Đẩy issue lên GitHub": hỏi 4 field nhập tay → dry-run →
    nêu đích đến → **chờ xác nhận rõ** → `--submit`. Đây là cổng human-in-the-loop thứ hai, độc lập với bước 5:
    user duyệt bản nháp **không** có nghĩa là đồng ý đẩy lên GitHub.
 
 ## Quy tắc viết "Các bước tái hiện"
 
 - Danh sách đánh số `1. 2. 3.`, mỗi bước **một thao tác** người khác làm theo được, bắt đầu từ trạng thái xuất
-  phát rõ (đã đăng nhập chưa, đã cấp quyền Calendar chưa, có data gì sẵn, Pro hay Free nếu liên quan).
-- Dữ liệu cụ thể: giá trị đã nhập, tên template, tên nút đúng chữ trên UI (`Tap ✓`, không viết "tap the done button").
+  phát rõ (đăng nhập bằng vai trò nào, vụ việc đang ở trạng thái gì, đã cấp quyền camera/thư viện ảnh chưa).
+- Dữ liệu cụ thể: giá trị đã nhập, mã vụ việc test, tên nút đúng chữ trên UI (`Bấm "Giao việc và gửi"`, không viết "bấm nút gửi").
 - Bước cuối là hành động gây lỗi. Sau danh sách thêm 2 dòng:
-  - **Actual result:** điều đã xảy ra (quan sát được, không phỏng đoán nguyên nhân).
-  - **Expected result:** chỉ ghi khi có căn cứ (spec/wireframe/hành vi màn tương tự); nếu không có căn cứ →
-    `❓ no spec — needs PM/dev confirmation`, không tự bịa.
-- Tần suất tái hiện (`always` / `x/y times` / `intermittent`) nếu biết; nếu chưa thử lại → ghi `not retested`.
-- Thêm điều kiện đặc biệt nếu có: mạng yếu/offline, múi giờ, Google Calendar sync bật/tắt, quyền bị từ chối…
-- Nhắc user **đính kèm ảnh/video** vào ô "Paste, drop, or click to add files"; liệt kê rõ file nào nên đính.
+  - **Thực tế:** điều đã xảy ra (quan sát được, không phỏng đoán nguyên nhân).
+  - **Mong đợi:** chỉ ghi khi có căn cứ (spec/wireframe/hành vi màn tương tự); nếu không có căn cứ →
+    `❓ spec chưa nêu — cần PM/dev xác nhận`, không tự bịa.
+- Tần suất tái hiện (`luôn luôn` / `x/y lần` / `thỉnh thoảng`) nếu biết; nếu chưa thử lại → ghi `chưa thử lại`.
+- Thêm điều kiện đặc biệt nếu có: mạng yếu/offline, vai trò tài khoản, nhiều cán bộ cùng thao tác, thời hạn đã qua, quyền camera bị từ chối…
+- Nhắc user **đính kèm ảnh/video** vào ô "Ảnh, video, log" (đã che dữ liệu cá nhân); liệt kê rõ file nào nên đính.
   Không tự nhúng link ảnh không tồn tại.
 
 ## Quy tắc Title
 
-- Title trả lời **Where / What / When**, không có How:
-  - **Where** — màn hình/tính năng bị lỗi, đặt trong ngoặc vuông ngay sau `[QC]`: `[Create note]`, `[Paywall]`,
-    `[Wallpaper]`. Dùng nhãn UI bản English, 1–3 từ, nhất quán giữa các bug để dễ search/gom nhóm.
-  - **What** — *cái gì* bị lỗi + triệu chứng quan sát được, cụ thể ("note is not saved", "SAVE 100% pill is shown",
-    "blank screen"), không nêu nguyên nhân giả định ("do sập DB", "thiếu gọi API") trừ khi đã có log xác nhận.
-  - **When** — *khi nào* lỗi xảy ra: điều kiện/tình huống kích hoạt ngắn gọn ("when tapping ✓", "after enabling Google
-    Calendar sync", "when offline"). Nếu lỗi chỉ xảy ra trên một thiết bị/iOS/ngôn ngữ cụ thể thì thêm vào cuối
-    title (`on iOS 26`); nếu lỗi chung thì không ghi vì đã có field Thiết bị.
-  - **How** (các thao tác từng bước) **không** vào Title — chỉ viết ở "Các bước tái hiện".
-- Dạng `[QC] [Where] <What> when <When>`, **tiếng Anh**, ngắn gọn, đọc một lần là hiểu lỗi gì (≤ ~80 ký tự).
-  - ✅ `[QC] [Create note] Note is not saved when tapping ✓`
-  - ✅ `[QC] [Wallpaper] Google Calendar event is missing when sync is on`
-  - ✅ `[QC] [Paywall] "SAVE 100%" pill is shown when discount = 1`
-  - ❌ `[QC] Save error` (chung chung, thiếu Where/When)
-  - ❌ `[QC] Button does not work` (không rõ nút nào, màn nào)
-  - ❌ `[QC] Open Discover → Lockscreen → Note → enter title → tap ✓ and the note is lost` (đây là How)
-  - ❌ `[QC] [Create note] Save fails because the API is not called` (nguyên nhân giả định)
+- Title trả lời **Ở đâu / Cái gì / Khi nào**, không có các bước thao tác:
+  - **Ở đâu** — màn hình/tính năng bị lỗi, đặt trong ngoặc vuông ngay sau `[QC]`: `[Tạo vụ việc]`, `[Biên bản]`,
+    `[Giao việc]`. Dùng nhãn UI, 1–3 từ, nhất quán giữa các bug để dễ search/gom nhóm.
+  - **Cái gì** — triệu chứng quan sát được, cụ thể ("không lưu được vụ việc", "nút Xác nhận chữ ký vẫn bấm được",
+    "màn hình trắng"), không nêu nguyên nhân giả định trừ khi đã có log xác nhận.
+  - **Khi nào** — điều kiện kích hoạt ngắn gọn ("khi chưa bật toggle xác nhận", "khi chọn 2 cán bộ", "khi offline").
+    Nếu lỗi chỉ xảy ra trên một nền tảng/vai trò cụ thể thì thêm vào cuối title (`— vai trò Cán bộ`).
+  - Các bước thao tác **không** vào Title — chỉ viết ở "Các bước tái hiện".
+- Dạng `[QC] [Ở đâu] <Cái gì> khi <Khi nào>`, **tiếng Việt**, ngắn gọn (≤ ~80 ký tự).
+  - ✅ `[QC] [Tạo vụ việc] Mất thông tin đối tượng đã quét khi bấm Quay lại`
+  - ✅ `[QC] [Biên bản] Xác nhận chữ ký được khi chưa bật toggle đã đọc`
+  - ❌ `[QC] Lỗi lưu` (chung chung, thiếu Ở đâu/Khi nào)
+  - ❌ `[QC] Mở Trang chủ → Tạo vụ việc → bước 6 → Quay lại thì mất dữ liệu` (đây là các bước)
+  - ❌ `[QC] [Tạo vụ việc] Không lưu được vì API lỗi` (nguyên nhân giả định)
 
 ## Định dạng đầu ra
 
@@ -105,16 +106,16 @@ Xuất theo thứ tự field, mỗi field trong 1 code block riêng để copy-p
 ```
 [QC] ...
 ```
-**Build**
+**Phiên bản**
 ```
 ...
 ```
-**Bản cài** → `<option>`  (dropdown option nguyên văn)
-**Thiết bị và iOS**
+**Nền tảng** → `<option>`  (dropdown option nguyên văn)
+**Thiết bị / Trình duyệt**
 ```
 ...
 ```
-**Ngôn ngữ app** (tuỳ chọn)
+**Vai trò tài khoản** (tuỳ chọn)
 ```
 ...
 ```
@@ -133,17 +134,17 @@ Xuất theo thứ tự field, mỗi field trong 1 code block riêng để copy-p
 ```
 **Tần suất** → `<option>`  (dropdown option nguyên văn)
 **Mức độ** → `<option>`  (dropdown option nguyên văn)
-**Ảnh, video, log:** <file cần kéo vào; không đính kèm dữ liệu lịch thật của người dùng>
+**Ảnh, video, log:** <file cần kéo vào; đã che dữ liệu cá nhân>
 ````
 
 Cuối bản nháp thêm 1 dòng lý do chọn **Mức độ** (theo định nghĩa Severity trong header bug-log). Form có field Mức độ
 nên giá trị này **được dán/đẩy lên GitHub**; bug-log vẫn lưu Severity 4 mức gốc.
-Sau đó **một dòng** liệt kê field còn `❓` hoặc giả định đã dùng. Đẩy lên GitHub theo mục "Đẩy issue lên repo source"
+Sau đó **một dòng** liệt kê field còn `❓` hoặc giả định đã dùng. Đẩy lên GitHub theo mục "Đẩy issue lên GitHub"
 bên dưới (script có cổng xác nhận); user vẫn có thể chọn dán tay qua web UI.
 
 ## Chưa xác nhận
 
-- Map Severity 4 mức → Mức độ 3 mức (`High → major`, `Medium → major`): QC đã đồng ý (2026-10-11), dev chưa xác nhận.
+- Cách đánh số Phiên bản/build của app CACK.
 - Team có assignee/triage riêng cho label `needs-triage` không (form chỉ gắn label, không gắn assignee).
 - Cách đính kèm ảnh/video: `gh` không upload được → kéo thả thủ công vào issue sau khi tạo.
 
@@ -162,7 +163,7 @@ Cách làm:
 2. **ID**: `BUG-NNN` = số lớn nhất hiện có + 1 (3 chữ số). Không đánh lại số bug cũ.
 3. **Thêm 1 dòng vào bảng Tổng hợp** (cuối bảng) và **1 section chi tiết** ở cuối file, đúng format các mục sẵn có:
    - Bảng field: `Date` (hôm nay, `YYYY-MM-DD`), `Flow` / `Screen` / `State` (đúng tên trong
-     `.claude/rules/screenshot-naming.md` §7; không xác định được → `❓`), `Severity`, `Status`, `Device / Build`
+     `.claude/rules/screenshot-naming.md` §7; không xác định được → `❓`), `Severity`, `Status`, `Account role`, `Device / Build`
      (lấy từ form đã duyệt), thêm dòng **`GitHub issue`**.
    - Section: *Steps to reproduce*, *Expected*, *Actual*, *Evidence*, *Notes* — **copy từ nội dung đã duyệt**,
      không viết lại theo ý khác.
@@ -177,22 +178,26 @@ Cách làm:
 
 Không sửa/xoá bug cũ trong file này trừ khi user yêu cầu.
 
-## Đẩy issue lên repo source (script, SAU KHI đã ghi bug-log)
+## Đẩy issue lên GitHub (script, SAU KHI đã ghi bug-log)
 
 Cấu hình repo đích/label/tên heading: [`scripts/bug-issue.conf`](../../../scripts/bug-issue.conf). Cần `gh auth login`
 một lần (tài khoản cá nhân có quyền tạo issue ở repo đích). Không lưu token trong repo.
 
+> ⚠️ **Repo đích `nhatanh410/cack_qc` đang PUBLIC (kiểm tra 2026-10-26).** Trước mỗi `--submit`, kiểm tra lại
+> `gh repo view <REPO> --json visibility`; nếu vẫn `PUBLIC` → nói rõ với user issue sẽ ai cũng đọc được và khuyên
+> chuyển private trước. Label `qc-bug`, `needs-triage` phải tồn tại trên repo (xem `docs/guides/bug-issue-setup.md`).
+
 1. **Điều kiện:** bug đã được user duyệt và ghi vào bug-log, section có dòng `**Issue title:** \`...\``.
-   **Bốn field luôn do user nhập tay mỗi lần: Build, Bản cài, Thiết bị và iOS, Tần suất.** Không lấy từ bug-log,
+   **Bốn field luôn do user nhập tay mỗi lần: Phiên bản, Nền tảng, Thiết bị / Trình duyệt, Tần suất.** Không lấy từ bug-log,
    không dùng lại giá trị bug trước, không đoán từ ảnh/ghi chú. Trước khi chạy script, **hỏi user cả 4** (dùng
-   AskUserQuestion cho 2 dropdown Bản cài / Tần suất; Build và Thiết bị+iOS để user gõ), **chờ trả lời đủ rồi mới chạy**.
-   User chưa trả lời → dừng, không chạy dry-run với giá trị giả. (Mức độ: map `High/Medium → major` đã được user
-   đồng ý ngày 2026-10-11, vẫn hiện trong dry-run để user thấy.)
+   AskUserQuestion cho 2 dropdown Nền tảng / Tần suất; Phiên bản và Thiết bị để user gõ), **chờ trả lời đủ rồi mới chạy**.
+   User chưa trả lời → dừng, không chạy dry-run với giá trị giả. (Mức độ: map `High/Medium → major` vẫn hiện trong
+   dry-run để user thấy và xác nhận.)
 2. **Dry-run (luôn chạy trước):**
    `scripts/create-bug-issue.sh BUG-NNN --build V --install V --device V --frequency V [--lang V] [--severity V]`
    → in title/labels/body, chống trùng theo mã `BUG-NNN`. Exit 3 = còn thiếu field (`❓`) → quay lại hỏi user, không đoán.
-3. **Cổng xác nhận trước `--submit` (bắt buộc).** Sau dry-run, hiển thị cho user: **repo đích, title, labels, 4 field
-   đã nhập, Mức độ đã map** và nói rõ *"issue sẽ hiện công khai với dev và họ sẽ nhận thông báo"*. Rồi hỏi một câu
+3. **Cổng xác nhận trước `--submit` (bắt buộc).** Sau dry-run, hiển thị cho user: **repo đích (kèm public/private), title, labels,
+   4 field đã nhập, Mức độ đã map** và nói rõ *"issue sẽ hiện với mọi người xem được repo và họ sẽ nhận thông báo"*. Rồi hỏi một câu
    xác nhận riêng (AskUserQuestion: `Submit` / `Chưa, để chỉnh`).
    - Chỉ coi là xác nhận khi user **nói rõ ý đẩy lên GitHub** ("submit", "tạo issue đi", "đẩy lên"…). "ok", "được",
      "tiếp đi", im lặng, hoặc việc user vừa duyệt bản nháp **không** tính. Mơ hồ → hỏi lại.
@@ -214,8 +219,9 @@ Chạy khi user yêu cầu, không tự chạy.
 
 - [ ] Một issue = một lỗi.
 - [ ] Title có `[QC]`, có `[Where]` + What (triệu chứng cụ thể) + When, không chứa các bước How và không đoán nguyên nhân.
-- [ ] Các field bắt buộc (Build, Bản cài, Thiết bị+iOS, Tần suất, Mức độ) có giá trị thật hoặc `❓`; dropdown dùng đúng option nguyên văn.
-- [ ] Toàn bộ report bằng tiếng Anh (trừ tên field form và lời dẫn cho user).
+- [ ] Các field bắt buộc (Phiên bản, Nền tảng, Thiết bị / Trình duyệt, Tần suất, Mức độ) có giá trị thật hoặc `❓`; dropdown dùng đúng option nguyên văn.
+- [ ] Toàn bộ report bằng tiếng Việt; tiêu đề section bug-log giữ khoá tiếng Anh cho script.
+- [ ] Không có dữ liệu cá nhân thật trong title/steps/bug-log/ảnh.
 - [ ] Người chưa biết lỗi làm theo Steps được mà không cần hỏi lại.
 - [ ] Actual result tách khỏi nguyên nhân phỏng đoán; mong đợi có căn cứ hoặc `❓`.
 - [ ] Đã nhắc đính kèm ảnh/video.
