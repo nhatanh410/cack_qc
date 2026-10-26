@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ink Calendar iOS — QA Workspace
 
 Đây **không phải** repo chứa source code của app. Đây là workspace tài liệu QA cho **Ink: Lockscreen
@@ -239,3 +240,7 @@ trúc và điểm rủi ro cốt lõi nằm ở [wideframes/README.md § Cách h
 
 Repo này lưu trên GitHub tại `ngochando/ink-calendar-ios` — chỉ chứa tài liệu QA (`requirements/`,
 `test-cases/`, `bugs/`, `references/`), không chứa source code Xcode/Swift của app.
+=======
+# cack_qc
+CACK_QC
+>>>>>>> origin/main
