@@ -1,6 +1,6 @@
 # Test Analysis — Tạo vụ việc xử lý vi phạm (flow `03_case-create`)
 
-> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis. Đã thay bằng [test-analysis-dac-ta-v2.1.md](test-analysis-dac-ta-v2.1.md) (2026-10-26) vì repo đã có đặc tả chính thức v2.1 ([dac-ta-chuc-nang-v2.1.md](../../specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md)). Câu hỏi B1–B7, O1–O19 của tài liệu này được đối chiếu ở mục 6 của tài liệu mới.
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis. Đã thay bằng [test-analysis-dac-ta-v2.1-SUPERSEDED.md](test-analysis-dac-ta-v2.1-SUPERSEDED.md) (2026-10-26) vì repo đã có đặc tả chính thức v2.1 ([dac-ta-chuc-nang-v2.1.md](../../specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md)). Câu hỏi B1–B7, O1–O19 của tài liệu này được đối chiếu ở mục 6 của tài liệu mới.
 
 > ⚠️ DRAFT — chờ xác nhận: 7 câu hỏi chặn (B1–B7, mục 4.1) — quyền tạo vụ việc của Cán bộ / Tổ phó chưa uỷ quyền; bước nào bắt buộc (text và ảnh nói khác nhau); vụ việc giao cho Đội hay cho cán bộ; kết quả sau khi gửi (tab Tiếp nhận của ai, trạng thái ban đầu, thông báo); nút "Xử lý tại chỗ và hoàn thành" chỉ có trong ghi chú trên ảnh; các chức năng chỉ thấy trong ảnh; lưu trữ dữ liệu cá nhân của đối tượng. **Analysis Status: BLOCKED — chưa được phép chạy test-plan.**
 

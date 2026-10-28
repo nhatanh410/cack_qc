@@ -1,6 +1,9 @@
 # Test Case Specification — Tạo vụ việc xử lý vi phạm (XL01, flow `03_case-create`) — theo đặc tả v2.1
 
-> Thiết kế case theo [test-plan-dac-ta-v2.1.md](test-plan-dac-ta-v2.1.md) (ISTQB Foundation) — bám đúng kỹ thuật đã chọn ở mục 5 test plan (Decision Table, Equivalence Partitioning, Boundary Value Analysis, State Transition, Exploratory, Checklist/Error guessing có nguồn).
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.
+> Thay bằng [test-cases-dac-ta-v2.1-lam-ro-10-28.md](test-cases-dac-ta-v2.1-lam-ro-10-28.md) (2026-10-28). Lý do: bản làm rõ [lam-ro-2026-10-27.md](../../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md) đổi nghiệp vụ lớn — cán bộ hiện trường / Phòng Camera được tạo vụ việc và bàn giao cho Đội (kể cả quét QR), không chọn hạn, trạng thái vụ việc mới, người nhận cảnh báo Khẩn cấp mới, phạm vi vai trò thu về 2 nhóm. Các kết luận về quyền "cán bộ không tạo được vụ việc" trong tài liệu này **đã sai**.
+
+> Thiết kế case theo [test-plan-dac-ta-v2.1-SUPERSEDED.md](test-plan-dac-ta-v2.1-SUPERSEDED.md) (ISTQB Foundation) — bám đúng kỹ thuật đã chọn ở mục 5 test plan (Decision Table, Equivalence Partitioning, Boundary Value Analysis, State Transition, Exploratory, Checklist/Error guessing có nguồn).
 > Test basis (thứ tự ưu tiên khi mâu thuẫn): [dac-ta-chuc-nang-v2.1.md](../../specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md) > [lam-ro-2026-10-26.md](../../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md) > [mo-ta-chuc-nang-v1.md](../../specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md). Nhãn giao diện tham khảo thêm [wireframe 03_case-create](../../ui/ux/wideframes/03_case-create.md) (lập trước đặc tả — chỉ để lấy nhãn, **không** dùng làm kết quả mong đợi).
 > Test plan Status khi thiết kế: **READY (có điều kiện)** — điều kiện đi kèm được tôn trọng đầy đủ, xem mục "Quy ước".
 

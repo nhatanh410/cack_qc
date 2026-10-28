@@ -1,5 +1,8 @@
 # Test Analysis — Tạo vụ việc xử lý vi phạm (XL01, flow `03_case-create`) — theo đặc tả v2.1
 
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.
+> Thay bằng [test-analysis-dac-ta-v2.1-lam-ro-10-28.md](test-analysis-dac-ta-v2.1-lam-ro-10-28.md) (2026-10-28). Lý do: bản làm rõ [lam-ro-2026-10-27.md](../../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md) đổi nghiệp vụ lớn — cán bộ hiện trường / Phòng Camera được tạo vụ việc và bàn giao cho Đội (kể cả quét QR), không chọn hạn, trạng thái vụ việc mới, người nhận cảnh báo Khẩn cấp mới, phạm vi vai trò thu về 2 nhóm. Các kết luận về quyền "cán bộ không tạo được vụ việc" trong tài liệu này **đã sai**.
+
 > **Analysis Status: READY** (cập nhật lần 4, 2026-10-26) — được phép chạy test-plan. Căn cứ: (1) QB1, QB2, QB3 đã được QC lead trả lời → không còn câu hỏi chặn; (2) **quyết định của QC lead ngày 2026-10-26** "Chấp nhận cả hai, chạy tiếp" ([lam-ro-2026-10-26.md](../../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md), mục "Quyết định của QC lead về trạng thái test-analysis-dac-ta-v2.1"): **chấp nhận căn cứ risk A1/A2 (QO24 đóng)** và **cho mang 29 câu hỏi mở còn lại sang test-plan** dưới dạng "kết quả mong đợi còn mở" → mục 4 không còn câu hỏi nào phải làm rõ *trước khi* lập test plan. Các câu hỏi mở **vẫn còn hiệu lực** và được liệt kê đầy đủ ở **mục 5** — test-plan phải mang theo, không coi là đã trả lời. **QO25 (⚑ suy ra) không dùng làm tiêu chí đạt/không đạt** cho tới khi được xác nhận.
 
 > **Test basis (theo thứ tự ưu tiên khi mâu thuẫn — QC lead chốt 2026-10-26):**

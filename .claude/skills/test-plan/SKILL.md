@@ -45,7 +45,7 @@ bằng text **trước khi** tạo file — không âm thầm chọn 1 phương 
 | Tài liệu **test basis** (spec/QC handoff của feature, thường ở `requirements/specs/<feature>/...`) | Nguồn sự thật duy nhất để suy ra scope, hành vi kỳ vọng, câu hỏi mở |
 | `requirements/test-plans/<feature>/test-analysis-<slug>.md` (nếu đã chạy skill test-analysis) | Danh sách test condition **đã ưu tiên hoá** — dùng thẳng cho mục 2/6, không phân tích lại |
 | `requirements/istqb-foundation/ISTQB_CTFL_Syllabus_v4.0.1.md` | Định nghĩa chuẩn cho mọi khái niệm dùng trong test plan — xem bảng mục 2 dưới đây để biết đọc mục nào |
-| `requirements/test-plans/<feature khác gần nhất>/test-plan-*.md` đã có; mẫu hiện có: `requirements/test-plans/case-create/test-plan-dac-ta-v2.1.md` (test plan đầu tiên của dự án CACK — học hình thức; nội dung chỉ đúng cho XL01) | **Mẫu chuẩn** về độ sâu, cách trình bày, cách viết mục risk/entry-exit/gap |
+| `requirements/test-plans/<feature khác gần nhất>/test-plan-*.md` đã có; mẫu hiện có: `requirements/test-plans/case-create/test-plan-dac-ta-v2.1-lam-ro-10-28.md` (test plan đầu tiên của dự án CACK — học hình thức; nội dung chỉ đúng cho XL01) | **Mẫu chuẩn** về độ sâu, cách trình bày, cách viết mục risk/entry-exit/gap |
 | `.claude/rules/screenshot-naming.md` §7 (flow map) | Liệt kê toàn bộ flow của app để điền bảng "Ảnh hưởng chéo tới flow khác" (mục 3.1) |
 | `requirements/exploratory/<NN>_<flow>.md`, wireframe cùng flow (nếu có) | Đối chiếu case/checklist cũ — phát hiện điểm mâu thuẫn hoặc case cần chạy lại (regression) |
 | `bugs/bug-log.md` (nếu có bug liên quan) | Bug cũ cần regression lại trong test plan mới |
@@ -175,7 +175,7 @@ flow ở screenshot-naming.md §7.
 
 **Version cũ bị thay thế → không xoá, chỉ đánh dấu superseded** và giải thích rõ sai ở đâu, đúng ở đâu (xem cách
 làm ở `requirements/test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md` — banner SUPERSEDED — và mục 6 "đối chiếu với đợt cũ" của
-`requirements/test-plans/case-create/test-analysis-dac-ta-v2.1.md`).
+`requirements/test-plans/case-create/test-analysis-dac-ta-v2.1-lam-ro-10-28.md`).
 
 **Gap (mục 10) khác Coverage gap (mục 11).** Mục 10 = câu hỏi mà **câu trả lời sẽ đổi kết quả mong đợi** của case
 đã viết. Mục 11 = case **hoàn toàn chưa được nghĩ tới** trong test basis, QC tự bổ sung.

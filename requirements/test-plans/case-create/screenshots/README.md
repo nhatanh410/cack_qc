@@ -1,6 +1,6 @@
 # Ảnh bằng chứng — Tạo vụ việc xử lý vi phạm (XL01, `03_case-create`)
 
-Ảnh chụp màn hình thật khi thực thi từng case trong [test-cases-dac-ta-v2.1.md](../test-cases-dac-ta-v2.1.md), dùng để
+Ảnh chụp màn hình thật khi thực thi từng case trong [test-cases-dac-ta-v2.1-lam-ro-10-28.md](../test-cases-dac-ta-v2.1-lam-ro-10-28.md), dùng để
 đối chiếu với cột "Kết quả mong đợi" — **không phải** bộ ảnh giao diện/wireframe ở `requirements/ui/ux/screenshots/`
 (bộ đó theo [screenshot-naming.md](../../../../.claude/rules/screenshot-naming.md), mục đích khác). Chưa có ảnh nào
 được chụp; việc chụp là của người thực thi.

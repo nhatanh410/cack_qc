@@ -1,5 +1,8 @@
 # Test Plan — Tạo vụ việc xử lý vi phạm (XL01, flow `03_case-create`) — theo đặc tả v2.1
 
+> ⚠️ SUPERSEDED — không dùng tài liệu này làm test basis.
+> Thay bằng [test-plan-dac-ta-v2.1-lam-ro-10-28.md](test-plan-dac-ta-v2.1-lam-ro-10-28.md) (2026-10-28). Lý do: bản làm rõ [lam-ro-2026-10-27.md](../../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md) đổi nghiệp vụ lớn — cán bộ hiện trường / Phòng Camera được tạo vụ việc và bàn giao cho Đội (kể cả quét QR), không chọn hạn, trạng thái vụ việc mới, người nhận cảnh báo Khẩn cấp mới, phạm vi vai trò thu về 2 nhóm. Các kết luận về quyền "cán bộ không tạo được vụ việc" trong tài liệu này **đã sai**.
+
 > **Test Plan Status: READY (có điều kiện — đọc mục "Điều kiện đi kèm" ngay dưới)** · Ngày lập 2026-10-26.
 > Căn cứ: không có banner DRAFT; mục 10 có 29 câu hỏi mở nhưng **không câu nào đổi scope hoặc priority** — chỉ đổi kết quả mong đợi (QC lead đã quyết định ngày 2026-10-26 cho mang sang dưới dạng "còn mở"; QO24 đã đóng, căn cứ risk A1/A2 đã được chấp nhận). Chưa có gap nào trùng 5 lý do dừng bắt buộc ở mục 0 của skill.
 
@@ -14,8 +17,8 @@
 > 3. [mo-ta-chuc-nang-v1.md](../../specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md) — chỉ dùng khi đặc tả không nói.
 >
 > **Chuẩn:** ISTQB Foundation Level v4.0.1 (test basis → test object → kỹ thuật thiết kế → rủi ro → entry/exit)
-> **Test analysis đầu vào:** [test-analysis-dac-ta-v2.1.md](test-analysis-dac-ta-v2.1.md) (Analysis Status READY, 65 test condition: P1 34 · P2 20 · P3 11). Mã `TC-nn` và `QOnn` trong tài liệu này **trích đúng** từ file đó; `QBn` = câu hỏi chặn đã trả lời.
-> **Test case cụ thể:** [test-cases-dac-ta-v2.1.md](test-cases-dac-ta-v2.1.md) — sẽ sinh bởi skill test-case sau khi orchestrator xác nhận test plan này.
+> **Test analysis đầu vào:** [test-analysis-dac-ta-v2.1-SUPERSEDED.md](test-analysis-dac-ta-v2.1-SUPERSEDED.md) (Analysis Status READY, 65 test condition: P1 34 · P2 20 · P3 11). Mã `TC-nn` và `QOnn` trong tài liệu này **trích đúng** từ file đó; `QBn` = câu hỏi chặn đã trả lời.
+> **Test case cụ thể:** [test-cases-dac-ta-v2.1-SUPERSEDED.md](test-cases-dac-ta-v2.1-SUPERSEDED.md) — sẽ sinh bởi skill test-case sau khi orchestrator xác nhận test plan này.
 > **Đối chiếu tài liệu đã có:** wireframe [03_case-create.md](../../ui/ux/wideframes/03_case-create.md) và checklist [03_case-create.md](../../exploratory/03_case-create.md) (cả hai lập **trước** đặc tả, có banner cảnh báo — không phải test basis); [test-analysis-mo-ta-v1-SUPERSEDED.md](test-analysis-mo-ta-v1-SUPERSEDED.md) (đã thay thế); `bugs/bug-log.md` (hiện **rỗng** → không có bug cũ cần regression); chưa có test plan nào khác của dự án CACK (hình thức tham khảo từ `3ada18a:.../test-plan-ios26-27.md`, không lấy nội dung).
 > **Dữ liệu cá nhân:** chỉ dùng giấy tờ và dữ liệu đối tượng **mẫu giả**; không chép dữ liệu thật từ ảnh trong spec.
 > **Người lập:** QC
@@ -470,7 +473,7 @@ Theo §5.1.3 (áp dụng cho **bước chạy test**; bước thiết kế test 
 | Tài nguyên | Tài khoản, Đội, khu vực, danh mục ở mục 7 đã được quản trị viên chuẩn bị và QC xác nhận đăng nhập được | Chưa kiểm |
 | Tài nguyên | Bộ giấy tờ mẫu giả + ảnh thử đã có | **Chưa đạt** (QO23) |
 | Tài nguyên | Công cụ/nhật ký để kiểm TC-37 hoặc có quyết định bỏ TC-37 khỏi đợt này | **Chưa đạt** (mục 11, G5) |
-| Testware | Test plan READY (đạt) và `test-cases-dac-ta-v2.1.md` đã được duyệt | Plan đạt; test-case chưa có |
+| Testware | Test plan READY (đạt) và `test-cases-dac-ta-v2.1-SUPERSEDED.md` đã được duyệt | Plan đạt; test-case chưa có |
 | Testware | Mỗi test case ghi rõ trạng thái KQ mong đợi (XĐ/MỘT PHẦN/MỞ) và QO liên quan | Yêu cầu cho test-case |
 | Chất lượng test object | Smoke: đăng nhập được, mở được "Bước 1/9", đi hết 9 bước và gửi được 1 vụ việc tối thiểu | Chưa chạy |
 | Quản trị | Không có mâu thuẫn mới của test basis chưa được QC lead quyết định (xem điều kiện dừng ở 8.1) | Đạt tại thời điểm lập |
@@ -565,4 +568,4 @@ Tất cả 29 câu mở dưới đây **mang sang đúng theo quyết định QC
 
 - **Trạng thái:** READY (có điều kiện: KQ mong đợi "còn mở" và ⚑ QO25 không chấm; chưa đủ điều kiện **chạy** test — thiếu model/iOS/build/giấy tờ mẫu/công cụ TC-37).
 - 10 nhóm (AUTH, NAV, EVD, CLS, DSC, SUBJ, PROP, ASG, SUB, POST); 65 test condition: **P1 34 · P2 20 · P3 11**; KQ mong đợi XĐ 22 · MỘT PHẦN 34 · MỞ 9.
-- Bước tiếp theo: orchestrator quyết định gọi skill **test-case** trên `test-plan-dac-ta-v2.1.md`.
+- Bước tiếp theo: orchestrator quyết định gọi skill **test-case** trên `test-plan-dac-ta-v2.1-SUPERSEDED.md`.

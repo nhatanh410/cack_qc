@@ -24,6 +24,7 @@
 | `03_case-create/03_case-create_08_proposal_default.png` | hinh-12 | Bước 7/9 Đề xuất xử lý — "Tuỳ chọn", 5 checkbox, Tiếp tục bật |
 | `03_case-create/03_case-create_09_assignee_default.png` | hinh-13 | Bước 8/9 Giao việc — Đội nhận việc đã chọn, chưa chọn cán bộ, Tiếp tục mờ 🔒 |
 | `03_case-create/03_case-create_09_assignee_selected.png` | hinh-14 | Bước 8/9 — đã chọn 1 cán bộ (thẻ có nút ✕), Tiếp tục bật 🔒 |
+| `03_case-create/03_case-create_09_assignee_qr-scan.png` | QC lead gửi 2026-10-28 (1170×2532, build ❓) | Màn quét QR trong **Tạo vụ việc**: khung camera quét "Mã QR định danh" hiện trên máy cán bộ nhận (màn "Mã QR của tôi", mở từ Trang chủ — ghi chú "Cho cán bộ khác quét khi nhận bàn giao vụ việc trực tiếp."), dòng "Đang tra cứu cán bộ...", nút **Chọn ảnh QR** / **Huỷ** 🔒 |
 | `03_case-create/03_case-create_10_review_default.png` | hinh-15 | Bước 9/9 Xem lại & gửi — chưa chọn hạn, "Giao việc & gửi" mờ 🔒 |
 | `03_case-create/03_case-create_10_review_filled.png` | hinh-16 | Bước 9/9 — đã chọn ngày + giờ, "Giao việc & gửi" bật 🔒 |
 | `04_case-handling/04_case-handling_01_case-list_default.png` | hinh-17 | Tab Tiếp nhận — ô tìm kiếm, lọc trạng thái + mức độ, danh sách thẻ vụ việc, nút Hoàn thành |

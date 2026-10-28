@@ -41,7 +41,7 @@ case khác không bị chặn vẫn có thể viết bình thường trong lúc 
 | `requirements/test-plans/<feature>/test-plan-<slug>.md` | **Bắt buộc phải tồn tại.** Mục 2 (test object + mã nhóm), mục 5 (kỹ thuật thiết kế — nguồn trực tiếp để suy case), mục 6 (risk → priority), mục 10/11 (gap, coverage gap) |
 | Tài liệu **test basis** gốc mà test plan trích dẫn | Giá trị cụ thể (chuỗi, số, tên màn hình thật) để viết bước thực hiện chính xác, không suy đoán |
 | `requirements/istqb-foundation/ISTQB_CTFL_Syllabus_v4.0.1.md` | Cách tính coverage đúng cho từng kỹ thuật — xem bảng mục 1.1 |
-| `requirements/test-plans/case-create/test-cases-dac-ta-v2.1.md` | **Mẫu chuẩn về hình thức** (bộ test case đầu tiên của dự án CACK — học cách trình bày; nội dung chỉ đúng cho XL01) — cách viết "Quy ước" đầu file, cách gộp nhiều case vào 1 trình tự chạy, cách đánh dấu 🔭/⚠️ |
+| `requirements/test-plans/case-create/test-cases-dac-ta-v2.1-lam-ro-10-28.md` | **Mẫu chuẩn về hình thức** (bộ test case đầu tiên của dự án CACK — học cách trình bày; nội dung chỉ đúng cho XL01) — cách viết "Quy ước" đầu file, cách gộp nhiều case vào 1 trình tự chạy, cách đánh dấu 🔭/⚠️ |
 | `requirements/test-plans/case-create/screenshots/README.md` | Mẫu quy ước đặt tên ảnh bằng chứng nếu feature cần chụp màn hình khi chạy case |
 
 Nếu **chưa có test-plan-*.md** cho feature này → dừng lại, báo user chạy skill **test-plan** trước. Không tự suy
@@ -95,7 +95,7 @@ hình/state).
 
 > (Nếu nhóm case có thể gộp thành 1 trình tự chạy liên tục để đỡ tốn thời gian setup — vd đổi lần lượt qua các
 > giá trị của cùng 1 tổ hợp Decision Table — viết phần "Trình tự chạy gộp" trước bảng, liệt kê case nào gộp
-> được/không gộp được, theo cách trình bày ở mục "Quy ước" của `requirements/test-plans/case-create/test-cases-dac-ta-v2.1.md`.)
+> được/không gộp được, theo cách trình bày ở mục "Quy ước" của `requirements/test-plans/case-create/test-cases-dac-ta-v2.1-lam-ro-10-28.md`.)
 
 | ID | Bước thực hiện | Kết quả mong đợi | Ưu tiên |
 |---|---|---|:---:|
