@@ -129,6 +129,9 @@ disabled     enabled      editing      preview      scrolled
 system-dialog     dialog quyền của hệ điều hành (camera, thư viện ảnh, thông báo)
 granted / denied  kết quả sau khi user chọn quyền
 pending           vụ việc/giao việc chờ tiếp nhận
+team-processing   vụ việc "Đang xử lý tại Đội" (Đội trưởng đã tiếp nhận)
+awaiting-direction vụ việc "Chờ chỉ đạo" (đã Đề xuất lãnh đạo)
+closed            vụ việc "Đã đóng" (lãnh đạo đóng)
 in-progress       đang thực hiện (sau khi bấm "Đang làm")
 completed         đã hoàn thành
 overdue           quá hạn hoàn thành
@@ -141,8 +144,8 @@ step-1 / step-2   một bước của guide nhiều bước nằm trong CÙNG m�
 unknown           chưa xác định được — cần người review
 ```
 
-**Màn hình khác nhau theo vai trò** (người giao việc vs cán bộ): thêm hậu tố vai trò vào cuối
-`state` — `-assigner` hoặc `-officer`. Ví dụ `04_case-handling_02_case-detail_default-officer.png`.
+**Màn hình khác nhau theo vai trò** (người giao việc vs cán bộ vs lãnh đạo CACK): thêm hậu tố vai trò vào cuối
+`state` — `-assigner`, `-officer` hoặc `-leader` (Trưởng/Phó trưởng CACK). Ví dụ `04_case-handling_02_case-detail_default-officer.png`.
 Chỉ thêm khi giao diện **thực sự khác** giữa 2 vai trò.
 
 ### 4.3 State cho web
@@ -264,13 +267,13 @@ Thứ tự flow bám theo **hành trình người dùng thật**, không theo th
 
 Vai trò (theo [đặc tả v2.1](../../requirements/specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md) §3):
 **người giao việc** = Đội trưởng/Chỉ huy Đội, Tổ trưởng, Tổ phó, Phó đội trưởng, Phó trưởng CACK, Trưởng CACK,
-và **cán bộ được uỷ quyền Tổ phó** (quản trị viên cấp) · **cán bộ** = người nhận việc (kể cả Phòng Camera).
+và **cán bộ được uỷ quyền Tổ phó** (quản trị viên cấp) · **cán bộ** = người nhận việc, gồm 3 loại: hiện trường, Phòng Camera, Văn thư ([làm rõ C6/C7](../../requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md)).
 
 | flow-no | flow-name | Nội dung | Vai trò |
 |---------|-----------|----------|---------|
 | `01` | `login` | Đăng nhập vào hệ thống | Tất cả |
 | `02` | `home` | Tab Trang chủ: Thống kê, lối vào Tạo vụ việc / Giao việc | Tất cả |
-| `03` | `case-create` | Tạo vụ việc xử lý vi phạm — 9 bước (ảnh/bằng chứng, khu vực, loại, mức độ, mô tả, đối tượng [quét giấy tờ / thư viện / thủ công], đề xuất xử lý, chọn cán bộ, hạn hoàn thành) | Người giao việc |
+| `03` | `case-create` | Tạo vụ việc xử lý vi phạm — 9 bước (ảnh/bằng chứng, khu vực, loại, mức độ, mô tả, đối tượng [quét giấy tờ / thư viện / thủ công], đề xuất xử lý, chọn cán bộ, hạn hoàn thành) | Người giao việc; **cán bộ Phòng Camera, cán bộ hiện trường** (từ 2026-10-27, khác đặc tả — [làm rõ L6/L7](../../requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md); C1–C8, D1–D8, E1–E9, F1–F8, G1–G6, H1–H5 đã trả lời, còn mở I1; cán bộ bắt buộc bàn giao cho 1 Đội; cán bộ Văn thư không tạo được) |
 | `04` | `case-handling` | Tiếp nhận & xử lý vụ việc: tab Tiếp nhận, Của tôi, Thông báo, chi tiết vụ việc, Đang làm → Hoàn thành (nhập kết quả/lý do), Lịch sử | Cả hai |
 | `05` | `record-signing` | Biểu mẫu & chữ ký: lập biên bản, trường thêm theo nhóm cá nhân (hành khách / cán bộ), vật phẩm nguy hiểm, chốt để ký, cá nhân ký + đại diện CACK ký, xem/xuất PDF, ký lại biên bản khi 1 trong 2 bên chưa ký đủ ở lần đầu (đặc tả XL04; [làm rõ L3](../../requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md)) | Cán bộ |
 | `06` | `task-assign` | Giao việc: tạo giao việc, tab Tôi đã giao / Giao cho tôi / Của Đội, chi tiết giao việc | Cả hai |

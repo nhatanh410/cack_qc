@@ -14,7 +14,7 @@ khám phá, lập test plan / test case theo ISTQB Foundation Level và theo dõ
 | Muốn làm gì | Vào đây |
 |---|---|
 | Đặc tả chính thức (cơ sở kiểm thử chính) | [`dac-ta-chuc-nang-v2.1.md`](requirements/specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md) — use case, ma trận quyền, trạng thái, quy tắc nghiệp vụ |
-| Hiểu hệ thống làm gì (spec tổng quan) | [`mo-ta-chuc-nang-v1.md`](requirements/specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md) + bản làm rõ [`lam-ro-2026-10-26.md`](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md) |
+| Hiểu hệ thống làm gì (spec tổng quan) | [`mo-ta-chuc-nang-v1.md`](requirements/specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md) + bản làm rõ [`lam-ro-2026-10-26.md`](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md), [`lam-ro-2026-10-27.md`](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md) |
 | Xem danh sách flow + vai trò dùng từng flow | [`.claude/rules/screenshot-naming.md`](.claude/rules/screenshot-naming.md) §7 (đã xác nhận 2026-10-26) |
 | Xem UI thật của 1 màn hình / flow | [`requirements/ui/ux/screenshots/`](requirements/ui/ux/screenshots/) — tách theo `iphone/` · `web/` |
 | Đọc wireframe dựng từ screenshot | [`requirements/ui/ux/wideframes/`](requirements/ui/ux/wideframes/) — 1 file / flow |
@@ -30,7 +30,8 @@ khám phá, lập test plan / test case theo ISTQB Foundation Level và theo dõ
 ## Hệ thống gồm gì (tóm tắt từ spec)
 
 - **Vai trò:** người giao việc (Đội trưởng/Chỉ huy Đội, Tổ trưởng, Tổ phó, Phó đội trưởng, Phó trưởng CACK, Trưởng
-  CACK, và cán bộ được uỷ quyền Tổ phó) và cán bộ (nhận việc).
+  CACK, và cán bộ được uỷ quyền Tổ phó) và cán bộ (nhận việc). Từ 2026-10-27, cán bộ Phòng Camera và cán bộ hiện
+  trường cũng tạo được vụ việc ([làm rõ L6/L7](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md)).
 - **App mobile (hiện chỉ chạy trên iPhone):** tạo vụ việc xử lý vi phạm (9 bước, có quét giấy tờ), tiếp nhận & xử lý vụ việc, lập và ký biên
   bản trên thiết bị (xuất PDF), giao việc, gia hạn / phân công lại / huỷ phần việc / phân công tiếp, thống kê ở
   Trang chủ, báo cáo hằng ngày.

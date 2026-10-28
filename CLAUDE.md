@@ -21,7 +21,13 @@ knowledge for CACK.
 ## Product facts that shape every test
 
 - **Two roles** (spec v2.1 §3): *người giao việc* (Đội trưởng/Chỉ huy Đội, Tổ trưởng, Tổ phó, Phó đội trưởng, Phó
-  trưởng CACK, Trưởng CACK, plus any *cán bộ được uỷ quyền Tổ phó* granted by an admin) and *cán bộ* (receives work). Role/permission is a cross-cutting risk.
+  trưởng CACK, Trưởng CACK, plus any *cán bộ được uỷ quyền Tổ phó* granted by an admin) and *cán bộ* (receives work). Since 2026-10-27 *cán bộ Phòng Camera* and *cán bộ hiện trường* can also create
+  cases (QC lead decision overriding spec [Q4]/[Q31] — see
+  [lam-ro-2026-10-27.md](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md), C1–C8, D1–D8, E1–E9, F1–F8, G1–G6, H1–H5 answered; I1 open; officers must hand cases to a team; states Chờ tiếp nhận / Đang xử lý tại Đội /
+  Đang thực hiện / Chờ chỉ đạo / Đã hoàn thành / Đã đóng (no Đã huỷ). Current test scope = 2 role groups only
+  (assigner vs receiver); sub-role differences (Tổ trưởng, Tổ phó…) deferred by the QC lead (F2)). Officer types are
+  *hiện trường*, *Phòng Camera*, *Văn thư* (Văn thư cannot create), set as the account role in the web admin.
+  Role/permission is a cross-cutting risk.
 - **Personal data**: CCCD/passport scanning, names, dates of birth, passenger flight/seat, signatures. Never put
   real personal data in docs, bug reports or committed images — test data only.
 - **Primary test basis:** [dac-ta-chuc-nang-v2.1.md](requirements/specs/xu-ly-vi-pham-giao-viec/dac-ta-chuc-nang-v2.1.md)
@@ -33,7 +39,8 @@ knowledge for CACK.
   (exported from Google Doc 2026-10-26; the source doc stops mid-section at "Ký lại biên bản"). Always read it together
   with [lam-ro-2026-10-26.md](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md) — the QC lead's answers
   (case-action roles, re-signing, iPhone-only, mandatory fields) and its "Đối chiếu với đặc tả v2.1" section, which
-  records where those answers differ from spec v2.1.
+  records where those answers differ from spec v2.1 — plus
+  [lam-ro-2026-10-27.md](requirements/specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-27.md) (officers may create cases).
 
 ## Architecture: how a feature's documentation set fits together
 
