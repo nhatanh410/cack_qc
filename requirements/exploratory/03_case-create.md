@@ -7,7 +7,7 @@
 > kết luận của dự án cũ (`git show 3ada18a:references/exploratory-references.md`) (§2, §5); phần "rủi ro xuyên suốt" chưa có.
 > Test basis đối chiếu: [mo-ta-chuc-nang-v1.md](../specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md) ·
 > [lam-ro-2026-10-26.md](../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md) ·
-> [test-analysis-mo-ta-v1-SUPERSEDED.md](../test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md) (mã `T`/`B`/`O`; đang **BLOCKED**)
+> test-analysis-mo-ta-v1-SUPERSEDED.md (đã xoá 2026-10-28, xem git `5fc75a6`) (mã `T`/`B`/`O`; đang **BLOCKED**)
 > Kỹ thuật (ISTQB §4.4): Checklist-based (§1, phần lớn §2) · Error guessing (§2, §3) · Exploratory
 > session-based (§6, §7)
 > Build: 1.0.0 (52) — ❓ môi trường (TestFlight / dev) chưa ghi nhận · Tài khoản test: Đội trưởng / Chỉ huy Đội
@@ -172,8 +172,8 @@ quyền theo vai trò · dữ liệu cá nhân (CCCD/hộ chiếu) · giao đún
 ## 5 · Câu hỏi cần PO/dev trả lời — CRE-Q
 
 Phần lớn câu hỏi đã có trong test-analysis — **không lặp lại**, chỉ liên kết:
-[B1–B7 (chặn)](../test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md#41-câu-hỏi-chặn-thuộc-mục-0-của-skill--phải-trả-lời-trước-khi-chạy-test-plan) ·
-[O1–O19](../test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md#42-câu-hỏi-mở-không-chặn--ảnh-hưởng-expected-result--chi-tiết-trả-lời-được-song-song-với-test-plan-sau-khi-b1b7-xong).
+B1–B7 (chặn) (đã xoá 2026-10-28, xem git `5fc75a6`) ·
+O1–O19 (đã xoá 2026-10-28, xem git `5fc75a6`).
 Câu hỏi **mới** phát sinh khi dựng wireframe:
 
 | ID | Câu hỏi | Liên quan |

@@ -20,7 +20,7 @@
 > **Chuẩn:** ISTQB Foundation Level v4.0.1 (test basis → test object → kỹ thuật thiết kế → rủi ro → entry/exit)
 > **Test analysis đầu vào:** [test-analysis-dac-ta-v2.1-lam-ro-10-28.md](test-analysis-dac-ta-v2.1-lam-ro-10-28.md) (Analysis Status READY, cập nhật lần 3; 79 test condition: P1 44 · P2 24 · P3 11). Mã `TC-nn` và `QOnn` trong tài liệu này **trích đúng** từ file đó — **không trùng nghĩa** với `TC-nn` của bộ cũ `*-dac-ta-v2.1.md`.
 > **Test case cụ thể:** [test-cases-dac-ta-v2.1-lam-ro-10-28.md](test-cases-dac-ta-v2.1-lam-ro-10-28.md) — sẽ sinh bởi skill test-case sau khi orchestrator xác nhận test plan này.
-> **Đối chiếu tài liệu đã có:** bộ cũ [test-plan-dac-ta-v2.1-SUPERSEDED.md](test-plan-dac-ta-v2.1-SUPERSEDED.md) (tham khảo cấu trúc/phương pháp, không phải test basis; chờ orchestrator đánh dấu SUPERSEDED); [exploratory/03_case-create.md](../../exploratory/03_case-create.md) và wireframe (lập trước đặc tả — chỉ làm nguồn gợi ý khi test basis im lặng); `bugs/bug-log.md` (chỉ có khung mẫu, **chưa có bug nào** → không có bug cũ cần regression).
+> **Đối chiếu tài liệu đã có:** bộ cũ test-plan-dac-ta-v2.1-SUPERSEDED.md (đã xoá 2026-10-28, xem git `5fc75a6`) (tham khảo cấu trúc/phương pháp, không phải test basis; chờ orchestrator đánh dấu SUPERSEDED); [exploratory/03_case-create.md](../../exploratory/03_case-create.md) và wireframe (lập trước đặc tả — chỉ làm nguồn gợi ý khi test basis im lặng); `bugs/bug-log.md` (chỉ có khung mẫu, **chưa có bug nào** → không có bug cũ cần regression).
 > **Dữ liệu cá nhân:** chỉ dùng giấy tờ, dữ liệu đối tượng và tài khoản **mẫu giả**; tài liệu này chỉ nêu tên trường, không chép họ tên, email, số giấy tờ, số điện thoại, mã cán bộ.
 > **Ngày lập:** 2026-10-28 · **Người lập:** QC
 

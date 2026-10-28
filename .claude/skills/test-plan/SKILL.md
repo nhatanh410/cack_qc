@@ -174,7 +174,7 @@ biết trước kết quả đúng (thăm dò thật), không phải nơi vứt 
 flow ở screenshot-naming.md §7.
 
 **Version cũ bị thay thế → không xoá, chỉ đánh dấu superseded** và giải thích rõ sai ở đâu, đúng ở đâu (xem cách
-làm ở `requirements/test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md` — banner SUPERSEDED — và mục 6 "đối chiếu với đợt cũ" của
+làm ở `requirements/test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md` (đã xoá 2026-10-28, xem git `5fc75a6`) — banner SUPERSEDED — và mục 6 "đối chiếu với đợt cũ" của
 `requirements/test-plans/case-create/test-analysis-dac-ta-v2.1-lam-ro-10-28.md`).
 
 **Gap (mục 10) khác Coverage gap (mục 11).** Mục 10 = câu hỏi mà **câu trả lời sẽ đổi kết quả mong đợi** của case

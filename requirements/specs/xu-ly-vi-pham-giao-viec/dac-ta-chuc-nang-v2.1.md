@@ -9,7 +9,7 @@
 > [lam-ro-2026-10-26.md](lam-ro-2026-10-26.md) mục "Đối chiếu với đặc tả v2.1" (2 điểm khác nhau đã ghi nhận).
 >
 > ⚠️ **Trùng ký hiệu:** `[Bn]` trong tài liệu này là quyết định của khách hàng ở **Phụ lục B của đặc tả** — KHÁC với câu
-> hỏi chặn B1–B7 trong `test-analysis-mo-ta-v1-SUPERSEDED.md`. Khi trích dẫn trong tài liệu QC, ghi rõ "đặc tả [B7]" hoặc "TA-B7".
+> hỏi chặn B1–B7 trong `test-analysis-mo-ta-v1-SUPERSEDED.md` (đã xoá 2026-10-28, xem git `5fc75a6`). Khi trích dẫn trong tài liệu QC, ghi rõ "đặc tả [B7]" hoặc "TA-B7".
 > ⚠️ Các điểm `[Bn*]`, `[Q37*]` là **giả định chưa được khách hàng xác nhận** (Phụ lục B: B25–B27) — không dùng làm fact.
 > Bảng 39 câu hỏi `[Qn]` được tham chiếu nhưng **chưa có trong repo** (chỉ có tóm tắt ở Phụ lục A).
 

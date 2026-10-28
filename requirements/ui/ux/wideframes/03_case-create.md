@@ -10,7 +10,7 @@ loại, đối tượng) và giao cho cán bộ xử lý, trong một wizard 9 b
 tra ảnh gốc ở [index.md](../screenshots/iphone/index.md). Build 1.0.0 (52), chụp 20/10/2026.
 **Test basis đối chiếu:** [mo-ta-chuc-nang-v1.md](../../specs/xu-ly-vi-pham-giao-viec/mo-ta-chuc-nang-v1.md) mục
 "Giao diện và thao tác" 1 · [lam-ro-2026-10-26.md](../../specs/xu-ly-vi-pham-giao-viec/lam-ro-2026-10-26.md) ·
-phân tích: [test-analysis-mo-ta-v1-SUPERSEDED.md](../../test-plans/case-create/test-analysis-mo-ta-v1-SUPERSEDED.md) (mã `T…`, `B…`, `O…`).
+phân tích: test-analysis-mo-ta-v1-SUPERSEDED.md (đã xoá 2026-10-28, xem git `5fc75a6`) (mã `T…`, `B…`, `O…`).
 **Vai trò:** người giao việc (6 vai trò, Tổ phó phải được uỷ quyền). Toàn bộ ảnh chụp bằng tài khoản **Đội
 trưởng / Chỉ huy Đội** — chưa có ảnh nào của vai trò khác.
 
